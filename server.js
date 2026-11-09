@@ -6,7 +6,7 @@ import { randomUUID } from 'crypto';
 import { fileURLToPath } from 'url';
 
 const dir = path.dirname(fileURLToPath(import.meta.url));
-const { PAYPAL_CLIENT_ID, PAYPAL_SECRET, ANTHROPIC_API_KEY, MONGODB_URI, AI_MODEL = 'claude-sonnet-5-5', PORT = 3000 } = process.env;
+const { PAYPAL_CLIENT_ID, PAYPAL_SECRET, GEMINI_API_KEY, MONGODB_URI, GEMINI_MODEL = 'gemini-2.5-flash', PORT = 3000 } = process.env;
 const PP = 'https://api-m.sandbox.paypal.com'; // sandbox only
 const CUR = 'USD';
 
@@ -49,21 +49,21 @@ async function pp(method, url, body) {
 
 /* ---------- AI ---------- */
 async function ai(system, user) {
-  const r = await fetch('https://api.anthropic.com/v1/messages', {
+  const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`, {
     method: 'POST',
-    headers: { 'x-api-key': ANTHROPIC_API_KEY, 'anthropic-version': '2023-06-01', 'content-type': 'application/json' },
+    headers: { 'x-goog-api-key': GEMINI_API_KEY, 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      model: AI_MODEL, max_tokens: 1800,
-      system: system + '\nRespond with ONLY one valid JSON object. No prose, no code fences.',
-      messages: [{ role: 'user', content: user }]
+      systemInstruction: { parts: [{ text: system + '\nRespond with ONLY one valid JSON object. No prose, no code fences.' }] },
+      contents: [{ role: 'user', parts: [{ text: user }] }],
+      generationConfig: { responseMimeType: 'application/json', maxOutputTokens: 4096, temperature: 0.2 }
     })
   });
   const j = await r.json();
   if (!r.ok) throw new Error(j.error?.message || 'AI request failed');
-  const text = j.content.filter(c => c.type === 'text').map(c => c.text).join('');
+  const text = (j.candidates?.[0]?.content?.parts || []).map(p => p.text || '').join('');
+  if (!text) throw new Error('AI returned an empty response, try again');
   return JSON.parse(text.replace(/```json|```/g, '').trim());
 }
-
 /* ---------- helpers ---------- */
 const app = express();
 app.use(express.json({ limit: '1mb' }));
