@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Escrow Agent: AI-verified payments on PayPal</title>
+<style>
+:root{--bg:#0b1020;--card:#141b34;--line:#26305a;--tx:#e8ecff;--mut:#97a2d1;--ac:#4f8cff;--ok:#27c281;--warn:#f5b53d;--bad:#ff5d6c}
+*{box-sizing:border-box}body{margin:0;font:15px/1.5 system-ui,sans-serif;background:var(--bg);color:var(--tx)}
+header{display:flex;justify-content:space-between;align-items:center;padding:14px 22px;border-bottom:1px solid var(--line)}
+header b{font-size:18px}main{max-width:860px;margin:0 auto;padding:22px}
+a{color:var(--ac);text-decoration:none}h1,h2{margin:.4em 0}.mut{color:var(--mut)}
+.card,.ms{display:block;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin:12px 0;color:var(--tx)}
+input,textarea,select{width:100%;background:#0e1430;color:var(--tx);border:1px solid var(--line);border-radius:8px;padding:9px;margin:5px 0;font:inherit}
+.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px}
+.btn{background:var(--ac);color:#fff;border:0;border-radius:8px;padding:9px 16px;font:inherit;cursor:pointer;margin:6px 6px 0 0}
+.btn.alt{background:transparent;border:1px solid var(--line);color:var(--tx)}.btn.bad{background:var(--bad)}.btn.ok{background:var(--ok)}.btn:disabled{opacity:.5}
+.b{display:inline-block;padding:2px 10px;border-radius:99px;font-size:12px;margin:6px 6px 0 0;background:#2a3463}
+.b.funded{background:#1f4aa8}.b.submitted{background:#8a6410}.b.verified,.b.released{background:#14724d}.b.disputed{background:#9b2c38}
+.rep li{margin:4px 0}.met{color:var(--ok)}.unmet{color:var(--bad)}.log{font-size:12px;color:var(--mut);margin-top:8px}
+#toast{display:none;position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#2a1620;border:1px solid var(--bad);padding:10px 16px;border-radius:10px;max-width:90%}
+</style></head><body>
+<header><b>🛡️ Escrow Agent</b><label class="mut">Viewing as <select id="role" style="width:auto"><option value="client">Client (pays)</option><option value="freelancer">Freelancer (delivers)</option></select></label></header>
+<main id="app"></main><div id="toast"></div>
+<script>
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let role='client',cfg,draft=null;
+const toast=m=>{const t=$('#toast');t.textContent=m;t.style.display='block';clearTimeout(toast.t);toast.t=setTimeout(()=>t.style.display='none',5000)};
+async function api(url,method='GET',body){const r=await fetch('/api'+url,{method,headers:{'Content-Type':'application/json'},body:body?JSON.stringify(body):undefined});const j=await r.json();if(!r.ok)throw new Error(j.error||'Request failed');return j}
+async function busy(btn,fn){const o=btn.textContent;btn.disabled=true;btn.textContent='Working…';try{await fn()}catch(e){toast(e.message)}finally{btn.disabled=false;btn.textContent=o}}
+const badge=s=>`<span class="b ${s}">${s}</span>`;
+const total=d=>d.milestones.reduce((a,m)=>a+m.amount,0).toFixed(2);
+
+async function home(){
+  const deals=await api('/deals');
+  $('#app').innerHTML=`<section class="card"><h2>1. Describe the deal in plain English</h2>
+  <textarea id="txt" rows="4" placeholder="e.g. I'll pay Ravi $300 for a 3-page portfolio site: $100 for the design mockup, $200 once it is live and mobile-friendly."></textarea>
+  <button id="dr" class="btn">Draft contract with AI</button></section><div id="review"></div>
+  <h2>Deals</h2>${deals.map(d=>`<a class="card" href="#/deal/${d._id}"><b>${esc(d.title)}</b> <span class="mut">${esc(d.clientName)} → ${esc(d.freelancerName)} · $${total(d)}</span><div>${d.milestones.map(m=>badge(m.status)).join('')}</div></a>`).join('')||'<p class="mut">No deals yet.</p>'}`;
+  $('#dr').onclick=e=>busy(e.target,async()=>{draft=await api('/draft','POST',{text:$('#txt').value});review()});
+}
+function review(){
+  $('#review').innerHTML=`<section class="card"><h2>2. Review and create</h2>
+  <div class="row"><input id="cn" placeholder="Your name (client)"><input id="fn" placeholder="Freelancer name"><input id="fe" type="email" placeholder="Freelancer PayPal email"></div>
+  <input id="ti" value="${esc(draft.title)}"><p class="mut">${esc(draft.summary)}</p>
+  ${draft.milestones.map((m,i)=>`<div class="ms"><input data-k="title" data-i="${i}" value="${esc(m.title)}"><textarea data-k="criteria" data-i="${i}" rows="2">${esc(m.criteria)}</textarea><input data-k="amount" data-i="${i}" type="number" step="0.01" value="${m.amount}"></div>`).join('')}
+  <button id="cr" class="btn">Create deal</button></section>`;
+  document.querySelectorAll('[data-k]').forEach(el=>el.oninput=()=>{draft.milestones[el.dataset.i][el.dataset.k]=el.dataset.k==='amount'?parseFloat(el.value)||0:el.value});
+  $('#cr').onclick=e=>busy(e.target,async()=>{const d=await api('/deals','POST',{title:$('#ti').value,summary:draft.summary,clientName:$('#cn').value,freelancerName:$('#fn').value,freelancerEmail:$('#fe').value,milestones:draft.milestones});location.hash='#/deal/'+d._id});
+}
+async function sdk(){
+  if(window.paypal)return;cfg??=await api('/config');
+  await new Promise((ok,no)=>{const s=document.createElement('script');s.src=`https://www.paypal.com/sdk/js?client-id=${cfg.clientId}&currency=USD&intent=authorize`;s.onload=ok;s.onerror=()=>no(new Error('PayPal SDK failed to load'));document.head.appendChild(s)});
+}
+function card(d,m,i){
+  const r=m.aiReport,dp=m.dispute,c=role==='client',f=role==='freelancer',live=['funded','submitted','verified'].includes(m.status);
+  return `<div class="ms"><b>${i+1}. ${esc(m.title)}</b> · $${m.amount.toFixed(2)} ${badge(m.status)}
+  <p class="mut">${esc(m.criteria)}</p>
+  ${m.submission?`<p><b>Submission:</b> ${esc(m.submission)}</p>`:''}
+  ${r?`<div class="rep"><b>AI verdict: ${esc(r.verdict)} (${esc(r.score)}/100)</b><p>${esc(r.summary)}</p><ul>${(r.criteria||[]).map(x=>`<li class="${x.met?'met':'unmet'}">${x.met?'✔':'✘'} ${esc(x.criterion)} <span class="mut">${esc(x.evidence)}</span></li>`).join('')}</ul></div>`:''}
+  ${dp?`<div class="rep"><b>Dispute by ${esc(dp.by)}:</b> ${esc(dp.reason)}<p><b>AI mediator (${esc(dp.recommended_release_percent)}% to freelancer):</b> ${esc(dp.reasoning)}</p></div>`:''}
+  ${m.status==='pending'&&c?`<div id="pp-${i}" style="max-width:320px"></div>`:''}
+  ${m.status==='pending'&&f?'<p class="mut">Waiting for the client to fund this milestone.</p>':''}
+  ${['funded','submitted'].includes(m.status)&&f?`<textarea id="sub${i}" rows="2" placeholder="Describe your delivery and paste a link (live URL, repo, doc…)">${esc(m.submission||'')}</textarea><button class="btn" data-a="submit" data-i="${i}">Submit work</button>`:''}
+  ${m.status==='submitted'?`<button class="btn alt" data-a="verify" data-i="${i}">Run AI verification</button>`:''}
+  ${m.status==='verified'&&c?`<button class="btn ok" data-a="settle" data-p="100" data-i="${i}">Release 100% to freelancer</button>`:''}
+  ${m.status==='submitted'&&c?`<button class="btn ok" data-a="settle" data-p="100" data-i="${i}">Approve and release</button>`:''}
+  ${m.status==='funded'&&c?`<button class="btn alt" data-a="settle" data-p="0" data-i="${i}">Cancel and refund</button>`:''}
+  ${['submitted','verified'].includes(m.status)?`<button class="btn bad" data-a="dispute" data-i="${i}">Open dispute</button>`:''}
+  ${m.status==='disputed'?`<button class="btn" data-a="settle" data-p="${esc(dp.recommended_release_percent)}" data-i="${i}">Accept AI ruling (${esc(dp.recommended_release_percent)}% to freelancer)</button>`:''}
+  <div class="log">${(m.log||[]).map(esc).join('<br>')}</div></div>`;
+}
+async function deal(id){
+  const d=await api('/deals/'+id),base=i=>`/deals/${id}/milestones/${i}`;
+  $('#app').innerHTML=`<a href="#/">← All deals</a><h1>${esc(d.title)}</h1><p class="mut">${esc(d.summary)}</p><p>Client <b>${esc(d.clientName)}</b> · Freelancer <b>${esc(d.freelancerName)}</b> · Total <b>$${total(d)}</b></p>${d.milestones.map((m,i)=>card(d,m,i)).join('')}`;
+  document.querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>busy(b,async()=>{
+    const i=b.dataset.i,a=b.dataset.a;
+    if(a==='submit')await api(base(i)+'/submit','POST',{submission:$('#sub'+i).value});
+    if(a==='verify')await api(base(i)+'/verify','POST');
+    if(a==='settle')await api(base(i)+'/settle','POST',{percent:+b.dataset.p});
+    if(a==='dispute'){const r=prompt('Why are you opening a dispute?');if(!r)return;await api(base(i)+'/dispute','POST',{reason:r,party:role})}
+    deal(id)}));
+  if(role==='client'&&d.milestones.some(m=>m.status==='pending')){
+    try{await sdk()}catch(e){return toast(e.message)}
+    d.milestones.forEach((m,i)=>{if(m.status==='pending'&&$('#pp-'+i))paypal.Buttons({
+      createOrder:async()=>(await api(base(i)+'/order','POST')).id,
+      onApprove:async()=>{await api(base(i)+'/authorize','POST');toast('Funds are now held in escrow');deal(id)},
+      onError:e=>toast(String(e))}).render('#pp-'+i)});
+  }
+}
+const route=()=>{const m=location.hash.match(/^#\/deal\/(\w+)/);(m?deal(m[1]):home()).catch(e=>toast(e.message))};
+$('#role').onchange=e=>{role=e.target.value;route()};
+addEventListener('hashchange',route);route();
+</script></body></html>
