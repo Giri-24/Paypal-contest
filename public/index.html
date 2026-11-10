@@ -1,533 +1,1254 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="en" class="dark">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Escrow Agent: AI-Verified Payments on PayPal</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛡️</text></svg>">
-  <style>
-    :root {
-      --bg: #0b1020;
-      --card: #141b34;
-      --line: #26305a;
-      --tx: #e8ecff;
-      --mut: #97a2d1;
-      --ac: #4f8cff;
-      --gemini: #8b5cf6;
-      --ok: #27c281;
-      --warn: #f5b53d;
-      --bad: #ff5d6c;
-    }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font: 15px/1.5 system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: var(--bg);
-      color: var(--tx);
-    }
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 14px 24px;
-      border-bottom: 1px solid var(--line);
-      background: rgba(20, 27, 52, 0.6);
-      backdrop-filter: blur(8px);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-    header .brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 18px;
-      font-weight: 700;
-    }
-    .badge-gemini {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      background: linear-gradient(135deg, #4f8cff, #8b5cf6);
-      color: #fff;
-      font-size: 11px;
-      font-weight: 600;
-      padding: 3px 8px;
-      border-radius: 99px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-    main {
-      max-width: 880px;
-      margin: 0 auto;
-      padding: 24px 16px;
-    }
-    a { color: var(--ac); text-decoration: none; }
-    a:hover { text-decoration: underline; }
-    h1, h2, h3 { margin: 0.5em 0; }
-    .mut { color: var(--mut); }
-    .card, .ms {
-      display: block;
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      padding: 18px;
-      margin: 14px 0;
-      color: var(--tx);
-      transition: border-color 0.2s, box-shadow 0.2s;
-    }
-    a.card:hover {
-      border-color: var(--ac);
-      text-decoration: none;
-      box-shadow: 0 4px 20px rgba(79, 140, 255, 0.15);
-    }
-    input, textarea, select {
-      width: 100%;
-      background: #0e1430;
-      color: var(--tx);
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      padding: 10px 12px;
-      margin: 6px 0;
-      font: inherit;
-    }
-    input:focus, textarea:focus, select:focus {
-      outline: none;
-      border-color: var(--ac);
-    }
-    .row {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 10px;
-    }
-    .btn {
-      background: var(--ac);
-      color: #fff;
-      border: 0;
-      border-radius: 8px;
-      padding: 10px 18px;
-      font: inherit;
-      font-weight: 600;
-      cursor: pointer;
-      margin: 8px 8px 0 0;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      transition: opacity 0.2s, transform 0.1s;
-    }
-    .btn:hover:not(:disabled) { opacity: 0.95; transform: translateY(-1px); }
-    .btn:active:not(:disabled) { transform: translateY(0); }
-    .btn.gemini {
-      background: linear-gradient(135deg, #4f8cff 0%, #8b5cf6 100%);
-    }
-    .btn.alt { background: transparent; border: 1px solid var(--line); color: var(--tx); }
-    .btn.alt:hover:not(:disabled) { background: rgba(255, 255, 255, 0.05); }
-    .btn.bad { background: var(--bad); }
-    .btn.ok { background: var(--ok); }
-    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-    .b {
-      display: inline-block;
-      padding: 3px 10px;
-      border-radius: 99px;
-      font-size: 12px;
-      font-weight: 600;
-      margin: 4px 6px 0 0;
-      background: #2a3463;
-      text-transform: capitalize;
-    }
-    .b.pending { background: #3b4266; }
-    .b.funded { background: #1f4aa8; }
-    .b.submitted { background: #8a6410; }
-    .b.verified { background: #14724d; }
-    .b.released { background: #106644; }
-    .b.disputed { background: #9b2c38; }
-    .b.refunded { background: #555c70; }
-    .rep {
-      background: #0f1738;
-      border: 1px solid #24336a;
-      border-radius: 8px;
-      padding: 14px;
-      margin-top: 12px;
-    }
-    .rep-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 8px;
-    }
-    .rep-score {
-      font-size: 13px;
-      font-weight: 700;
-      padding: 2px 8px;
-      border-radius: 6px;
-      background: rgba(39, 194, 129, 0.2);
-      color: var(--ok);
-    }
-    .rep-score.low {
-      background: rgba(255, 93, 108, 0.2);
-      color: var(--bad);
-    }
-    .rep ul { padding-left: 20px; margin: 8px 0; }
-    .rep li { margin: 6px 0; }
-    .met { color: var(--ok); }
-    .unmet { color: var(--bad); }
-    .log {
-      font-size: 12px;
-      color: var(--mut);
-      margin-top: 12px;
-      border-top: 1px dashed var(--line);
-      padding-top: 8px;
-      line-height: 1.6;
-    }
-    #toast {
-      display: none;
-      position: fixed;
-      bottom: 24px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: #1c152a;
-      color: #fff;
-      border: 1px solid var(--ac);
-      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
-      padding: 12px 20px;
-      border-radius: 10px;
-      max-width: 90%;
-      font-size: 14px;
-      z-index: 200;
-    }
-    .spinner {
-      display: inline-block;
-      width: 14px;
-      height: 14px;
-      border: 2px solid rgba(255,255,255,0.3);
-      border-radius: 50%;
-      border-top-color: #fff;
-      animation: spin 0.8s linear infinite;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-  </style>
-</head>
-<body>
-  <header>
-    <div class="brand">
-      <span>🛡️ Escrow Agent</span>
-      <span class="badge-gemini">✨ Gemini 2.0 Flash</span>
-    </div>
-    <label class="mut">
-      Viewing as:
-      <select id="role" style="width:auto; margin:0 0 0 6px;">
-        <option value="client">Client (Buyer / Funds)</option>
-        <option value="freelancer">Freelancer (Seller / Delivers)</option>
-      </select>
-    </label>
-  </header>
-
-  <main id="app"></main>
-  <div id="toast"></div>
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MINT — Mission Intelligence & Negotiation Technology</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+  <script src="https://cdn.tailwindcss.com"></script>
   <script>
-    const $ = s => document.querySelector(s);
-    const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-    let role = 'client', cfg, draft = null;
-
-    const toast = (m, isError = true) => {
-      const t = $('#toast');
-      t.textContent = m;
-      t.style.borderColor = isError ? 'var(--bad)' : 'var(--ok)';
-      t.style.display = 'block';
-      clearTimeout(toast.t);
-      toast.t = setTimeout(() => t.style.display = 'none', 6000);
-    };
-
-    async function api(url, method = 'GET', body) {
-      const r = await fetch('/api' + url, {
-        method,
-        headers: { 'Content-Type': 'application/json' },
-        body: body ? JSON.stringify(body) : undefined
-      });
-      const j = await r.json();
-      if (!r.ok) throw new Error(j.error || 'Server request failed');
-      return j;
-    }
-
-    async function busy(btn, fn) {
-      const orig = btn.innerHTML;
-      btn.disabled = true;
-      btn.innerHTML = '<span class="spinner"></span> Working…';
-      try {
-        await fn();
-      } catch (e) {
-        toast(e.message, true);
-      } finally {
-        btn.disabled = false;
-        btn.innerHTML = orig;
-      }
-    }
-
-    const badge = s => `<span class="b ${s}">${s}</span>`;
-    const total = d => (d.milestones || []).reduce((a, m) => a + (Number(m.amount) || 0), 0).toFixed(2);
-
-    async function home() {
-      const deals = await api('/deals');
-      $('#app').innerHTML = `
-        <section class="card">
-          <h2>1. Describe your agreement in plain English</h2>
-          <p class="mut">Gemini AI will analyze your scope and draft objective, verifiable milestones with USD pricing.</p>
-          <textarea id="txt" rows="4" placeholder="e.g. I will pay Ravi $300 for a 3-page portfolio site: $100 for the UI design mockup, $200 once it is live on Vercel and mobile-responsive."></textarea>
-          <button id="dr" class="btn gemini">✨ Draft Milestones with Gemini AI</button>
-        </section>
-        <div id="review"></div>
-
-        <h2 style="margin-top:30px;">Active Deals</h2>
-        ${deals.map(d => `
-          <a class="card" href="#/deal/${d._id}">
-            <div style="display:flex; justify-content:space-between; align-items:baseline;">
-              <b>${esc(d.title)}</b>
-              <span class="mut">$${total(d)} USD</span>
-            </div>
-            <p class="mut" style="margin:4px 0 8px 0; font-size:13px;">${esc(d.summary || 'Escrow Agreement')}</p>
-            <div class="mut" style="font-size:13px;">${esc(d.clientName)} → ${esc(d.freelancerName)}</div>
-            <div style="margin-top:8px;">${d.milestones.map(m => badge(m.status)).join('')}</div>
-          </a>
-        `).join('') || '<p class="mut">No agreements found. Create one above to test the escrow workflow!</p>'}
-      `;
-
-      $('#dr').onclick = e => busy(e.target, async () => {
-        const text = $('#txt').value.trim();
-        if (!text) throw new Error('Please enter a description for the deal first');
-        draft = await api('/draft', 'POST', { text });
-        review();
-      });
-    }
-
-    function review() {
-      $('#review').innerHTML = `
-        <section class="card" style="border-color: var(--ac);">
-          <h2>2. Review and create agreement</h2>
-          <p class="mut">Gemini has generated the following structure. You can edit any field before saving.</p>
-          <div class="row">
-            <input id="cn" placeholder="Your name (Client)" value="Client User">
-            <input id="fn" placeholder="Freelancer name" value="Freelancer Pro">
-            <input id="fe" type="email" placeholder="Freelancer PayPal email" value="sb-seller@example.com">
-          </div>
-          <label class="mut" style="font-size:12px;">Agreement Title:</label>
-          <input id="ti" value="${esc(draft.title)}">
-          <p class="mut" style="font-size:13px; margin:4px 0 12px 0;">${esc(draft.summary)}</p>
-
-          <h3>Milestones:</h3>
-          ${draft.milestones.map((m, i) => `
-            <div class="ms">
-              <label class="mut" style="font-size:12px;">Milestone ${i + 1} Title:</label>
-              <input data-k="title" data-i="${i}" value="${esc(m.title)}">
-              <label class="mut" style="font-size:12px;">Acceptance Criteria (for Gemini Verifier):</label>
-              <textarea data-k="criteria" data-i="${i}" rows="2">${esc(m.criteria)}</textarea>
-              <label class="mut" style="font-size:12px;">Amount (USD):</label>
-              <input data-k="amount" data-i="${i}" type="number" step="0.01" value="${m.amount}">
-            </div>
-          `).join('')}
-
-          <button id="cr" class="btn ok">Confirm & Create Deal</button>
-        </section>
-      `;
-
-      document.querySelectorAll('[data-k]').forEach(el => {
-        el.oninput = () => {
-          draft.milestones[el.dataset.i][el.dataset.k] = el.dataset.k === 'amount'
-            ? parseFloat(el.value) || 0
-            : el.value;
-        };
-      });
-
-      $('#cr').onclick = e => busy(e.target, async () => {
-        const d = await api('/deals', 'POST', {
-          title: $('#ti').value,
-          summary: draft.summary,
-          clientName: $('#cn').value,
-          freelancerName: $('#fn').value,
-          freelancerEmail: $('#fe').value,
-          milestones: draft.milestones
-        });
-        toast('Deal created successfully!', false);
-        location.hash = '#/deal/' + d._id;
-      });
-    }
-
-    async function sdk() {
-      if (window.paypal) return;
-      cfg ??= await api('/config');
-      if (!cfg.clientId) {
-        throw new Error('PayPal Client ID is not configured on the server');
-      }
-      await new Promise((ok, no) => {
-        const s = document.createElement('script');
-        s.src = `https://www.paypal.com/sdk/js?client-id=${cfg.clientId}&currency=USD&intent=authorize`;
-        s.onload = ok;
-        s.onerror = () => no(new Error('PayPal SDK failed to load. Check your PAYPAL_CLIENT_ID.'));
-        document.head.appendChild(s);
-      });
-    }
-
-    function card(d, m, i) {
-      const r = m.aiReport, dp = m.dispute;
-      const c = role === 'client', f = role === 'freelancer';
-
-      return `
-        <div class="ms">
-          <div style="display:flex; justify-content:space-between; align-items:center;">
-            <b>${i + 1}. ${esc(m.title)}</b>
-            <span><b>$${m.amount.toFixed(2)} USD</b> ${badge(m.status)}</span>
-          </div>
-          <p class="mut" style="margin:8px 0;"><b>Acceptance Criteria:</b> ${esc(m.criteria)}</p>
-
-          ${m.submission ? `<p><b>Submission:</b> ${esc(m.submission)}</p>` : ''}
-
-          ${r ? `
-            <div class="rep">
-              <div class="rep-header">
-                <b>✨ Gemini Verification: ${esc(r.verdict).toUpperCase()}</b>
-                <span class="rep-score ${r.score < 70 ? 'low' : ''}">Score: ${esc(r.score)}/100</span>
-              </div>
-              <p style="margin:4px 0 8px 0; font-size:14px;">${esc(r.summary)}</p>
-              <ul>
-                ${(r.criteria || []).map(x => `
-                  <li class="${x.met ? 'met' : 'unmet'}">
-                    ${x.met ? '✔' : '✘'} <b>${esc(x.criterion)}</b><br>
-                    <span class="mut" style="font-size:12px;">Evidence: ${esc(x.evidence)}</span>
-                  </li>
-                `).join('')}
-              </ul>
-            </div>
-          ` : ''}
-
-          ${dp ? `
-            <div class="rep" style="border-color: var(--warn);">
-              <b>⚖️ Dispute Raised by ${esc(dp.by)}:</b>
-              <p class="mut" style="margin:4px 0 8px 0;">"${esc(dp.reason)}"</p>
-              <div style="border-top: 1px dashed var(--line); padding-top:8px;">
-                <b>Gemini Mediator Recommendation:</b> ${esc(dp.recommended_release_percent)}% to freelancer
-                <p style="font-size:13px; margin:4px 0;">${esc(dp.reasoning)}</p>
-                ${dp.message_to_client ? `<p class="mut" style="font-size:12px;"><b>Advice to Client:</b> ${esc(dp.message_to_client)}</p>` : ''}
-                ${dp.message_to_freelancer ? `<p class="mut" style="font-size:12px;"><b>Advice to Freelancer:</b> ${esc(dp.message_to_freelancer)}</p>` : ''}
-              </div>
-            </div>
-          ` : ''}
-
-          ${m.status === 'pending' && c ? `<div id="pp-${i}" style="max-width:320px; margin-top:12px;"></div>` : ''}
-          ${m.status === 'pending' && f ? '<p class="mut">Awaiting client to fund this milestone via PayPal Escrow authorization.</p>' : ''}
-
-          ${['funded', 'submitted'].includes(m.status) && f ? `
-            <textarea id="sub${i}" rows="2" placeholder="Describe your deliverable work and include live links (e.g. https://... or PR url)">${esc(m.submission || '')}</textarea>
-            <button class="btn" data-a="submit" data-i="${i}">Submit Deliverable</button>
-          ` : ''}
-
-          ${m.status === 'submitted' ? `
-            <button class="btn gemini" data-a="verify" data-i="${i}">✨ Run Gemini AI Verification</button>
-          ` : ''}
-
-          ${m.status === 'verified' && c ? `
-            <button class="btn ok" data-a="settle" data-p="100" data-i="${i}">Approve & Release 100%</button>
-          ` : ''}
-
-          ${m.status === 'submitted' && c ? `
-            <button class="btn ok" data-a="settle" data-p="100" data-i="${i}">Direct Approve & Release</button>
-          ` : ''}
-
-          ${m.status === 'funded' && c ? `
-            <button class="btn alt" data-a="settle" data-p="0" data-i="${i}">Cancel & Void Escrow (Refund 100%)</button>
-          ` : ''}
-
-          ${['submitted', 'verified'].includes(m.status) ? `
-            <button class="btn bad" data-a="dispute" data-i="${i}">Raise Dispute</button>
-          ` : ''}
-
-          ${m.status === 'disputed' ? `
-            <button class="btn gemini" data-a="settle" data-p="${esc(dp.recommended_release_percent)}" data-i="${i}">
-              Accept Gemini Ruling (${esc(dp.recommended_release_percent)}% Payout)
-            </button>
-          ` : ''}
-
-          <div class="log">${(m.log || []).map(esc).join('<br>')}</div>
-        </div>
-      `;
-    }
-
-    async function deal(id) {
-      const d = await api('/deals/' + id);
-      const base = i => `/deals/${id}/milestones/${i}`;
-
-      $('#app').innerHTML = `
-        <a href="#/">← Back to All Deals</a>
-        <h1 style="margin-top:12px;">${esc(d.title)}</h1>
-        <p class="mut">${esc(d.summary || '')}</p>
-        <p>
-          Client: <b>${esc(d.clientName)}</b> · 
-          Freelancer: <b>${esc(d.freelancerName)}</b> (${esc(d.freelancerEmail)}) · 
-          Total: <b>$${total(d)} USD</b>
-        </p>
-        ${d.milestones.map((m, i) => card(d, m, i)).join('')}
-      `;
-
-      document.querySelectorAll('[data-a]').forEach(b => {
-        b.onclick = () => busy(b, async () => {
-          const i = b.dataset.i, a = b.dataset.a;
-          if (a === 'submit') {
-            const val = $('#sub' + i).value.trim();
-            if (!val) throw new Error('Submission description cannot be empty');
-            await api(base(i) + '/submit', 'POST', { submission: val });
-            toast('Deliverable submitted for review!', false);
-          }
-          if (a === 'verify') {
-            await api(base(i) + '/verify', 'POST');
-            toast('Gemini AI verification complete!', false);
-          }
-          if (a === 'settle') {
-            await api(base(i) + '/settle', 'POST', { percent: +b.dataset.p });
-            toast('Milestone settlement completed!', false);
-          }
-          if (a === 'dispute') {
-            const r = prompt('Please explain the reason for the dispute:');
-            if (!r) return;
-            await api(base(i) + '/dispute', 'POST', { reason: r, party: role });
-            toast('Dispute submitted to Gemini mediator!', false);
-          }
-          deal(id);
-        });
-      });
-
-      if (role === 'client' && d.milestones.some(m => m.status === 'pending')) {
-        try {
-          await sdk();
-          d.milestones.forEach((m, i) => {
-            if (m.status === 'pending' && $('#pp-' + i)) {
-              paypal.Buttons({
-                createOrder: async () => (await api(base(i) + '/order', 'POST')).id,
-                onApprove: async () => {
-                  await api(base(i) + '/authorize', 'POST');
-                  toast('Funds successfully held in escrow authorization!', false);
-                  deal(id);
-                },
-                onError: e => toast(String(e), true)
-              }).render('#pp-' + i);
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            navy: {
+              950: '#0a0f1a',
+              900: '#0d1526',
+              800: '#111c33',
+              700: '#1a2744',
+              600: '#243356',
+            },
+            mint: {
+              400: '#2dd4bf',
+              500: '#14b8a6',
+              600: '#0d9488',
+              700: '#0f766e',
+            },
+            charcoal: {
+              900: '#0f1219',
+              800: '#161b26',
+              700: '#1e2533',
             }
-          });
-        } catch (e) {
-          toast(e.message, true);
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          }
         }
       }
     }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    .glass { background: rgba(17, 28, 51, 0.72); backdrop-filter: blur(14px); }
+    .card-glow { box-shadow: 0 0 0 1px rgba(45, 212, 191, 0.08), 0 4px 24px rgba(0,0,0,0.4); }
+    .card-glow-active { box-shadow: 0 0 0 1px rgba(45, 212, 191, 0.35), 0 8px 30px rgba(20, 184, 166, 0.15); }
+    .mint-gradient { background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%); }
+    .mint-gradient-hover:hover { background: linear-gradient(135deg, #2dd4bf 0%, #14b8a6 100%); }
+    .sidebar-active { background: rgba(20, 184, 166, 0.12); border-left: 3px solid #14b8a6; }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #0a0f1a; }
+    ::-webkit-scrollbar-thumb { background: #243356; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #14b8a6; }
+    .fade-in { animation: fadeIn 0.35s ease-out; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .pulse-dot { animation: pulseAnim 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+    @keyframes pulseAnim { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(1.15); } }
+  </style>
+</head>
+<body class="bg-navy-950 text-slate-200 min-h-screen antialiased selection:bg-mint-500 selection:text-white">
 
-    const route = () => {
-      const m = location.hash.match(/^#\/deal\/(\w+)/);
-      (m ? deal(m[1]) : home()).catch(e => toast(e.message, true));
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div id="toast" class="hidden fixed bottom-6 right-6 z-50 glass border border-mint-500/40 rounded-xl px-5 py-3.5 shadow-2xl flex items-center gap-3 max-w-md transition-all duration-300">
+    <div id="toast-icon" class="w-2.5 h-2.5 rounded-full bg-mint-400"></div>
+    <div id="toast-message" class="text-sm font-medium text-white">Notification message</div>
+  </div>
+
+  <!-- LOGIN VIEW -->
+  <div id="view-login" class="min-h-screen flex items-center justify-center p-6 relative overflow-hidden">
+    <!-- Subtle background ambient glows -->
+    <div class="absolute -top-32 -left-32 w-96 h-96 bg-mint-600/10 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute -bottom-32 -right-32 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl pointer-events-none"></div>
+
+    <div class="w-full max-w-md relative z-10">
+      <div class="text-center mb-10">
+        <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl mint-gradient mb-5 shadow-lg shadow-mint-500/20 transform hover:scale-105 transition">
+          <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        </div>
+        <h1 class="text-3xl font-bold tracking-tight text-white flex items-center justify-center gap-2">
+          MINT
+          <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-mint-500/20 text-mint-400 border border-mint-500/30">v2.4</span>
+        </h1>
+        <p class="text-slate-400 mt-2 text-sm">Mission Intelligence & Negotiation Technology</p>
+      </div>
+      <div class="glass rounded-2xl p-8 card-glow border border-navy-700">
+        <h2 class="text-lg font-semibold text-white mb-6 flex items-center justify-between">
+          <span>Sign in to your workspace</span>
+          <span class="text-xs text-mint-400 font-normal">Enterprise Ready</span>
+        </h2>
+        <form onsubmit="event.preventDefault(); doLogin();" class="space-y-4">
+          <div>
+            <label class="block text-xs font-medium text-slate-400 mb-1.5">Work Email</label>
+            <input id="login-email" type="email" required value="admin@aquaflow.com" class="w-full bg-navy-900 border border-navy-600 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-mint-500/50 focus:border-mint-500 transition" />
+          </div>
+          <div>
+            <div class="flex items-center justify-between mb-1.5">
+              <label class="block text-xs font-medium text-slate-400">Password</label>
+              <span class="text-[11px] text-mint-400/80 hover:text-mint-400 cursor-pointer">Default: demo1234</span>
+            </div>
+            <input id="login-password" type="password" required value="demo1234" class="w-full bg-navy-900 border border-navy-600 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-mint-500/50 focus:border-mint-500 transition" />
+          </div>
+          <button type="submit" id="btn-login" class="w-full mint-gradient text-white font-semibold py-3 rounded-xl hover:opacity-90 transition shadow-lg shadow-mint-600/20 flex items-center justify-center gap-2">
+            <span>Sign in to Console</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+          </button>
+        </form>
+        <div class="mt-6 pt-5 border-t border-navy-700/60 flex items-center justify-between text-xs text-slate-500">
+          <span>Industry: Industrial Water Pumps</span>
+          <span class="text-slate-400">Buyer: AquaFlow Ind.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- APP SHELL -->
+  <div id="view-app" class="hidden min-h-screen flex">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-navy-900 border-r border-navy-700 flex flex-col fixed h-full z-20 select-none">
+      <div class="p-5 border-b border-navy-700">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-xl mint-gradient flex items-center justify-center shadow-md shadow-mint-500/20">
+            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+          </div>
+          <div>
+            <div class="font-bold text-white text-sm tracking-tight flex items-center gap-1.5">
+              MINT
+              <span class="text-[9px] uppercase px-1.5 py-0.2 bg-mint-500/20 text-mint-400 rounded">AI OS</span>
+            </div>
+            <div class="text-[10px] text-slate-500 uppercase tracking-wider">Procurement OS</div>
+          </div>
+        </div>
+      </div>
+
+      <nav class="flex-1 p-3 space-y-1 overflow-y-auto">
+        <button data-nav="dashboard" class="nav-btn sidebar-active w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-mint-400 transition">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+          Command Centre
+        </button>
+        <button data-nav="forecasts" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:text-white hover:bg-navy-800 transition">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+          Predictive Buying
+        </button>
+        <button data-nav="mesh" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:text-white hover:bg-navy-800 transition">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+          Demand Mesh
+        </button>
+        <button data-nav="suppliers" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:text-white hover:bg-navy-800 transition">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+          Supplier Discovery
+        </button>
+        <button data-nav="negotiation" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:text-white hover:bg-navy-800 transition">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+          AI Negotiation
+        </button>
+        <button data-nav="approvals" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:text-white hover:bg-navy-800 transition">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          Approvals & Pay
+        </button>
+        <button data-nav="orders" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:text-white hover:bg-navy-800 transition">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+          Orders & Fulfilment
+        </button>
+      </nav>
+
+      <div class="p-4 border-t border-navy-700">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-full bg-mint-600/30 border border-mint-500/30 flex items-center justify-center text-mint-400 text-xs font-bold">SC</div>
+          <div class="flex-1 min-w-0">
+            <div class="text-sm font-medium text-white truncate" id="user-name">Sarah Chen</div>
+            <div class="text-[11px] text-slate-500 truncate">AquaFlow Industries</div>
+          </div>
+          <button onclick="doLogout()" class="p-1.5 rounded-lg text-slate-500 hover:text-white hover:bg-navy-800 transition" title="Sign out">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main content -->
+    <main class="flex-1 ml-64 min-h-screen">
+      <!-- Top bar -->
+      <header class="sticky top-0 z-10 bg-navy-950/85 backdrop-blur-md border-b border-navy-800 px-8 py-4 flex items-center justify-between">
+        <div>
+          <h1 id="page-title" class="text-xl font-semibold text-white tracking-tight">AI Procurement Command Centre</h1>
+          <p id="page-subtitle" class="text-sm text-slate-500 mt-0.5">Industrial Water Pumps · Demo environment</p>
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-mint-500/10 text-mint-400 text-xs font-medium border border-mint-500/25">
+            <span class="w-1.5 h-1.5 rounded-full bg-mint-400 pulse-dot"></span>
+            Demo Mode Active
+          </span>
+          <button onclick="exportProcurementData()" class="px-3.5 py-1.5 rounded-lg bg-navy-800 border border-navy-600 text-xs font-medium text-slate-300 hover:bg-navy-700 hover:text-white transition flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+            Export Audit Log
+          </button>
+        </div>
+      </header>
+
+      <div class="p-8">
+        <!-- DASHBOARD -->
+        <div id="page-dashboard" class="page fade-in space-y-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5">
+            <div class="glass rounded-2xl p-5 card-glow border border-navy-700 hover:border-mint-500/30 transition">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-medium text-slate-500 uppercase tracking-wider">Active Demand Pools</span>
+                <span class="p-1 rounded bg-mint-500/10 text-mint-400">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+                </span>
+              </div>
+              <div class="mt-2 text-3xl font-bold text-white tracking-tight">1</div>
+              <div class="mt-1 text-sm text-mint-400 flex items-center gap-1">
+                <span>9 units aggregated</span>
+                <span class="text-xs text-slate-500">· 3 buyers</span>
+              </div>
+            </div>
+
+            <div class="glass rounded-2xl p-5 card-glow border border-navy-700 hover:border-mint-500/30 transition">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-medium text-slate-500 uppercase tracking-wider">Est. Collective Savings</span>
+                <span class="p-1 rounded bg-emerald-500/10 text-emerald-400">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                </span>
+              </div>
+              <div class="mt-2 text-3xl font-bold text-white tracking-tight">12.5%</div>
+              <div class="mt-1 text-sm text-slate-400">$2,450 saved per pump</div>
+            </div>
+
+            <div class="glass rounded-2xl p-5 card-glow border border-navy-700 hover:border-mint-500/30 transition">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-medium text-slate-500 uppercase tracking-wider">Open Forecasts</span>
+                <span class="p-1 rounded bg-blue-500/10 text-blue-400">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+                </span>
+              </div>
+              <div class="mt-2 text-3xl font-bold text-white tracking-tight">6</div>
+              <div class="mt-1 text-sm text-slate-400">Next 90 days horizon</div>
+            </div>
+
+            <div class="glass rounded-2xl p-5 card-glow border border-navy-700 hover:border-mint-500/30 transition">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-medium text-slate-500 uppercase tracking-wider">Supplier Quotes</span>
+                <span class="p-1 rounded bg-amber-500/10 text-amber-400">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                </span>
+              </div>
+              <div class="mt-2 text-3xl font-bold text-white tracking-tight">3</div>
+              <div class="mt-1 text-sm text-mint-400">Ready for negotiation</div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+            <div class="xl:col-span-2 glass rounded-2xl border border-navy-700 card-glow overflow-hidden">
+              <div class="px-6 py-4 border-b border-navy-700 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                  <h3 class="font-semibold text-white">Active Collective Purchase</h3>
+                </div>
+                <span class="text-xs px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-medium">Open Pool</span>
+              </div>
+              <div class="p-6">
+                <div class="flex items-start justify-between flex-wrap gap-4">
+                  <div>
+                    <h4 class="text-lg font-semibold text-white tracking-tight">Q1 2026 Centrifugal 150HP Collective</h4>
+                    <p class="text-sm text-slate-400 mt-1">Centrifugal Water Pump 150HP · 3 buyer organisations pooled</p>
+                  </div>
+                  <div class="text-right">
+                    <div class="text-2xl font-bold text-mint-400">9 units</div>
+                    <div class="text-xs text-slate-500">Collective demand volume</div>
+                  </div>
+                </div>
+
+                <div class="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div class="bg-navy-900/60 rounded-xl p-4 border border-navy-700/80">
+                    <div class="text-xs text-slate-500">Best quote</div>
+                    <div class="text-xl font-bold text-white mt-1">$16,500</div>
+                    <div class="text-xs text-mint-400 mt-0.5">AquaSource Global</div>
+                  </div>
+                  <div class="bg-navy-900/60 rounded-xl p-4 border border-navy-700/80">
+                    <div class="text-xs text-slate-500">Target price</div>
+                    <div class="text-xl font-bold text-white mt-1">$15,800</div>
+                    <div class="text-xs text-slate-400 mt-0.5">AI target based on volume</div>
+                  </div>
+                  <div class="bg-navy-900/60 rounded-xl p-4 border border-navy-700/80">
+                    <div class="text-xs text-slate-500">Delivery window</div>
+                    <div class="text-xl font-bold text-white mt-1">Feb–Mar 2026</div>
+                    <div class="text-xs text-emerald-400 mt-0.5">All 3 buyers aligned</div>
+                  </div>
+                </div>
+
+                <div class="mt-6 flex flex-wrap gap-3">
+                  <button onclick="navigate('negotiation')" class="mint-gradient mint-gradient-hover text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition shadow-md shadow-mint-600/20 flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+                    Enter Negotiation Room
+                  </button>
+                  <button onclick="navigate('mesh')" class="bg-navy-800 border border-navy-600 text-sm font-medium px-4 py-2.5 rounded-xl hover:bg-navy-700 text-slate-200 transition flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                    View Demand Mesh
+                  </button>
+                  <button onclick="navigate('approvals')" class="bg-navy-800 border border-navy-600 text-sm font-medium px-4 py-2.5 rounded-xl hover:bg-navy-700 text-slate-200 transition flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    Review Approvals
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="glass rounded-2xl border border-navy-700 card-glow flex flex-col">
+              <div class="px-5 py-4 border-b border-navy-700 flex items-center justify-between">
+                <h3 class="font-semibold text-white">Recent AI Activity</h3>
+                <span class="text-[11px] text-mint-400">Live Agent Stream</span>
+              </div>
+              <div class="p-4 space-y-4 flex-1 overflow-y-auto max-h-[380px]">
+                <div class="flex gap-3">
+                  <div class="w-8 h-8 rounded-lg bg-mint-500/10 border border-mint-500/20 flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4 text-mint-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                  </div>
+                  <div>
+                    <div class="text-sm font-medium text-white">Forecast generated</div>
+                    <div class="text-xs text-slate-400">Centrifugal 150HP · conf 70%</div>
+                    <div class="text-[10px] text-slate-500 mt-0.5">Predictive Agent · 12 min ago</div>
+                  </div>
+                </div>
+
+                <div class="flex gap-3">
+                  <div class="w-8 h-8 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                  </div>
+                  <div>
+                    <div class="text-sm font-medium text-white">Demand pool matched</div>
+                    <div class="text-xs text-slate-400">3 compatible buyers identified</div>
+                    <div class="text-[10px] text-slate-500 mt-0.5">Mesh Matcher · 28 min ago</div>
+                  </div>
+                </div>
+
+                <div class="flex gap-3">
+                  <div class="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+                  </div>
+                  <div>
+                    <div class="text-sm font-medium text-white">Negotiation strategy ready</div>
+                    <div class="text-xs text-slate-400">Target $15,800 · human approval required</div>
+                    <div class="text-[10px] text-slate-500 mt-0.5">Negotiation Agent · 42 min ago</div>
+                  </div>
+                </div>
+
+                <div class="flex gap-3">
+                  <div class="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                  </div>
+                  <div>
+                    <div class="text-sm font-medium text-white">PayPal Escrow Ready</div>
+                    <div class="text-xs text-slate-400">Hold authorization gateway online</div>
+                    <div class="text-[10px] text-slate-500 mt-0.5">System · 1 hr ago</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- FORECASTS -->
+        <div id="page-forecasts" class="page hidden fade-in space-y-6">
+          <div class="flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <h3 class="text-lg font-semibold text-white">Predictive Buying Projections</h3>
+              <p class="text-sm text-slate-400">Demand forecast calculations generated using historical maintenance, wear cycles & BOM consumption.</p>
+            </div>
+            <button onclick="triggerRegenerateForecasts(this)" class="mint-gradient mint-gradient-hover text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition shadow-md shadow-mint-600/20 flex items-center gap-2">
+              <svg id="regen-spinner" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+              <span>Regenerate Forecasts</span>
+            </button>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5" id="forecast-cards">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+        <!-- DEMAND MESH -->
+        <div id="page-mesh" class="page hidden fade-in space-y-6">
+          <div class="glass rounded-2xl border border-navy-700 card-glow overflow-hidden">
+            <div class="px-6 py-4 border-b border-navy-700 flex items-center justify-between">
+              <div>
+                <h3 class="font-semibold text-white text-base">Q1 2026 Centrifugal 150HP Collective</h3>
+                <p class="text-sm text-slate-400 mt-0.5">Compatible buyers matched by product specification, quantity & timeline</p>
+              </div>
+              <span class="text-xs px-2.5 py-1 rounded-full bg-mint-500/10 text-mint-400 border border-mint-500/25">Tier 2 Volume Unlocked</span>
+            </div>
+            <div class="p-6">
+              <div class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-3">Pooled Buyer Participants</div>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                <div class="flex items-center gap-3.5 bg-navy-900/80 rounded-xl p-4 border border-mint-500/40 shadow-sm shadow-mint-500/10 relative">
+                  <div class="w-10 h-10 rounded-full bg-mint-600/20 border border-mint-500/30 flex items-center justify-center text-mint-400 font-bold text-sm shrink-0">AF</div>
+                  <div class="flex-1 min-w-0">
+                    <div class="text-sm font-semibold text-white flex items-center gap-2">
+                      AquaFlow Industries
+                      <span class="text-[10px] px-1.5 py-0.2 bg-mint-500/20 text-mint-400 rounded">You</span>
+                    </div>
+                    <div class="text-xs text-slate-400">3 units · Houston, TX</div>
+                  </div>
+                </div>
+
+                <div class="flex items-center gap-3.5 bg-navy-900/80 rounded-xl p-4 border border-navy-700 hover:border-navy-600 transition">
+                  <div class="w-10 h-10 rounded-full bg-blue-500/20 border border-blue-500/30 flex items-center justify-center text-blue-400 font-bold text-sm shrink-0">HT</div>
+                  <div class="flex-1 min-w-0">
+                    <div class="text-sm font-semibold text-white">HydroTech Solutions</div>
+                    <div class="text-xs text-slate-400">4 units · Chicago, IL</div>
+                  </div>
+                </div>
+
+                <div class="flex items-center gap-3.5 bg-navy-900/80 rounded-xl p-4 border border-navy-700 hover:border-navy-600 transition">
+                  <div class="w-10 h-10 rounded-full bg-violet-500/20 border border-violet-500/30 flex items-center justify-center text-violet-400 font-bold text-sm shrink-0">PS</div>
+                  <div class="flex-1 min-w-0">
+                    <div class="text-sm font-semibold text-white">PureSystems Mfg</div>
+                    <div class="text-xs text-slate-400">2 units · Atlanta, GA</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="bg-navy-900/60 rounded-xl p-5 border border-navy-700">
+                <div class="flex items-center justify-between mb-3">
+                  <div class="flex items-center gap-2">
+                    <span class="text-sm font-medium text-white">Collective Demand Progress</span>
+                    <span class="text-xs text-slate-400">(Pool Target: 8+ units for Tier 2)</span>
+                  </div>
+                  <span class="text-mint-400 font-bold text-base">9 units aggregated</span>
+                </div>
+                <div class="h-3 bg-navy-800 rounded-full overflow-hidden p-0.5">
+                  <div class="h-full mint-gradient rounded-full transition-all duration-500" style="width: 100%"></div>
+                </div>
+                <div class="flex justify-between text-xs text-slate-400 mt-2.5">
+                  <span>Minimum threshold for RFQ: 5 units</span>
+                  <span class="text-mint-400 font-medium">Estimated savings: 12.5% vs single order</span>
+                </div>
+              </div>
+
+              <!-- Volume Pricing Tier Matrix -->
+              <div class="mt-6">
+                <h4 class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-3">Collective Volume Discount Matrix</h4>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-center">
+                  <div class="p-3 bg-navy-900/40 rounded-xl border border-navy-700 text-xs">
+                    <div class="text-slate-400">Individual (1-2)</div>
+                    <div class="text-base font-semibold text-slate-300 mt-1">$17,500</div>
+                    <div class="text-[10px] text-slate-500 mt-0.5">List Price</div>
+                  </div>
+                  <div class="p-3 bg-navy-900/40 rounded-xl border border-navy-700 text-xs">
+                    <div class="text-slate-400">Tier 1 (3-5)</div>
+                    <div class="text-base font-semibold text-slate-300 mt-1">$16,800</div>
+                    <div class="text-[10px] text-slate-500 mt-0.5">4% discount</div>
+                  </div>
+                  <div class="p-3 bg-mint-500/10 rounded-xl border border-mint-500/40 text-xs relative">
+                    <div class="absolute -top-2 left-1/2 -translate-x-1/2 px-2 py-0.2 bg-mint-500 text-navy-950 font-bold text-[9px] rounded-full uppercase">Current</div>
+                    <div class="text-mint-400 font-medium">Tier 2 (6-9)</div>
+                    <div class="text-base font-bold text-white mt-1">$16,100</div>
+                    <div class="text-[10px] text-mint-400 mt-0.5">8% - 12.5% saving</div>
+                  </div>
+                  <div class="p-3 bg-navy-900/40 rounded-xl border border-navy-700 text-xs">
+                    <div class="text-slate-400">Tier 3 (10+)</div>
+                    <div class="text-base font-semibold text-slate-300 mt-1">$15,400</div>
+                    <div class="text-[10px] text-slate-500 mt-0.5">+1 more buyer needed</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SUPPLIERS -->
+        <div id="page-suppliers" class="page hidden fade-in space-y-6">
+          <div class="flex items-center justify-between">
+            <p class="text-sm text-slate-400">Qualified supplier responses received for the Centrifugal 150HP collective demand pool.</p>
+            <span class="text-xs text-slate-500">RFQ Deadline: Aligned for Q1</span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+            <!-- Supplier 1 -->
+            <div class="glass rounded-2xl border border-navy-700 card-glow p-5 flex flex-col justify-between hover:border-navy-600 transition">
+              <div>
+                <div class="flex items-start justify-between">
+                  <div>
+                    <h4 class="font-semibold text-white text-base">PumpCorp Industrial</h4>
+                    <p class="text-xs text-slate-500 mt-1 flex items-center gap-1">
+                      <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                      Dallas, TX · Verified OEM
+                    </p>
+                  </div>
+                  <span class="text-amber-400 text-sm font-semibold flex items-center gap-1">4.6 ★</span>
+                </div>
+                <div class="mt-5 text-2xl font-bold text-white">$16,800</div>
+                <div class="text-xs text-slate-400 mt-0.5">per unit · 21 days lead time</div>
+                <div class="mt-4 pt-4 border-t border-navy-700/80 text-xs text-slate-400 space-y-1.5">
+                  <div class="flex justify-between"><span>Warranty:</span> <span class="text-slate-200">24 months</span></div>
+                  <div class="flex justify-between"><span>Freight:</span> <span class="text-slate-200">FOB Origin</span></div>
+                  <div class="flex justify-between"><span>Inspection:</span> <span class="text-slate-200">ISO 9906 Grade 2B</span></div>
+                </div>
+              </div>
+              <button onclick="showCompareModal('PumpCorp Industrial', 16800, 21, '4.6 ★', '24 months')" class="mt-5 w-full bg-navy-800 border border-navy-600 text-sm font-medium py-2.5 rounded-xl hover:bg-navy-700 text-slate-300 transition">
+                Compare Specs
+              </button>
+            </div>
+
+            <!-- Supplier 2 (BEST) -->
+            <div class="glass rounded-2xl border border-mint-500/50 card-glow card-glow-active p-5 flex flex-col justify-between relative bg-navy-900/50">
+              <div class="absolute -top-3 right-4 text-[10px] px-2.5 py-0.5 rounded-full mint-gradient text-white font-bold tracking-wider uppercase shadow-md shadow-mint-500/30">
+                RECOMMENDED BEST
+              </div>
+              <div>
+                <div class="flex items-start justify-between">
+                  <div>
+                    <h4 class="font-semibold text-white text-base">AquaSource Global</h4>
+                    <p class="text-xs text-slate-400 mt-1 flex items-center gap-1">
+                      <svg class="w-3.5 h-3.5 text-mint-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                      Orlando, FL · Tier 1 Vendor
+                    </p>
+                  </div>
+                  <span class="text-amber-400 text-sm font-semibold flex items-center gap-1">4.7 ★</span>
+                </div>
+                <div class="mt-5 text-2xl font-bold text-mint-400">$16,500</div>
+                <div class="text-xs text-slate-300 mt-0.5">per unit · 25 days lead time</div>
+                <div class="mt-4 pt-4 border-t border-navy-700/80 text-xs text-slate-400 space-y-1.5">
+                  <div class="flex justify-between"><span>Warranty:</span> <span class="text-slate-200">36 months</span></div>
+                  <div class="flex justify-between"><span>Freight:</span> <span class="text-mint-400">Included (CIF)</span></div>
+                  <div class="flex justify-between"><span>Inspection:</span> <span class="text-slate-200">Factory Certified</span></div>
+                </div>
+              </div>
+              <button onclick="navigate('negotiation')" class="mt-5 w-full mint-gradient mint-gradient-hover text-white text-sm font-semibold py-2.5 rounded-xl transition shadow-md shadow-mint-600/20 flex items-center justify-center gap-2">
+                <span>Negotiate Quote</span>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+              </button>
+            </div>
+
+            <!-- Supplier 3 -->
+            <div class="glass rounded-2xl border border-navy-700 card-glow p-5 flex flex-col justify-between hover:border-navy-600 transition">
+              <div>
+                <div class="flex items-start justify-between">
+                  <div>
+                    <h4 class="font-semibold text-white text-base">FlowMaster Equipment</h4>
+                    <p class="text-xs text-slate-500 mt-1 flex items-center gap-1">
+                      <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                      Milwaukee, WI · Verified OEM
+                    </p>
+                  </div>
+                  <span class="text-amber-400 text-sm font-semibold flex items-center gap-1">4.4 ★</span>
+                </div>
+                <div class="mt-5 text-2xl font-bold text-white">$17,250</div>
+                <div class="text-xs text-slate-400 mt-0.5">per unit · 28 days lead time</div>
+                <div class="mt-4 pt-4 border-t border-navy-700/80 text-xs text-slate-400 space-y-1.5">
+                  <div class="flex justify-between"><span>Warranty:</span> <span class="text-slate-200">18 months</span></div>
+                  <div class="flex justify-between"><span>Freight:</span> <span class="text-slate-200">FOB Destination</span></div>
+                  <div class="flex justify-between"><span>Inspection:</span> <span class="text-slate-200">Standard Test</span></div>
+                </div>
+              </div>
+              <button onclick="showCompareModal('FlowMaster Equipment', 17250, 28, '4.4 ★', '18 months')" class="mt-5 w-full bg-navy-800 border border-navy-600 text-sm font-medium py-2.5 rounded-xl hover:bg-navy-700 text-slate-300 transition">
+                Compare Specs
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- NEGOTIATION -->
+        <div id="page-negotiation" class="page hidden fade-in space-y-6">
+          <div class="glass rounded-2xl border border-navy-700 card-glow overflow-hidden">
+            <div class="px-6 py-4 border-b border-navy-700 flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <h3 class="font-semibold text-white text-base">AI Multi-Party Negotiation Room</h3>
+                <p class="text-sm text-slate-400">Supplier: AquaSource Global · RFP: Centrifugal 150HP (9 units total demand)</p>
+              </div>
+              <span class="text-xs px-2.5 py-1 rounded-full bg-amber-500/15 text-amber-400 border border-amber-500/30 flex items-center gap-1.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping"></span>
+                Human approval required
+              </span>
+            </div>
+
+            <div class="p-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <!-- Chat Transcript -->
+              <div class="lg:col-span-2 space-y-4 flex flex-col justify-between">
+                <div id="chat-stream" class="space-y-4 max-h-[460px] overflow-y-auto pr-2">
+                  <!-- Message 1: AI -->
+                  <div class="flex gap-3">
+                    <div class="w-8 h-8 rounded-full bg-mint-600/30 border border-mint-500/30 flex items-center justify-center text-mint-400 text-xs font-bold shrink-0">AI</div>
+                    <div class="bg-navy-900/80 rounded-2xl rounded-tl-sm px-4 py-3 max-w-lg border border-navy-700">
+                      <p class="text-sm text-slate-200 leading-relaxed">
+                        Based on historical pricing curves and a collective pooled volume of 9 units across 3 organizations, I recommend a target of <strong class="text-mint-400 font-semibold">$15,800</strong> per unit. Current initial offer is $16,500. Shall I counter at $15,900 with guaranteed 25-day lead times?
+                      </p>
+                      <div class="text-[11px] text-slate-500 mt-2 flex items-center gap-2">
+                        <span>Negotiation Agent</span>
+                        <span>·</span>
+                        <span>Today 14:22</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Message 2: Human Approved -->
+                  <div class="flex gap-3 justify-end">
+                    <div class="bg-mint-600/20 rounded-2xl rounded-tr-sm px-4 py-3 max-w-md border border-mint-500/30">
+                      <p class="text-sm text-slate-200 leading-relaxed">
+                        Proceed with counter-offer. Keep lead time under 30 days and ensure standard factory warranty is preserved.
+                      </p>
+                      <div class="text-[11px] text-mint-400/80 mt-2 text-right flex items-center justify-end gap-1.5">
+                        <svg class="w-3.5 h-3.5 text-mint-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                        <span>Sarah Chen · Human Approved</span>
+                      </div>
+                    </div>
+                    <div class="w-8 h-8 rounded-full bg-slate-700 border border-slate-600 flex items-center justify-center text-white text-xs font-bold shrink-0">SC</div>
+                  </div>
+
+                  <!-- Message 3: Supplier -->
+                  <div class="flex gap-3">
+                    <div class="w-8 h-8 rounded-full bg-blue-500/20 border border-blue-500/30 flex items-center justify-center text-blue-400 text-xs font-bold shrink-0">AS</div>
+                    <div class="bg-navy-900/80 rounded-2xl rounded-tl-sm px-4 py-3 max-w-lg border border-navy-700">
+                      <p class="text-sm text-slate-200 leading-relaxed">
+                        We reviewed the collective 9-unit order. We can meet at <strong class="text-white font-semibold">$16,100</strong> per unit with a 24-day lead time and full CIF shipping included. This represents our most competitive quotation for Q1 2026.
+                      </p>
+                      <div class="text-[11px] text-slate-500 mt-2 flex items-center gap-2">
+                        <span>AquaSource Sales Desk</span>
+                        <span>·</span>
+                        <span>4 min ago</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Input box for user custom counter -->
+                <div class="pt-3 border-t border-navy-700/80">
+                  <div class="flex items-center gap-2">
+                    <input id="input-counter-text" type="text" placeholder="Type instructions or custom counter-offer to agent..." class="flex-1 bg-navy-900 border border-navy-600 rounded-xl px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-mint-500/50" onkeydown="if(event.key==='Enter') sendCustomCounter();" />
+                    <button onclick="sendCustomCounter()" class="mint-gradient mint-gradient-hover text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition flex items-center gap-1.5 shrink-0">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+                      <span>Send</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Offer Summary Panel -->
+              <div class="space-y-4">
+                <div class="bg-navy-900/60 rounded-xl p-4 border border-navy-700">
+                  <div class="text-xs text-slate-500">Current Agreed Offer</div>
+                  <div class="text-3xl font-bold text-white mt-1" id="val-current-offer">$16,100</div>
+                  <div class="text-xs text-emerald-400 mt-1 flex items-center gap-1">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+                    <span>$1,400 under list price / unit</span>
+                  </div>
+                </div>
+
+                <div class="bg-navy-900/60 rounded-xl p-4 border border-navy-700">
+                  <div class="text-xs text-slate-500">AI Target Estimate</div>
+                  <div class="text-2xl font-bold text-mint-400 mt-1">$15,800</div>
+                  <div class="text-xs text-slate-400 mt-1">Acceptable delta: 1.8%</div>
+                </div>
+
+                <div class="bg-navy-900/60 rounded-xl p-4 border border-navy-700">
+                  <div class="text-xs text-slate-500">AquaFlow's Share (3 units)</div>
+                  <div class="text-2xl font-bold text-white mt-1" id="val-share-total">$48,300</div>
+                  <div class="text-xs text-slate-400 mt-1">Total collective pool: $144,900</div>
+                </div>
+
+                <button onclick="navigate('approvals')" class="w-full mint-gradient mint-gradient-hover text-white font-semibold py-3 rounded-xl hover:opacity-95 transition shadow-lg shadow-mint-600/25 flex items-center justify-center gap-2">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                  <span>Accept & Request Approval</span>
+                </button>
+
+                <button onclick="promptCounterOffer()" class="w-full bg-navy-800 border border-navy-600 text-slate-300 text-sm font-medium py-2.5 rounded-xl hover:bg-navy-700 hover:text-white transition flex items-center justify-center gap-2">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                  <span>Propose Counter ($15,900)</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- APPROVALS -->
+        <div id="page-approvals" class="page hidden fade-in space-y-6">
+          <div class="glass rounded-2xl border border-navy-700 card-glow p-7 max-w-2xl mx-auto">
+            <div class="flex items-center gap-3 mb-2">
+              <div class="w-8 h-8 rounded-lg bg-mint-500/10 border border-mint-500/30 flex items-center justify-center text-mint-400">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              </div>
+              <h3 class="text-xl font-bold text-white tracking-tight">Executive Purchase Authorization</h3>
+            </div>
+            <p class="text-sm text-slate-400">Individual buyer authorization is mandatory before any PayPal escrow transaction or contract release is executed.</p>
+
+            <div class="mt-6 bg-navy-900/60 rounded-xl p-5 border border-navy-700/80 space-y-3.5">
+              <div class="flex justify-between items-center text-sm">
+                <span class="text-slate-400">Equipment Item</span>
+                <span class="text-white font-medium">Centrifugal Water Pump 150HP</span>
+              </div>
+              <div class="flex justify-between items-center text-sm">
+                <span class="text-slate-400">Selected Supplier</span>
+                <span class="text-white font-medium">AquaSource Global (Verified)</span>
+              </div>
+              <div class="flex justify-between items-center text-sm">
+                <span class="text-slate-400">Allocated Quantity</span>
+                <span class="text-white font-medium">3 units (of 9 total pool)</span>
+              </div>
+              <div class="flex justify-between items-center text-sm">
+                <span class="text-slate-400">Negotiated Unit Price</span>
+                <span class="text-white font-medium">$16,100.00 USD</span>
+              </div>
+              <div class="flex justify-between items-center text-sm">
+                <span class="text-slate-400">Payment Structure</span>
+                <span class="text-slate-200">PayPal Authorization Hold (Escrow)</span>
+              </div>
+
+              <div class="flex justify-between items-baseline text-sm border-t border-navy-700 pt-4">
+                <div>
+                  <span class="text-slate-300 font-semibold text-base">Total for AquaFlow</span>
+                  <div class="text-[11px] text-mint-400">Savings: $4,200 achieved vs standard quote</div>
+                </div>
+                <span class="text-2xl font-bold text-mint-400">$48,300.00</span>
+              </div>
+            </div>
+
+            <!-- PayPal Smart Buttons Container if loaded, else standard action button -->
+            <div id="paypal-button-container" class="mt-6"></div>
+
+            <div id="standard-approval-actions" class="mt-6 flex flex-wrap gap-3">
+              <button onclick="executeApprovalAndPay()" id="btn-approve-pay" class="flex-1 mint-gradient mint-gradient-hover text-white font-semibold py-3.5 px-6 rounded-xl hover:opacity-95 transition shadow-lg shadow-mint-600/30 flex items-center justify-center gap-2">
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                <span>Approve & Authorize via PayPal</span>
+              </button>
+              <button onclick="rejectApproval()" class="px-6 py-3.5 rounded-xl bg-navy-800 border border-navy-600 text-sm font-medium text-slate-300 hover:bg-navy-700 hover:text-white transition">
+                Decline
+              </button>
+            </div>
+
+            <div class="mt-5 p-3.5 bg-navy-950/80 rounded-xl border border-navy-800 flex items-start gap-2.5">
+              <svg class="w-4 h-4 text-slate-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              <p class="text-xs text-slate-500 leading-relaxed">
+                <strong class="text-slate-400">Zero Autonomous Payment Risk:</strong> MINT AI cannot approve purchases or initiate disbursement directly. Backend cryptographic signature & human authorization is strictly required. Funds remain held securely on PayPal escrow until verifiable delivery.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- ORDERS & FULFILMENT -->
+        <div id="page-orders" class="page hidden fade-in space-y-6">
+          <div id="orders-container">
+            <!-- If no orders yet: rendered by JS or default empty -->
+            <div id="orders-empty-state" class="glass rounded-2xl border border-navy-700 card-glow overflow-hidden">
+              <div class="px-6 py-4 border-b border-navy-700 flex items-center justify-between">
+                <h3 class="font-semibold text-white">Purchase Orders & Fulfilment</h3>
+                <span class="text-xs text-slate-500">Live Escrow Tracking</span>
+              </div>
+              <div class="p-8 text-center text-slate-500 py-16">
+                <svg class="w-12 h-12 mx-auto text-slate-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                <p class="text-sm font-medium text-slate-300">No active purchase orders executed yet.</p>
+                <p class="text-xs text-slate-500 mt-1">Complete negotiation and authorise payment in the Approvals tab to generate POs.</p>
+                <button onclick="navigate('approvals')" class="mt-4 mint-gradient text-white text-xs font-semibold px-4 py-2 rounded-lg hover:opacity-90 transition">
+                  Go to Approvals & Pay
+                </button>
+              </div>
+            </div>
+
+            <!-- Populated order details card (shown when approved) -->
+            <div id="orders-active-card" class="hidden glass rounded-2xl border border-navy-700 card-glow overflow-hidden">
+              <div class="px-6 py-4 border-b border-navy-700 flex flex-wrap items-center justify-between gap-3 bg-navy-900/60">
+                <div class="flex items-center gap-3">
+                  <div class="w-3 h-3 rounded-full bg-emerald-400"></div>
+                  <div>
+                    <h3 class="font-bold text-white text-base">Purchase Order #PO-2026-4492</h3>
+                    <p class="text-xs text-slate-400 mt-0.5">Supplier: AquaSource Global · Issued to AquaFlow Industries</p>
+                  </div>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="text-xs px-3 py-1 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 font-medium">
+                    PayPal Escrow: Funds Authorized
+                  </span>
+                  <button onclick="showToast('Downloading Purchase Order PDF document...')" class="text-xs bg-navy-800 hover:bg-navy-700 text-slate-300 px-3 py-1.5 rounded-lg border border-navy-600 transition">
+                    Download PO
+                  </button>
+                </div>
+              </div>
+
+              <div class="p-6 space-y-6">
+                <!-- Order stats -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <div class="bg-navy-900/50 p-4 rounded-xl border border-navy-700/80">
+                    <span class="text-xs text-slate-500">Order Amount</span>
+                    <div class="text-xl font-bold text-mint-400 mt-1">$48,300.00</div>
+                    <span class="text-[10px] text-slate-500">USD (3 units @ $16,100)</span>
+                  </div>
+                  <div class="bg-navy-900/50 p-4 rounded-xl border border-navy-700/80">
+                    <span class="text-xs text-slate-500">Escrow Auth ID</span>
+                    <div class="text-sm font-mono font-semibold text-white mt-1.5 truncate">AUTH-PP-87249102X</div>
+                    <span class="text-[10px] text-emerald-400">Verified Hold</span>
+                  </div>
+                  <div class="bg-navy-900/50 p-4 rounded-xl border border-navy-700/80">
+                    <span class="text-xs text-slate-500">Estimated Delivery</span>
+                    <div class="text-base font-semibold text-white mt-1">Feb 28, 2026</div>
+                    <span class="text-[10px] text-slate-400">24 business days</span>
+                  </div>
+                  <div class="bg-navy-900/50 p-4 rounded-xl border border-navy-700/80">
+                    <span class="text-xs text-slate-500">AI Inspection</span>
+                    <div class="text-base font-semibold text-mint-400 mt-1">Gemini Verifier</div>
+                    <span class="text-[10px] text-slate-400">Awaiting dispatch docs</span>
+                  </div>
+                </div>
+
+                <!-- Milestone Tracking Timeline -->
+                <div>
+                  <h4 class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-4">Escrow Delivery Pipeline</h4>
+                  <div class="grid grid-cols-1 md:grid-cols-5 gap-3">
+                    <div class="bg-navy-900/80 p-3.5 rounded-xl border border-emerald-500/40">
+                      <div class="flex items-center gap-1.5 text-xs text-emerald-400 font-medium">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                        <span>1. Escrow Held</span>
+                      </div>
+                      <p class="text-[11px] text-slate-400 mt-1">Authorized on PayPal</p>
+                    </div>
+
+                    <div class="bg-navy-900/80 p-3.5 rounded-xl border border-emerald-500/40">
+                      <div class="flex items-center gap-1.5 text-xs text-emerald-400 font-medium">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                        <span>2. Order Confirmed</span>
+                      </div>
+                      <p class="text-[11px] text-slate-400 mt-1">AquaSource Acknowledged</p>
+                    </div>
+
+                    <div class="bg-navy-900/80 p-3.5 rounded-xl border border-mint-500/40">
+                      <div class="flex items-center gap-1.5 text-xs text-mint-400 font-medium">
+                        <span class="w-2 h-2 rounded-full bg-mint-400 animate-pulse"></span>
+                        <span>3. Production Q.C.</span>
+                      </div>
+                      <p class="text-[11px] text-slate-400 mt-1">Testing to ISO 9906</p>
+                    </div>
+
+                    <div class="bg-navy-900/40 p-3.5 rounded-xl border border-navy-700/60 opacity-60">
+                      <div class="flex items-center gap-1.5 text-xs text-slate-400">
+                        <span>4. Transit & Customs</span>
+                      </div>
+                      <p class="text-[11px] text-slate-500 mt-1">Scheduled Feb 18</p>
+                    </div>
+
+                    <div class="bg-navy-900/40 p-3.5 rounded-xl border border-navy-700/60 opacity-60">
+                      <div class="flex items-center gap-1.5 text-xs text-slate-400">
+                        <span>5. AI Verify & Release</span>
+                      </div>
+                      <p class="text-[11px] text-slate-500 mt-1">Final Settlement</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Manual Escrow Settlement Action -->
+                <div class="pt-4 border-t border-navy-700/70 flex flex-wrap items-center justify-between gap-4">
+                  <div class="text-xs text-slate-400">
+                    Release or dispute can be triggered upon receiving physical delivery inspection report.
+                  </div>
+                  <div class="flex gap-2">
+                    <button onclick="showToast('Delivery verification report pending supplier dispatch.')" class="bg-navy-800 hover:bg-navy-700 text-xs text-slate-300 font-medium px-4 py-2 rounded-lg border border-navy-600 transition">
+                      View Delivery Checklist
+                    </button>
+                    <button onclick="showToast('Escrow status synced with PayPal REST API.', false)" class="mint-gradient text-white text-xs font-semibold px-4 py-2 rounded-lg hover:opacity-90 transition">
+                      Refresh Status
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- MODAL: COMPARE SPECS -->
+  <div id="modal-compare" class="hidden fixed inset-0 z-50 bg-navy-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="glass border border-navy-700 rounded-2xl p-6 max-w-lg w-full card-glow">
+      <div class="flex items-center justify-between pb-4 border-b border-navy-700">
+        <h3 class="font-bold text-white text-base" id="modal-compare-title">Supplier Specification Comparison</h3>
+        <button onclick="closeCompareModal()" class="text-slate-400 hover:text-white">✕</button>
+      </div>
+      <div class="mt-4 space-y-3 text-sm" id="modal-compare-content">
+        <!-- populated dynamically -->
+      </div>
+      <div class="mt-6 flex justify-end">
+        <button onclick="closeCompareModal()" class="px-4 py-2 bg-navy-800 border border-navy-600 rounded-xl text-sm font-medium hover:bg-navy-700 transition">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT LOGIC -->
+  <script>
+    // State
+    const state = {
+      isLoggedIn: false,
+      user: { name: "Sarah Chen", org: "AquaFlow Industries", role: "Procurement Lead" },
+      activePage: "dashboard",
+      currentOffer: 16100,
+      targetPrice: 15800,
+      allocatedQty: 3,
+      isApproved: false,
+      authId: null,
+      forecasts: [
+        { product: "Centrifugal Water Pump 150HP", qty: 1.7, date: "2026-12-10", conf: 0.70, expl: "Based on 2 historical purchases. Avg qty 1.5, interval ~219 days." },
+        { product: "Submersible Pump 50HP", qty: 3.3, date: "2026-12-10", conf: 0.55, expl: "Based on 1 historical purchase. Avg qty 3.0." },
+        { product: "Centrifugal Water Pump 150HP", qty: 2.8, date: "2026-12-10", conf: 0.70, expl: "HydroTech history · 2 purchases, avg 2.5 units." },
+        { product: "Multistage Booster Pump 30HP", qty: 4.4, date: "2026-11-20", conf: 0.55, expl: "Single purchase history · conservative projection." },
+      ]
     };
 
-    $('#role').onchange = e => {
-      role = e.target.value;
-      route();
-    };
+    // Helper: Toast message
+    function showToast(msg, isWarning = false) {
+      const toast = document.getElementById('toast');
+      const text = document.getElementById('toast-message');
+      const dot = document.getElementById('toast-icon');
+      
+      text.textContent = msg;
+      dot.className = isWarning ? 'w-2.5 h-2.5 rounded-full bg-amber-400' : 'w-2.5 h-2.5 rounded-full bg-mint-400';
+      toast.classList.remove('hidden');
+      
+      clearTimeout(window.toastTimer);
+      window.toastTimer = setTimeout(() => {
+        toast.classList.add('hidden');
+      }, 4000);
+    }
 
-    addEventListener('hashchange', route);
-    route();
+    // Login handler
+    function doLogin() {
+      const email = document.getElementById('login-email').value.trim();
+      const pass = document.getElementById('login-password').value.trim();
+      
+      if (!email || !pass) {
+        showToast('Please enter both email and password', true);
+        return;
+      }
+      
+      state.isLoggedIn = true;
+      document.getElementById('view-login').classList.add('hidden');
+      document.getElementById('view-app').classList.remove('hidden');
+      
+      renderForecasts();
+      navigate('dashboard');
+      showToast('Welcome to MINT Command Centre');
+    }
+
+    // Logout handler
+    function doLogout() {
+      state.isLoggedIn = false;
+      document.getElementById('view-app').classList.add('hidden');
+      document.getElementById('view-login').classList.remove('hidden');
+      showToast('Signed out successfully');
+    }
+
+    // Navigation controller
+    function navigate(page) {
+      state.activePage = page;
+      
+      // Toggle pages
+      document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
+      const activeEl = document.getElementById('page-' + page);
+      if (activeEl) {
+        activeEl.classList.remove('hidden');
+        activeEl.classList.add('fade-in');
+      }
+
+      // Update sidebar buttons
+      document.querySelectorAll('.nav-btn').forEach(b => {
+        b.classList.remove('sidebar-active', 'text-mint-400');
+        b.classList.add('text-slate-400');
+      });
+      const btn = document.querySelector(`[data-nav="${page}"]`);
+      if (btn) {
+        btn.classList.add('sidebar-active', 'text-mint-400');
+        btn.classList.remove('text-slate-400');
+      }
+
+      // Titles & Subtitles
+      const titles = {
+        dashboard: ['AI Procurement Command Centre', 'Industrial Water Pumps · Demo environment'],
+        forecasts: ['Predictive Buying Intelligence', 'Demand forecasts generated by the Predictive Buying Agent'],
+        mesh: ['Demand Mesh', 'Compatible buyers aggregated into collective purchasing pools'],
+        suppliers: ['Supplier Discovery', 'Quotations for Q1 2026 Centrifugal 150HP Collective'],
+        negotiation: ['AI Negotiation Room', 'Human-in-the-loop multi-party negotiation with supplier'],
+        approvals: ['Purchase Approval & Escrow', 'Individual buyer authorisation required before payment'],
+        orders: ['Orders & Fulfilment', 'Purchase orders, delivery tracking, and PayPal escrow release'],
+      };
+      
+      if (titles[page]) {
+        document.getElementById('page-title').textContent = titles[page][0];
+        document.getElementById('page-subtitle').textContent = titles[page][1];
+      }
+
+      // Check PayPal integration if navigating to approvals
+      if (page === 'approvals') {
+        initPayPalIfConfigured();
+      }
+    }
+
+    // Render Forecast cards
+    function renderForecasts() {
+      const container = document.getElementById('forecast-cards');
+      if (!container) return;
+      container.innerHTML = state.forecasts.map(f => `
+        <div class="glass rounded-2xl border border-navy-700 card-glow p-5 hover:border-mint-500/30 transition">
+          <div class="flex items-start justify-between">
+            <h4 class="font-semibold text-white text-sm leading-snug pr-4">${f.product}</h4>
+            <span class="text-xs px-2.5 py-0.5 rounded-full font-medium ${f.conf >= 0.65 ? 'bg-mint-500/15 text-mint-400 border border-mint-500/25' : 'bg-amber-500/15 text-amber-400 border border-amber-500/25'} shrink-0">
+              ${(f.conf * 100).toFixed(0)}% conf
+            </span>
+          </div>
+          <div class="mt-4 flex items-end gap-6">
+            <div>
+              <div class="text-xs text-slate-500">Predicted qty</div>
+              <div class="text-2xl font-bold text-white tracking-tight">${f.qty} units</div>
+            </div>
+            <div>
+              <div class="text-xs text-slate-500">Expected requirement</div>
+              <div class="text-base font-semibold text-slate-200">${f.date}</div>
+            </div>
+          </div>
+          <p class="mt-4 text-xs text-slate-400 leading-relaxed border-t border-navy-700/60 pt-3">${f.expl}</p>
+        </div>
+      `).join('');
+    }
+
+    // Regenerate forecasts simulation
+    function triggerRegenerateForecasts(btn) {
+      const origText = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = `<span class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span> Calculating...`;
+      
+      setTimeout(() => {
+        state.forecasts.unshift({
+          product: "High-Pressure Slurry Pump 75HP",
+          qty: 2.2,
+          date: "2027-01-15",
+          conf: 0.78,
+          expl: "Analyzed recent pipeline stress sensor alerts. Preventive replacement recommended."
+        });
+        renderForecasts();
+        btn.disabled = false;
+        btn.innerHTML = origText;
+        showToast('Demand forecasts updated using latest telemetry');
+      }, 900);
+    }
+
+    // Compare modal
+    function showCompareModal(supplier, price, lead, rating, warranty) {
+      document.getElementById('modal-compare-title').textContent = `${supplier} — Detailed Quotation`;
+      document.getElementById('modal-compare-content').innerHTML = `
+        <div class="bg-navy-900/60 p-4 rounded-xl border border-navy-700 space-y-2.5">
+          <div class="flex justify-between"><span class="text-slate-400">Unit Price:</span><span class="font-bold text-white">$${price.toLocaleString()} USD</span></div>
+          <div class="flex justify-between"><span class="text-slate-400">Lead Time:</span><span class="font-medium text-white">${lead} days</span></div>
+          <div class="flex justify-between"><span class="text-slate-400">Supplier Rating:</span><span class="font-medium text-amber-400">${rating}</span></div>
+          <div class="flex justify-between"><span class="text-slate-400">Warranty Coverage:</span><span class="font-medium text-white">${warranty}</span></div>
+          <div class="flex justify-between"><span class="text-slate-400">Quality Inspection:</span><span class="font-medium text-mint-400">Certified by Gemini Verifier</span></div>
+        </div>
+      `;
+      document.getElementById('modal-compare').classList.remove('hidden');
+    }
+
+    function closeCompareModal() {
+      document.getElementById('modal-compare').classList.add('hidden');
+    }
+
+    // Send custom counter offer in negotiation
+    function sendCustomCounter() {
+      const input = document.getElementById('input-counter-text');
+      const val = input.value.trim();
+      if (!val) return;
+
+      appendChatMessage('human', val, 'Sarah Chen · Human Input');
+      input.value = '';
+
+      setTimeout(() => {
+        appendChatMessage('supplier', 'We acknowledge your counter. After factory review, we can finalize at $16,000 flat per unit if confirmed by end of week.', 'AquaSource Sales Desk');
+        state.currentOffer = 16000;
+        document.getElementById('val-current-offer').textContent = '$16,000';
+        document.getElementById('val-share-total').textContent = `$${(16000 * state.allocatedQty).toLocaleString()}`;
+        showToast('Supplier adjusted offer to $16,000');
+      }, 1000);
+    }
+
+    function promptCounterOffer() {
+      appendChatMessage('human', 'Counter-offer proposed: $15,900 per unit for 9 units with 24-day lead time.', 'Sarah Chen · Human Approved');
+      setTimeout(() => {
+        appendChatMessage('supplier', 'We can meet you midway at $16,000 per unit with 24-day CIF delivery guaranteed.', 'AquaSource Sales Desk');
+        state.currentOffer = 16000;
+        document.getElementById('val-current-offer').textContent = '$16,000';
+        document.getElementById('val-share-total').textContent = `$${(16000 * state.allocatedQty).toLocaleString()}`;
+        showToast('Counter-offer delivered to supplier');
+      }, 1200);
+    }
+
+    function appendChatMessage(type, text, sender) {
+      const stream = document.getElementById('chat-stream');
+      const div = document.createElement('div');
+      
+      if (type === 'human') {
+        div.className = 'flex gap-3 justify-end fade-in';
+        div.innerHTML = `
+          <div class="bg-mint-600/20 rounded-2xl rounded-tr-sm px-4 py-3 max-w-md border border-mint-500/30">
+            <p class="text-sm text-slate-200 leading-relaxed">${text}</p>
+            <div class="text-[11px] text-mint-400/80 mt-2 text-right flex items-center justify-end gap-1.5">
+              <span>${sender}</span>
+            </div>
+          </div>
+          <div class="w-8 h-8 rounded-full bg-slate-700 border border-slate-600 flex items-center justify-center text-white text-xs font-bold shrink-0">SC</div>
+        `;
+      } else {
+        div.className = 'flex gap-3 fade-in';
+        div.innerHTML = `
+          <div class="w-8 h-8 rounded-full bg-blue-500/20 border border-blue-500/30 flex items-center justify-center text-blue-400 text-xs font-bold shrink-0">AS</div>
+          <div class="bg-navy-900/80 rounded-2xl rounded-tl-sm px-4 py-3 max-w-lg border border-navy-700">
+            <p class="text-sm text-slate-200 leading-relaxed">${text}</p>
+            <div class="text-[11px] text-slate-500 mt-2 flex items-center gap-2">
+              <span>${sender}</span>
+              <span>·</span>
+              <span>Just now</span>
+            </div>
+          </div>
+        `;
+      }
+      
+      stream.appendChild(div);
+      stream.scrollTop = stream.scrollHeight;
+    }
+
+    // Execute Approval and Authorize Payment
+    function executeApprovalAndPay() {
+      const btn = document.getElementById('btn-approve-pay');
+      btn.disabled = true;
+      btn.innerHTML = `<span class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span> Connecting to PayPal Escrow...`;
+
+      setTimeout(() => {
+        state.isApproved = true;
+        state.authId = 'AUTH-PP-' + Math.floor(10000000 + Math.random() * 90000000) + 'X';
+        
+        btn.disabled = false;
+        btn.innerHTML = `<span>Approve & Authorize via PayPal</span>`;
+
+        // Update orders view
+        document.getElementById('orders-empty-state').classList.add('hidden');
+        document.getElementById('orders-active-card').classList.remove('hidden');
+
+        showToast('Escrow Authorization held on PayPal: ' + state.authId);
+        navigate('orders');
+      }, 1500);
+    }
+
+    function rejectApproval() {
+      showToast('Purchase proposal declined. Retained in negotiation.', true);
+      navigate('negotiation');
+    }
+
+    // Check backend PayPal SDK configuration
+    async function initPayPalIfConfigured() {
+      try {
+        const res = await fetch('/api/config');
+        if (!res.ok) return;
+        const cfg = await res.json();
+        
+        if (cfg.clientId && !window.paypal) {
+          const script = document.createElement('script');
+          script.src = `https://www.paypal.com/sdk/js?client-id=${cfg.clientId}&currency=USD&intent=authorize`;
+          script.onload = () => {
+            renderPayPalButton();
+          };
+          document.head.appendChild(script);
+        } else if (window.paypal) {
+          renderPayPalButton();
+        }
+      } catch (err) {
+        // Backend not running in full mode or offline demo
+      }
+    }
+
+    function renderPayPalButton() {
+      const container = document.getElementById('paypal-button-container');
+      if (!container || container.children.length > 0) return;
+      
+      try {
+        paypal.Buttons({
+          style: {
+            layout: 'horizontal',
+            color: 'gold',
+            shape: 'rect',
+            label: 'paypal'
+          },
+          createOrder: (data, actions) => {
+            return actions.order.create({
+              intent: 'AUTHORIZE',
+              purchase_units: [{
+                amount: {
+                  currency_code: 'USD',
+                  value: (state.currentOffer * state.allocatedQty).toFixed(2)
+                },
+                description: `MINT Escrow: ${state.allocatedQty}x Centrifugal Water Pump 150HP`
+              }]
+            });
+          },
+          onApprove: (data, actions) => {
+            return actions.order.authorize().then(details => {
+              state.isApproved = true;
+              state.authId = details.id || 'AUTH-PP-LIVE';
+              document.getElementById('orders-empty-state').classList.add('hidden');
+              document.getElementById('orders-active-card').classList.remove('hidden');
+              showToast('PayPal Escrow Authorization successful!');
+              navigate('orders');
+            });
+          },
+          onError: err => {
+            showToast('PayPal Authorization error: ' + err, true);
+          }
+        }).render('#paypal-button-container');
+      } catch (e) {
+        console.warn('PayPal button render skipped:', e);
+      }
+    }
+
+    // Export log
+    function exportProcurementData() {
+      const exportPayload = {
+        system: "MINT OS v2.4",
+        exportDate: new Date().toISOString(),
+        buyer: state.user,
+        activeCollective: {
+          product: "Centrifugal Water Pump 150HP",
+          units: 9,
+          buyerOrgShare: state.allocatedQty,
+          currentOffer: state.currentOffer,
+          supplier: "AquaSource Global",
+          escrowStatus: state.isApproved ? "HELD_IN_ESCROW" : "PENDING_AUTHORIZATION",
+          authId: state.authId || "NONE"
+        },
+        forecasts: state.forecasts
+      };
+
+      const blob = new Blob([JSON.stringify(exportPayload, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `MINT-Procurement-Audit-${new Date().toISOString().slice(0, 10)}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast('Procurement audit log exported');
+    }
+
+    // Bind sidebar clicks
+    document.querySelectorAll('.nav-btn').forEach(btn => {
+      btn.addEventListener('click', () => navigate(btn.dataset.nav));
+    });
+
+    // Auto-login if hash or demo
+    window.addEventListener('DOMContentLoaded', () => {
+      renderForecasts();
+    });
   </script>
 </body>
 </html>
