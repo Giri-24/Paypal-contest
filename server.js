@@ -165,8 +165,8 @@ const need = (m, list) => {
 
 /* ---------- Routes ---------- */
 
-// Healthcheck endpoint for Render / monitoring
-app.get('/health', (_req, res) => {
+// Healthcheck endpoint for Render / monitoring (supports both /health and /healthz)
+app.get(['/health', '/healthz'], (_req, res) => {
   res.json({
     status: 'ok',
     geminiConfigured: Boolean(GEMINI_API_KEY),
