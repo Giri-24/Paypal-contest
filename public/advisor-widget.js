@@ -214,7 +214,7 @@
 
           <!-- Honest Trade-Off Box -->
           <div class="bg-navy-900/90 border-l-2 border-mint-500 border-r border-t border-b border-navy-800 rounded-xl p-3">
-            <div class="font-mono text-[10px] uppercase text-mint-400 font-semibold mb-1">Objective Trade-Off Audit</div>
+            <div class="text-[11px] text-mint-400 font-medium mb-1">Objective trade-off audit</div>
             <p class="text-[11px] text-slate-300 leading-relaxed">${esc(comparison.tradeOffNote)}</p>
           </div>
         </div>
@@ -229,7 +229,7 @@
                     <div class="text-[10px] text-slate-500 font-mono">${esc(p.category)}</div>
                     <div class="font-semibold text-white text-xs mt-0.5">${esc(p.name)}</div>
                   </div>
-                  <span class="text-[10px] px-2 py-0.5 rounded-full ${p.fit === 'essential' ? 'bg-mint-500/20 text-mint-300 border border-mint-500/40' : 'bg-navy-800 text-slate-400'} font-medium">
+                  <span class="text-[10px] px-2 py-0.5 rounded-md ${p.fit === 'essential' ? 'bg-mint-500/20 text-mint-300 border border-mint-500/40' : 'bg-navy-800 text-slate-400'} font-medium">
                     ${esc(p.badge)}
                   </span>
                 </div>
@@ -337,7 +337,7 @@
           <!-- Gateway Comparison Table -->
           <div class="bg-navy-900/60 border border-navy-800 rounded-xl p-4 space-y-3">
             <div class="flex items-center justify-between">
-              <h4 class="text-xs font-semibold uppercase tracking-wider text-slate-300">Gateway Benchmark ($15,000 Milestone)</h4>
+              <h4 class="text-xs font-medium text-slate-300">Gateway Benchmark ($15,000 Milestone)</h4>
               <span class="text-[10px] text-mint-400 font-mono">Escrow Scoring</span>
             </div>
 

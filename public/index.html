@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MINT — Mission Intelligence & Negotiation Technology</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛡️</text></svg>">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%230d9488%22 stroke-width=%222%22><path stroke-linecap=%22round%22 stroke-linejoin=%22round%22 d=%22M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z%22/></svg>">
   <script>
     (function() {
       try {
@@ -27,27 +27,28 @@
       theme: {
         extend: {
           colors: {
-            navy: {
-              950: '#0a0f1a',
-              900: '#0d1526',
-              800: '#111c33',
-              700: '#1a2744',
-              600: '#243356',
+            surface: {
+              deep: '#0f0f10',
+              page: '#141415',
+              card: '#19191b',
+              raised: '#232325',
+              hover: '#2a2a2d',
             },
-            mint: {
+            accent: {
               400: '#2dd4bf',
               500: '#14b8a6',
               600: '#0d9488',
               700: '#0f766e',
             },
-            charcoal: {
-              900: '#0f1219',
-              800: '#161b26',
-              700: '#1e2533',
+            ink: {
+              primary: '#ededed',
+              secondary: '#a1a1a6',
+              muted: '#85858b',
             }
           },
           fontFamily: {
             sans: ['Inter', 'system-ui', 'sans-serif'],
+            mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace'],
           }
         }
       }
@@ -55,171 +56,177 @@
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     body { font-family: 'Inter', system-ui, sans-serif; }
-    .glass { background: rgba(17, 28, 51, 0.75); backdrop-filter: blur(14px); }
-    .card-glow { box-shadow: 0 0 0 1px rgba(45, 212, 191, 0.08), 0 4px 24px rgba(0,0,0,0.4); }
-    .card-glow-active { box-shadow: 0 0 0 1px rgba(45, 212, 191, 0.35), 0 8px 30px rgba(20, 184, 166, 0.15); }
-    .mint-gradient { background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%); }
-    .mint-gradient-hover:hover { background: linear-gradient(135deg, #2dd4bf 0%, #14b8a6 100%); }
-    .gemini-gradient { background: linear-gradient(135deg, #4f8cff 0%, #8b5cf6 100%); }
-    .sidebar-active { background: rgba(20, 184, 166, 0.12); border-left: 3px solid #14b8a6; }
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: #0a0f1a; }
-    ::-webkit-scrollbar-thumb { background: #243356; border-radius: 3px; }
-    ::-webkit-scrollbar-thumb:hover { background: #14b8a6; }
-    .fade-in { animation: fadeIn 0.3s ease-out; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
-    .pulse-dot { animation: pulseAnim 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
-    @keyframes pulseAnim { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(1.15); } }
-    .spinner {
-      display: inline-block;
-      width: 14px;
-      height: 14px;
-      border: 2px solid rgba(255,255,255,0.3);
-      border-radius: 50%;
-      border-top-color: #fff;
-      animation: spin 0.8s linear infinite;
+    .tabular-nums { font-variant-numeric: tabular-nums; }
+
+    /* Unslop Neutral Graphite Ramp (Dark Default) */
+    html.dark body { background-color: #141415; color: #ededed; }
+    html.dark aside { background-color: #0f0f10 !important; border-right: 1px solid rgba(255, 255, 255, 0.08) !important; }
+    html.dark header { background-color: rgba(20, 20, 21, 0.92) !important; border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important; }
+    html.dark .bg-navy-950 { background-color: #141415 !important; }
+    html.dark .bg-navy-900, html.dark .bg-navy-900\/60, html.dark .bg-navy-900\/70, html.dark .bg-navy-900\/80 { background-color: #19191b !important; }
+    html.dark .bg-navy-800, html.dark .bg-navy-800\/60, html.dark .bg-navy-800\/80 { background-color: #232325 !important; }
+    html.dark .border-navy-700, html.dark .border-navy-700\/80, html.dark .border-navy-800, html.dark .border-navy-600 { border-color: rgba(255, 255, 255, 0.08) !important; }
+    html.dark .glass { background-color: #19191b !important; border: 1px solid rgba(255, 255, 255, 0.08) !important; backdrop-filter: none !important; }
+    html.dark .text-white { color: #ededed !important; }
+    html.dark .text-slate-200, html.dark .text-slate-300 { color: #a1a1a6 !important; }
+    html.dark .text-slate-400, html.dark .text-slate-500 { color: #85858b !important; }
+    html.dark input, html.dark select, html.dark textarea {
+      background-color: #232325 !important;
+      border: 1px solid rgba(255, 255, 255, 0.1) !important;
+      color: #ededed !important;
     }
-    @keyframes spin { to { transform: rotate(360deg); } }
+    html.dark input::placeholder, html.dark textarea::placeholder { color: #64646a !important; }
+
+    /* Unslop Neutral Graphite Ramp (Light Mode) */
+    html.light { color-scheme: light; }
+    html.light body { background-color: #fafafa !important; color: #171717 !important; }
+    html.light aside { background-color: #f4f4f5 !important; border-right: 1px solid rgba(0, 0, 0, 0.08) !important; }
+    html.light header { background-color: rgba(250, 250, 250, 0.92) !important; border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important; }
+    html.light .bg-navy-950 { background-color: #fafafa !important; }
+    html.light .bg-navy-900, html.light .bg-navy-900\/60, html.light .bg-navy-900\/70, html.light .bg-navy-900\/80 { background-color: #ffffff !important; }
+    html.light .bg-navy-800, html.light .bg-navy-800\/60, html.light .bg-navy-800\/80 { background-color: #f4f4f5 !important; }
+    html.light .border-navy-700, html.light .border-navy-700\/80, html.light .border-navy-800, html.light .border-navy-600 { border-color: rgba(0, 0, 0, 0.08) !important; }
+    html.light .glass { background-color: #ffffff !important; border: 1px solid rgba(0, 0, 0, 0.08) !important; backdrop-filter: none !important; }
+    html.light .text-white { color: #171717 !important; }
+    html.light .text-slate-200, html.light .text-slate-300 { color: #525252 !important; }
+    html.light .text-slate-400, html.light .text-slate-500 { color: #737373 !important; }
+    html.light input, html.light select, html.light textarea {
+      background-color: #ffffff !important;
+      border: 1px solid rgba(0, 0, 0, 0.12) !important;
+      color: #171717 !important;
+    }
+    html.light input::placeholder, html.light textarea::placeholder { color: #a1a1a6 !important; }
+
+    /* Unslop Solid Buttons (replaces gradients & halos) */
+    .mint-gradient {
+      background: #0d9488 !important;
+      color: #ffffff !important;
+      border: 1px solid #0f766e !important;
+      box-shadow: none !important;
+    }
+    .mint-gradient:hover, .mint-gradient-hover:hover {
+      background: #0f766e !important;
+    }
+    .gemini-gradient {
+      background: #232325 !important;
+      color: #ededed !important;
+      border: 1px solid rgba(255, 255, 255, 0.12) !important;
+      box-shadow: none !important;
+    }
+    .gemini-gradient:hover {
+      background: #2c2c2f !important;
+    }
+    html.light .gemini-gradient {
+      background: #f4f4f5 !important;
+      color: #171717 !important;
+      border: 1px solid rgba(0, 0, 0, 0.12) !important;
+    }
+    html.light .gemini-gradient:hover {
+      background: #e4e4e7 !important;
+    }
+
+    /* Active navigation row */
+    html.dark .sidebar-active {
+      background-color: #232325 !important;
+      border-left: 2px solid #14b8a6 !important;
+      color: #ededed !important;
+    }
+    html.light .sidebar-active {
+      background-color: #e4e4e7 !important;
+      border-left: 2px solid #0d9488 !important;
+      color: #171717 !important;
+    }
+
+    /* Remove slop glows */
+    .card-glow, .card-glow-active {
+      box-shadow: none !important;
+    }
 
     /* Theme Switcher component styles */
     #theme-switcher button { transition: all 0.15s ease; }
     html.dark #theme-switcher button.theme-active {
-      background-color: #111c33 !important;
+      background-color: #232325 !important;
       color: #2dd4bf !important;
-      border: 1px solid #1a2744 !important;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.4);
+      border: 1px solid rgba(255, 255, 255, 0.1) !important;
     }
     html.light #theme-switcher button.theme-active {
       background-color: #ffffff !important;
       color: #0d9488 !important;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.08) !important;
-      border: 1px solid #cbd5e1 !important;
+      border: 1px solid rgba(0, 0, 0, 0.1) !important;
     }
 
-    /* Light Mode Theme Overrides */
-    html.light { color-scheme: light; }
-    html.light body { background-color: #f8fafc !important; color: #1e293b !important; }
-    html.light aside { background-color: #ffffff !important; border-right-color: #e2e8f0 !important; }
-    html.light header { background-color: rgba(255, 255, 255, 0.9) !important; border-bottom-color: #e2e8f0 !important; }
-    html.light .bg-navy-950,
-    html.light .bg-navy-950\/80,
-    html.light .bg-navy-950\/85 { background-color: #f1f5f9 !important; }
-    html.light .bg-navy-900,
-    html.light .bg-navy-900\/80,
-    html.light .bg-navy-900\/90 { background-color: #ffffff !important; }
-    html.light .bg-navy-800,
-    html.light .bg-navy-800\/60,
-    html.light .bg-navy-800\/80 { background-color: #f8fafc !important; }
-    html.light .border-navy-700,
-    html.light .border-navy-700\/80,
-    html.light .border-navy-800 { border-color: #e2e8f0 !important; }
-    html.light .border-navy-600 { border-color: #cbd5e1 !important; }
-    html.light .glass { background: rgba(255, 255, 255, 0.92) !important; border-color: #e2e8f0 !important; }
-    html.light .card-glow { box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.07), 0 1px 2px -1px rgba(0, 0, 0, 0.05) !important; border-color: #e2e8f0 !important; }
-    html.light .card-glow-active { box-shadow: 0 0 0 1px rgba(20, 184, 166, 0.4), 0 4px 16px rgba(20, 184, 166, 0.12) !important; }
-    html.light .text-white { color: #0f172a !important; }
-    html.light .text-slate-200,
-    html.light .text-slate-300 { color: #334155 !important; }
-    html.light .text-slate-400 { color: #64748b !important; }
-    html.light .text-slate-500 { color: #64748b !important; }
-    html.light input,
-    html.light select,
-    html.light textarea {
-      background-color: #ffffff !important;
-      border-color: #cbd5e1 !important;
-      color: #0f172a !important;
+    /* Scrollbars */
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    html.dark ::-webkit-scrollbar-track { background: #141415; }
+    html.dark ::-webkit-scrollbar-thumb { background: #2c2c2f; border-radius: 2px; }
+    html.light ::-webkit-scrollbar-track { background: #fafafa; }
+    html.light ::-webkit-scrollbar-thumb { background: #d4d4d8; border-radius: 2px; }
+
+    .fade-in { animation: fadeIn 0.15s ease-out; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+    .spinner {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border: 2px solid rgba(255,255,255,0.25);
+      border-radius: 50%;
+      border-top-color: #ededed;
+      animation: spin 0.8s linear infinite;
     }
-    html.light input::placeholder,
-    html.light textarea::placeholder { color: #94a3b8 !important; }
-    html.light .hover\:bg-navy-800:hover { background-color: #f1f5f9 !important; }
-    html.light .hover\:text-white:hover { color: #0f172a !important; }
-    html.light ::-webkit-scrollbar-track { background: #f1f5f9; }
-    html.light ::-webkit-scrollbar-thumb { background: #cbd5e1; }
-    html.light .advisor-tab.bg-navy-800 { background-color: #e2e8f0 !important; color: #0d9488 !important; }
-    /* Retain crisp white text on colored accent elements and badges */
-    html.light .mint-gradient,
-    html.light .mint-gradient *,
-    html.light .gemini-gradient,
-    html.light .gemini-gradient *,
-    html.light [class*="bg-mint-"],
-    html.light [class*="bg-mint-"] *,
-    html.light [class*="bg-emerald-600"],
-    html.light [class*="bg-emerald-600"] *,
-    html.light [class*="bg-rose-600"],
-    html.light [class*="bg-rose-600"] *,
-    html.light [class*="bg-blue-600"],
-    html.light [class*="bg-blue-600"] * {
-      color: #ffffff !important;
-    }
-    /* Subtle tinted badges */
-    html.light .bg-mint-500\/10,
-    html.light .bg-mint-500\/20,
-    html.light .bg-mint-600\/10,
-    html.light .bg-mint-600\/30 {
-      background-color: rgba(20, 184, 166, 0.12) !important;
-      color: #0f766e !important;
-    }
-    html.light .bg-mint-500\/10 *,
-    html.light .bg-mint-500\/20 *,
-    html.light .bg-mint-600\/10 *,
-    html.light .bg-mint-600\/30 * {
-      color: #0f766e !important;
-    }
+    @keyframes spin { to { transform: rotate(360deg); } }
   </style>
 </head>
 <body class="bg-navy-950 text-slate-200 min-h-screen antialiased selection:bg-mint-500 selection:text-white">
 
   <!-- TOAST NOTIFICATION CONTAINER -->
-  <div id="toast" class="hidden fixed bottom-6 right-6 z-50 glass border border-mint-500/40 rounded-xl px-5 py-3.5 shadow-2xl flex items-center gap-3 max-w-md transition-all duration-300">
-    <div id="toast-icon" class="w-2.5 h-2.5 rounded-full bg-mint-400"></div>
-    <div id="toast-message" class="text-sm font-medium text-white">Notification message</div>
+  <div id="toast" class="hidden fixed bottom-6 right-6 z-50 bg-[#19191b] border border-white/[0.12] rounded-lg px-4 py-3 shadow-lg flex items-center gap-3 max-w-md transition-opacity duration-150">
+    <div id="toast-icon" class="w-2 h-2 rounded-full bg-mint-400 shrink-0"></div>
+    <div id="toast-message" class="text-xs font-medium text-[#ededed]">Notification message</div>
   </div>
 
   <!-- LOGIN VIEW -->
-  <div id="view-login" class="min-h-screen flex items-center justify-center p-6 relative overflow-hidden">
-    <div class="absolute -top-32 -left-32 w-96 h-96 bg-mint-600/10 rounded-full blur-3xl pointer-events-none"></div>
-    <div class="absolute -bottom-32 -right-32 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl pointer-events-none"></div>
-
-    <div class="w-full max-w-md relative z-10">
-      <div class="text-center mb-8">
-        <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl mint-gradient mb-4 shadow-lg shadow-mint-500/20 transform hover:scale-105 transition">
-          <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+  <div id="view-login" class="min-h-screen flex items-center justify-center p-6 relative bg-[#141415]">
+    <div class="w-full max-w-sm relative z-10">
+      <div class="text-center mb-6">
+        <div class="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-[#0d9488] mb-3 text-white">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
         </div>
-        <h1 class="text-3xl font-bold tracking-tight text-white flex items-center justify-center gap-2">
+        <h1 class="text-2xl font-semibold text-[#ededed] flex items-center justify-center gap-2">
           MINT
-          <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-mint-500/20 text-mint-400 border border-mint-500/30">AI Escrow</span>
+          <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-mint-500/10 text-mint-400 border border-mint-500/25">Escrow OS</span>
         </h1>
-        <p class="text-slate-400 mt-2 text-sm">Mission Intelligence & Negotiation Technology</p>
+        <p class="text-slate-400 mt-1 text-xs">Industrial Equipment Procurement & Escrow</p>
       </div>
 
-      <div class="glass rounded-2xl p-8 card-glow border border-navy-700">
-        <h2 class="text-lg font-semibold text-white mb-6 flex items-center justify-between">
-          <span>Sign in to your workspace</span>
-          <span class="text-xs text-mint-400 font-normal">Backend Connected</span>
+      <div class="bg-[#19191b] rounded-xl p-6 border border-white/[0.08]">
+        <h2 class="text-sm font-medium text-[#ededed] mb-5 flex items-center justify-between">
+          <span>Sign in to console</span>
+          <span class="text-[11px] text-mint-400 font-mono">Ready</span>
         </h2>
         <form onsubmit="event.preventDefault(); doLogin();" class="space-y-4">
           <div>
-            <label class="block text-xs font-medium text-slate-400 mb-1.5">Work Email</label>
-            <input id="login-email" type="email" required value="admin@aquaflow.com" class="w-full bg-navy-900 border border-navy-600 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-mint-500/50 focus:border-mint-500 transition" />
+            <label class="block text-xs font-medium text-slate-400 mb-1">Work Email</label>
+            <input id="login-email" type="email" required value="admin@aquaflow.com" class="w-full bg-[#232325] border border-white/[0.1] rounded-lg px-3 py-2 text-xs text-[#ededed] placeholder-slate-500 focus:outline-none focus:border-mint-500 transition-colors" />
           </div>
           <div>
-            <div class="flex items-center justify-between mb-1.5">
+            <div class="flex items-center justify-between mb-1">
               <label class="block text-xs font-medium text-slate-400">Password</label>
-              <span class="text-[11px] text-mint-400/80">Default: demo1234</span>
+              <span class="text-[10px] text-slate-500 font-mono">demo1234</span>
             </div>
-            <input id="login-password" type="password" required value="demo1234" class="w-full bg-navy-900 border border-navy-600 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-mint-500/50 focus:border-mint-500 transition" />
+            <input id="login-password" type="password" required value="demo1234" class="w-full bg-[#232325] border border-white/[0.1] rounded-lg px-3 py-2 text-xs text-[#ededed] placeholder-slate-500 focus:outline-none focus:border-mint-500 transition-colors" />
           </div>
-          <button type="submit" id="btn-login" class="w-full mint-gradient mint-gradient-hover text-white font-semibold py-3 rounded-xl transition shadow-lg shadow-mint-600/20 flex items-center justify-center gap-2">
-            <span>Sign in to Console</span>
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+          <button type="submit" id="btn-login" class="w-full bg-[#0d9488] hover:bg-[#0f766e] text-white font-medium py-2 rounded-lg transition-colors flex items-center justify-center gap-2 text-xs">
+            <span>Sign in</span>
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
           </button>
         </form>
-        <div class="mt-6 pt-5 border-t border-navy-700/60 flex items-center justify-between text-xs text-slate-500">
-          <span>Google Gemini 2.0 Flash</span>
-          <span class="text-slate-400">PayPal REST v2</span>
+        <div class="mt-5 pt-4 border-t border-white/[0.08] flex items-center justify-between text-[11px] text-slate-500">
+          <span>Gemini 2.0 Flash</span>
+          <span class="font-mono">PayPal v2</span>
         </div>
       </div>
     </div>
@@ -228,60 +235,60 @@
   <!-- APP SHELL -->
   <div id="view-app" class="hidden min-h-screen flex">
     <!-- Sidebar -->
-    <aside class="w-64 bg-navy-900 border-r border-navy-700 flex flex-col fixed h-full z-20 select-none">
-      <div class="p-5 border-b border-navy-700">
-        <div class="flex items-center gap-3">
-          <div class="w-9 h-9 rounded-xl mint-gradient flex items-center justify-center shadow-md shadow-mint-500/20">
-            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+    <aside class="w-64 bg-[#0f0f10] border-r border-white/[0.08] flex flex-col fixed h-full z-20 select-none">
+      <div class="p-4 border-b border-white/[0.08]">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg bg-[#0d9488] flex items-center justify-center text-white shrink-0">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
           </div>
           <div>
-            <div class="font-bold text-white text-sm tracking-tight flex items-center gap-1.5">
+            <div class="font-semibold text-[#ededed] text-sm tracking-tight flex items-center gap-1.5">
               MINT
-              <span class="text-[9px] uppercase px-1.5 py-0.2 bg-mint-500/20 text-mint-400 rounded">AI OS</span>
+              <span class="text-[9px] font-mono px-1.5 py-0.2 bg-mint-500/10 text-mint-400 border border-mint-500/20 rounded">Escrow</span>
             </div>
-            <div class="text-[10px] text-slate-500 uppercase tracking-wider">Escrow Procurement</div>
+            <div class="text-[11px] text-slate-500">Industrial Procurement</div>
           </div>
         </div>
       </div>
 
       <!-- Navigation Links -->
       <nav class="flex-1 p-3 space-y-1 overflow-y-auto">
-        <button data-nav="dashboard" class="nav-btn sidebar-active w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-mint-400 transition">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-          Command Centre
+        <button data-nav="dashboard" class="nav-btn sidebar-active w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium text-mint-400 transition-colors">
+          <svg class="w-4 h-4 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+          <span>Overview</span>
         </button>
-        <button data-nav="forecasts" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:text-white hover:bg-navy-800 transition">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
-          AI Agreement Drafter
+        <button data-nav="forecasts" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium text-slate-400 hover:text-white hover:bg-[#232325] transition-colors">
+          <svg class="w-4 h-4 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+          <span>Agreement Drafter</span>
         </button>
-        <button data-nav="mesh" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:text-white hover:bg-navy-800 transition">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-          Active Agreements
+        <button data-nav="mesh" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium text-slate-400 hover:text-white hover:bg-[#232325] transition-colors">
+          <svg class="w-4 h-4 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+          <span>Agreements</span>
         </button>
-        <button data-nav="suppliers" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:text-white hover:bg-navy-800 transition">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
-          Supplier Discovery
+        <button data-nav="suppliers" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium text-slate-400 hover:text-white hover:bg-[#232325] transition-colors">
+          <svg class="w-4 h-4 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+          <span>Suppliers</span>
         </button>
-        <button data-nav="negotiation" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:text-white hover:bg-navy-800 transition">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
-          AI Verifier & Mediation
+        <button data-nav="negotiation" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium text-slate-400 hover:text-white hover:bg-[#232325] transition-colors">
+          <svg class="w-4 h-4 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+          <span>Verification & Dispute</span>
         </button>
-        <button data-nav="approvals" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:text-white hover:bg-navy-800 transition">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-          Approvals & PayPal
+        <button data-nav="approvals" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium text-slate-400 hover:text-white hover:bg-[#232325] transition-colors">
+          <svg class="w-4 h-4 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <span>Approvals</span>
         </button>
-        <button data-nav="orders" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:text-white hover:bg-navy-800 transition">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
-          Orders & Fulfilment
+        <button data-nav="orders" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium text-slate-400 hover:text-white hover:bg-[#232325] transition-colors">
+          <svg class="w-4 h-4 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+          <span>Orders</span>
         </button>
       </nav>
 
       <!-- Sidebar Footer -->
-      <div class="p-4 border-t border-navy-700 space-y-3">
+      <div class="p-4 border-t border-white/[0.08] space-y-3">
         <!-- Role Switcher -->
         <div>
-          <label class="block text-[11px] font-medium text-slate-400 uppercase tracking-wider mb-1">Acting Role</label>
-          <select id="role-select" onchange="setRole(this.value)" class="w-full bg-navy-950 border border-navy-700 text-xs text-white rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-mint-500">
+          <label class="block text-xs font-medium text-slate-400 mb-1">Acting Role</label>
+          <select id="role-select" onchange="setRole(this.value)" class="w-full bg-[#232325] border border-white/[0.1] text-xs text-[#ededed] rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-mint-500">
             <option value="client">Client (Buyer / Approver)</option>
             <option value="freelancer">Freelancer (Seller / Deliverer)</option>
           </select>
@@ -289,34 +296,34 @@
 
         <!-- Theme Switcher (Left Sidebar) -->
         <div>
-          <div class="flex items-center justify-between mb-1.5">
-            <label class="block text-[11px] font-medium text-slate-400 uppercase tracking-wider">Appearance</label>
+          <div class="flex items-center justify-between mb-1">
+            <label class="block text-xs font-medium text-slate-400">Appearance</label>
             <span id="theme-active-label" class="text-[10px] text-mint-400 font-mono capitalize">dark</span>
           </div>
-          <div class="grid grid-cols-3 gap-1 bg-navy-950 p-1 rounded-lg border border-navy-700 text-xs" id="theme-switcher">
-            <button type="button" onclick="setTheme('dark')" id="theme-btn-dark" class="py-1 px-1.5 rounded-md font-medium flex items-center justify-center gap-1 transition theme-active" title="Dark theme">
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+          <div class="grid grid-cols-3 gap-1 bg-[#141415] p-1 rounded-lg border border-white/[0.08] text-xs" id="theme-switcher">
+            <button type="button" onclick="setTheme('dark')" id="theme-btn-dark" class="py-1 px-1.5 rounded-md font-medium flex items-center justify-center gap-1 transition-colors theme-active" title="Dark theme">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
               <span>Dark</span>
             </button>
-            <button type="button" onclick="setTheme('light')" id="theme-btn-light" class="py-1 px-1.5 rounded-md font-medium flex items-center justify-center gap-1 transition text-slate-400 hover:text-white" title="Light theme">
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+            <button type="button" onclick="setTheme('light')" id="theme-btn-light" class="py-1 px-1.5 rounded-md font-medium flex items-center justify-center gap-1 transition-colors text-slate-400 hover:text-white" title="Light theme">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
               <span>Light</span>
             </button>
-            <button type="button" onclick="setTheme('system')" id="theme-btn-system" class="py-1 px-1.5 rounded-md font-medium flex items-center justify-center gap-1 transition text-slate-400 hover:text-white" title="Follow system theme">
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+            <button type="button" onclick="setTheme('system')" id="theme-btn-system" class="py-1 px-1.5 rounded-md font-medium flex items-center justify-center gap-1 transition-colors text-slate-400 hover:text-white" title="Follow system theme">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
               <span>Auto</span>
             </button>
           </div>
         </div>
 
-        <div class="flex items-center gap-3 pt-2">
-          <div class="w-8 h-8 rounded-full bg-mint-600/30 border border-mint-500/30 flex items-center justify-center text-mint-400 text-xs font-bold" id="user-avatar">SC</div>
+        <div class="flex items-center gap-2.5 pt-2 border-t border-white/[0.08]">
+          <div class="w-7 h-7 rounded-md bg-[#232325] border border-white/[0.1] flex items-center justify-center text-mint-400 text-xs font-mono" id="user-avatar">SC</div>
           <div class="flex-1 min-w-0">
-            <div class="text-sm font-medium text-white truncate" id="user-display-name">Sarah Chen</div>
+            <div class="text-xs font-medium text-[#ededed] truncate" id="user-display-name">Sarah Chen</div>
             <div class="text-[11px] text-slate-500 truncate" id="user-display-org">AquaFlow Industries</div>
           </div>
-          <button onclick="doLogout()" class="p-1.5 rounded-lg text-slate-500 hover:text-white hover:bg-navy-800 transition" title="Sign out">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+          <button onclick="doLogout()" class="p-1 rounded text-slate-500 hover:text-white transition-colors" title="Sign out">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
           </button>
         </div>
       </div>
@@ -325,22 +332,22 @@
     <!-- Main Content Area -->
     <main class="flex-1 ml-64 min-h-screen flex flex-col">
       <!-- Top Sticky Header -->
-      <header class="sticky top-0 z-10 bg-navy-950/85 backdrop-blur-md border-b border-navy-800 px-8 py-4 flex items-center justify-between">
+      <header class="sticky top-0 z-10 bg-[#141415]/95 backdrop-blur-sm border-b border-white/[0.08] px-8 py-3.5 flex items-center justify-between">
         <div>
-          <h1 id="page-title" class="text-xl font-semibold text-white tracking-tight">AI Procurement Command Centre</h1>
-          <p id="page-subtitle" class="text-sm text-slate-400 mt-0.5">Real-time Escrow & Automated Verification Engine</p>
+          <h1 id="page-title" class="text-base font-semibold text-[#ededed]">Procurement Overview</h1>
+          <p id="page-subtitle" class="text-xs text-slate-400 mt-0.5">Agreements, escrow authorizations, and milestone verification</p>
         </div>
-        <div class="flex items-center gap-3">
+        <div class="flex items-center gap-2.5">
           <!-- Live Backend Status Pill -->
-          <div id="backend-status-pill" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-mint-500/10 text-mint-400 text-xs font-medium border border-mint-500/25">
-            <span class="w-1.5 h-1.5 rounded-full bg-mint-400 pulse-dot"></span>
-            <span id="backend-status-text">Backend Connected</span>
+          <div id="backend-status-pill" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[#232325] text-mint-400 text-xs font-mono border border-white/[0.08]">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+            <span id="backend-status-text">Connected</span>
           </div>
-          <button onclick="navigate('forecasts')" class="px-3.5 py-1.5 rounded-lg mint-gradient text-xs font-semibold text-white hover:opacity-95 transition flex items-center gap-1.5 shadow-sm shadow-mint-500/20">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-            <span>+ Draft Deal</span>
+          <button onclick="navigate('forecasts')" class="px-3 py-1.5 rounded-lg bg-[#0d9488] hover:bg-[#0f766e] text-xs font-medium text-white transition-colors flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v16m8-8H4"/></svg>
+            <span>+ Draft Agreement</span>
           </button>
-          <button onclick="refreshData()" class="px-3.5 py-1.5 rounded-lg bg-navy-800 border border-navy-600 text-xs font-medium text-slate-300 hover:bg-navy-700 hover:text-white transition flex items-center gap-1.5">
+          <button onclick="refreshData()" class="px-3 py-1.5 rounded-lg bg-[#232325] hover:bg-[#2a2a2d] border border-white/[0.08] text-xs font-medium text-slate-300 transition-colors flex items-center gap-1.5">
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
             Refresh
           </button>
@@ -350,115 +357,116 @@
       <!-- Scrollable View Container -->
       <div class="p-8 flex-1 space-y-6">
 
-        <!-- 1. DASHBOARD / COMMAND CENTRE -->
-        <div id="page-dashboard" class="page fade-in space-y-6">
+        <!-- 1. DASHBOARD / OVERVIEW -->
+        <div id="page-dashboard" class="page fade-in space-y-5">
           <!-- Top KPI Metrics -->
-          <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5">
-            <div class="glass rounded-2xl p-5 card-glow border border-navy-700 hover:border-mint-500/30 transition">
+          <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+            <div class="bg-[#19191b] rounded-xl p-5 border border-white/[0.08]">
               <div class="flex items-center justify-between">
-                <span class="text-xs font-medium text-slate-400 uppercase tracking-wider">Active Deals</span>
-                <span class="p-1 rounded bg-mint-500/10 text-mint-400">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                <span class="text-xs font-medium text-slate-400">Active agreements</span>
+                <span class="p-1 rounded bg-[#232325] text-slate-400">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                 </span>
               </div>
-              <div class="mt-2 text-3xl font-bold text-white tracking-tight" id="kpi-total-deals">0</div>
-              <div class="mt-1 text-xs text-mint-400" id="kpi-deals-sub">From MongoDB database</div>
+              <div class="mt-2 text-2xl font-semibold text-[#ededed] tabular-nums font-mono" id="kpi-total-deals">0</div>
+              <div class="mt-1 text-xs text-slate-500 font-mono" id="kpi-deals-sub">Database records</div>
             </div>
 
-            <div class="glass rounded-2xl p-5 card-glow border border-navy-700 hover:border-mint-500/30 transition">
+            <div class="bg-[#19191b] rounded-xl p-5 border border-white/[0.08]">
               <div class="flex items-center justify-between">
-                <span class="text-xs font-medium text-slate-400 uppercase tracking-wider">Total Contract Value</span>
-                <span class="p-1 rounded bg-emerald-500/10 text-emerald-400">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <span class="text-xs font-medium text-slate-400">Total contract value</span>
+                <span class="p-1 rounded bg-[#232325] text-slate-400">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                 </span>
               </div>
-              <div class="mt-2 text-3xl font-bold text-white tracking-tight" id="kpi-total-value">$0.00</div>
-              <div class="mt-1 text-xs text-slate-400">Sum of all milestones</div>
+              <div class="mt-2 text-2xl font-semibold text-[#ededed] tabular-nums font-mono" id="kpi-total-value">$0.00</div>
+              <div class="mt-1 text-xs text-slate-500">Sum of milestone values</div>
             </div>
 
-            <div class="glass rounded-2xl p-5 card-glow border border-navy-700 hover:border-mint-500/30 transition">
+            <div class="bg-[#19191b] rounded-xl p-5 border border-white/[0.08]">
               <div class="flex items-center justify-between">
-                <span class="text-xs font-medium text-slate-400 uppercase tracking-wider">PayPal Escrow Held</span>
-                <span class="p-1 rounded bg-blue-500/10 text-blue-400">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                <span class="text-xs font-medium text-slate-400">PayPal escrow held</span>
+                <span class="p-1 rounded bg-[#232325] text-slate-400">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
                 </span>
               </div>
-              <div class="mt-2 text-3xl font-bold text-white tracking-tight" id="kpi-escrow-held">$0.00</div>
-              <div class="mt-1 text-xs text-blue-400">Authorized & secured</div>
+              <div class="mt-2 text-2xl font-semibold text-mint-400 tabular-nums font-mono" id="kpi-escrow-held">$0.00</div>
+              <div class="mt-1 text-xs text-slate-500">Active authorization holds</div>
             </div>
 
-            <div class="glass rounded-2xl p-5 card-glow border border-navy-700 hover:border-mint-500/30 transition">
+            <div class="bg-[#19191b] rounded-xl p-5 border border-white/[0.08]">
               <div class="flex items-center justify-between">
-                <span class="text-xs font-medium text-slate-400 uppercase tracking-wider">Gemini Verified</span>
-                <span class="p-1 rounded bg-purple-500/10 text-purple-400">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+                <span class="text-xs font-medium text-slate-400">Milestones verified</span>
+                <span class="p-1 rounded bg-[#232325] text-slate-400">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 13l4 4L19 7"/></svg>
                 </span>
               </div>
-              <div class="mt-2 text-3xl font-bold text-white tracking-tight" id="kpi-verified-count">0</div>
-              <div class="mt-1 text-xs text-purple-400">Ready for release</div>
+              <div class="mt-2 text-2xl font-semibold text-[#ededed] tabular-nums font-mono" id="kpi-verified-count">0</div>
+              <div class="mt-1 text-xs text-slate-500">Ready for payment release</div>
             </div>
           </div>
 
           <!-- PAYPAL SMART ADVISOR & ESCROW GUARD COMMAND CENTER -->
-          <div id="dashboard-advisor-section" class="glass rounded-2xl border border-navy-700 card-glow overflow-hidden">
+          <div id="dashboard-advisor-section" class="bg-[#19191b] rounded-xl border border-white/[0.08] overflow-hidden">
             <!-- Dynamically populated by window.paypalAdvisor.renderDashboardAdvisor -->
           </div>
 
           <!-- Main Grid -->
-          <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+          <div class="grid grid-cols-1 xl:grid-cols-3 gap-5">
             <!-- Active Deals List -->
-            <div class="xl:col-span-2 glass rounded-2xl border border-navy-700 card-glow overflow-hidden">
-              <div class="px-6 py-4 border-b border-navy-700 flex items-center justify-between">
+            <div class="xl:col-span-2 bg-[#19191b] rounded-xl border border-white/[0.08] overflow-hidden">
+              <div class="px-5 py-3.5 border-b border-white/[0.08] flex items-center justify-between">
                 <div class="flex items-center gap-2">
-                  <span class="w-2.5 h-2.5 rounded-full bg-mint-400"></span>
-                  <h3 class="font-semibold text-white">Live Procurement Agreements</h3>
+                  <span class="w-2 h-2 rounded-full bg-mint-400"></span>
+                  <h3 class="font-medium text-[#ededed] text-sm">Active agreements</h3>
                 </div>
-                <button onclick="navigate('forecasts')" class="text-xs text-mint-400 hover:underline">Draft New Deal →</button>
+                <button onclick="navigate('forecasts')" class="text-xs text-mint-400 hover:text-mint-300 transition-colors">Draft new →</button>
               </div>
-              <div class="p-6">
+              <div class="p-5">
                 <div id="dashboard-deals-list" class="space-y-3">
                   <!-- Populated by JS -->
                   <div class="text-center py-10 text-slate-500">
                     <span class="spinner mb-2"></span>
-                    <p class="text-sm">Loading agreements from backend...</p>
+                    <p class="text-xs">Loading agreements...</p>
                   </div>
                 </div>
               </div>
             </div>
 
-            <!-- Recent AI Event Log -->
-            <div class="glass rounded-2xl border border-navy-700 card-glow flex flex-col">
-              <div class="px-5 py-4 border-b border-navy-700 flex items-center justify-between">
-                <h3 class="font-semibold text-white">Escrow & AI Audit Log</h3>
-                <span class="text-[11px] text-mint-400">Real-time Stream</span>
+            <!-- Recent Event Log -->
+            <div class="bg-[#19191b] rounded-xl border border-white/[0.08] flex flex-col">
+              <div class="px-5 py-3.5 border-b border-white/[0.08] flex items-center justify-between">
+                <h3 class="font-medium text-[#ededed] text-sm">Escrow audit trail</h3>
+                <span class="text-[11px] text-slate-500 font-mono">Stream</span>
               </div>
-              <div id="dashboard-audit-log" class="p-4 space-y-3 flex-1 overflow-y-auto max-h-[420px]">
+              <div id="dashboard-audit-log" class="p-4 space-y-2.5 flex-1 overflow-y-auto max-h-[420px]">
                 <div class="text-xs text-slate-500 text-center py-8">No events logged yet.</div>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- 2. AI AGREEMENT DRAFTER / PREDICTIVE BUYING (FORECASTS) -->
-        <div id="page-forecasts" class="page hidden fade-in space-y-6">
-          <div class="glass rounded-2xl border border-navy-700 card-glow p-6">
+        <!-- 2. AGREEMENT DRAFTER (FORECASTS) -->
+        <div id="page-forecasts" class="page hidden fade-in space-y-5">
+          <div class="bg-[#19191b] rounded-xl border border-white/[0.08] p-5">
             <div class="flex items-center gap-2 mb-2">
-              <span class="badge-gemini px-2 py-0.5 rounded-md text-[10px] font-bold tracking-wider gemini-gradient text-white uppercase">
-                ✨ Powered by Gemini 2.0 Flash
+              <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-[#232325] text-mint-400 border border-white/[0.1]">
+                Gemini 2.0 Flash · Structured Generator
               </span>
-              <h3 class="text-lg font-semibold text-white">Draft Milestones in Plain English</h3>
+              <h3 class="text-sm font-semibold text-[#ededed]">Draft milestone criteria</h3>
             </div>
-            <p class="text-sm text-slate-400 mb-4">
-              Describe your agreement or scope. Gemini AI will analyze deliverables, draft objective verifiable criteria, and allocate USD milestone pricing.
+            <p class="text-xs text-slate-400 mb-3">
+              Describe deliverables and pricing. Gemini produces objective acceptance criteria and milestone amounts.
             </p>
 
-            <textarea id="draft-input-text" rows="4" class="w-full bg-navy-900 border border-navy-600 rounded-xl p-4 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-mint-500/50 focus:border-mint-500 transition" placeholder="e.g. I want to procure 3 Centrifugal Water Pumps 150HP from AquaSource Global for a total of $48,300. Milestone 1: $15,000 for manufacturing and factory acceptance test (FAT) report. Milestone 2: $33,300 upon physical delivery, ISO 9906 compliance test report, and operational commissioning.">I want to procure 3 Centrifugal Water Pumps 150HP from AquaSource Global for $48,300. Milestone 1: $15,000 upon factory acceptance test (FAT) report and material certs. Milestone 2: $33,300 upon physical delivery, ISO 9906 compliance test report, and operational commissioning.</textarea>
+            <textarea id="draft-input-text" rows="3" class="w-full bg-[#232325] border border-white/[0.1] rounded-lg p-3 text-xs text-[#ededed] placeholder-slate-500 focus:outline-none focus:border-mint-500 transition-colors" placeholder="e.g. Procure 3 Centrifugal Water Pumps 150HP from AquaSource Global for $48,300...">I want to procure 3 Centrifugal Water Pumps 150HP from AquaSource Global for $48,300. Milestone 1: $15,000 upon factory acceptance test (FAT) report and material certs. Milestone 2: $33,300 upon physical delivery, ISO 9906 compliance test report, and operational commissioning.</textarea>
 
-            <div class="mt-4 flex flex-wrap items-center justify-between gap-3">
-              <button onclick="handleDraftMilestones(this)" class="gemini-gradient text-white font-semibold text-sm px-6 py-3 rounded-xl hover:opacity-95 transition shadow-lg shadow-purple-500/20 flex items-center gap-2">
-                <span>✨ Draft Milestones with Gemini AI</span>
+            <div class="mt-3 flex flex-wrap items-center justify-between gap-3">
+              <button onclick="handleDraftMilestones(this)" class="bg-[#0d9488] hover:bg-[#0f766e] text-white font-medium text-xs px-4 py-2 rounded-lg transition-colors flex items-center gap-2">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                <span>Generate milestones with Gemini</span>
               </button>
-              <span class="text-xs text-slate-500">Calls POST /api/draft · Strict JSON schema</span>
+              <span class="text-[11px] text-slate-500 font-mono">POST /api/draft</span>
             </div>
           </div>
 
@@ -466,27 +474,27 @@
           <div id="draft-review-container"></div>
 
           <!-- Telemetry & Predictive maintenance cards -->
-          <div class="pt-4 border-t border-navy-800">
-            <h4 class="text-sm font-semibold uppercase tracking-wider text-slate-400 mb-4">Predictive Demand Telemetry</h4>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-5" id="forecast-cards">
+          <div class="pt-2 border-t border-white/[0.08]">
+            <h4 class="text-xs font-medium text-slate-400 mb-3">Predictive demand telemetry</h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="forecast-cards">
               <!-- Populated by JS -->
             </div>
           </div>
         </div>
 
-        <!-- 3. DEMAND MESH & ACTIVE DEALS -->
-        <div id="page-mesh" class="page hidden fade-in space-y-6">
-          <div class="glass rounded-2xl border border-navy-700 card-glow overflow-hidden">
-            <div class="px-6 py-4 border-b border-navy-700 flex items-center justify-between">
+        <!-- 3. AGREEMENTS & DEMAND MESH -->
+        <div id="page-mesh" class="page hidden fade-in space-y-5">
+          <div class="bg-[#19191b] rounded-xl border border-white/[0.08] overflow-hidden">
+            <div class="px-5 py-3.5 border-b border-white/[0.08] flex items-center justify-between">
               <div>
-                <h3 class="font-semibold text-white">Aggregated Agreements & Demand Pools</h3>
-                <p class="text-sm text-slate-400 mt-0.5">Real-time agreements synchronized with MongoDB</p>
+                <h3 class="font-medium text-[#ededed] text-sm">Agreements directory</h3>
+                <p class="text-xs text-slate-400 mt-0.5">Stored in MongoDB database</p>
               </div>
-              <button onclick="navigate('forecasts')" class="mint-gradient text-white text-xs font-semibold px-4 py-2 rounded-lg">
+              <button onclick="navigate('forecasts')" class="bg-[#0d9488] hover:bg-[#0f766e] text-white text-xs font-medium px-3 py-1.5 rounded-lg transition-colors">
                 + New Agreement
               </button>
             </div>
-            <div class="p-6">
+            <div class="p-5">
               <div id="mesh-deals-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <!-- Populated by JS -->
               </div>
@@ -495,171 +503,178 @@
         </div>
 
         <!-- 4. SUPPLIER DISCOVERY -->
-        <div id="page-suppliers" class="page hidden fade-in space-y-6">
+        <div id="page-suppliers" class="page hidden fade-in space-y-5">
           <div class="flex items-center justify-between">
             <div>
-              <h3 class="text-lg font-semibold text-white">Verified Supplier Network</h3>
-              <p class="text-sm text-slate-400">Pre-vetted equipment suppliers ready for AI escrow contracts.</p>
+              <h3 class="text-sm font-medium text-[#ededed]">Verified supplier network</h3>
+              <p class="text-xs text-slate-400">Pre-vetted industrial equipment manufacturers</p>
             </div>
-            <span class="text-xs text-mint-400 font-medium">3 Qualified Vendors Active</span>
+            <span class="text-xs text-mint-400 font-mono">3 Qualified vendors</span>
           </div>
 
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <!-- Supplier 1 -->
-            <div class="glass rounded-2xl border border-navy-700 card-glow p-5 flex flex-col justify-between">
+            <div class="bg-[#19191b] rounded-xl border border-white/[0.08] p-5 flex flex-col justify-between">
               <div>
                 <div class="flex items-start justify-between">
                   <div>
-                    <h4 class="font-semibold text-white text-base">PumpCorp Industrial</h4>
-                    <p class="text-xs text-slate-500 mt-1">Dallas, TX · Verified OEM</p>
+                    <h4 class="font-medium text-[#ededed] text-sm">PumpCorp Industrial</h4>
+                    <p class="text-xs text-slate-500 mt-0.5">Dallas, TX · Verified OEM</p>
                   </div>
-                  <span class="text-amber-400 text-sm font-semibold">4.6 ★</span>
+                  <div class="flex items-center gap-1 text-xs">
+                    <svg class="w-3.5 h-3.5 text-amber-400" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                    <span class="font-mono tabular-nums text-slate-300">4.6</span>
+                  </div>
                 </div>
-                <div class="mt-4 text-2xl font-bold text-white">$16,800</div>
-                <div class="text-xs text-slate-400 mt-0.5">unit · 21 days lead time</div>
-                <div class="mt-4 pt-3 border-t border-navy-700 text-xs text-slate-400 space-y-1">
+                <div class="mt-3 text-xl font-semibold tabular-nums font-mono text-[#ededed]">$16,800</div>
+                <div class="text-xs text-slate-400 mt-0.5">per unit · 21 days lead time</div>
+                <div class="mt-4 pt-3 border-t border-white/[0.08] text-xs text-slate-400 space-y-1">
                   <div>PayPal: <span class="text-slate-300 font-mono">sb-pumpcorp@example.com</span></div>
                   <div>Warranty: <span class="text-slate-300">24 months</span></div>
                 </div>
               </div>
-              <button onclick="startDealWithSupplier('PumpCorp Industrial', 'sb-pumpcorp@example.com', 16800)" class="mt-5 w-full bg-navy-800 border border-navy-600 text-sm font-medium py-2.5 rounded-xl hover:bg-navy-700 text-slate-200 transition">
-                Create Agreement
+              <button onclick="startDealWithSupplier('PumpCorp Industrial', 'sb-pumpcorp@example.com', 16800)" class="mt-5 w-full bg-[#232325] hover:bg-[#2c2c2f] border border-white/[0.08] text-xs font-medium py-2 rounded-lg text-slate-200 transition-colors">
+                Select supplier
               </button>
             </div>
 
-            <!-- Supplier 2 -->
-            <div class="glass rounded-2xl border border-mint-500/50 card-glow card-glow-active p-5 flex flex-col justify-between relative bg-navy-900/40">
-              <div class="absolute -top-3 right-4 text-[10px] px-2.5 py-0.5 rounded-full mint-gradient text-white font-bold uppercase">
-                RECOMMENDED BEST
+            <!-- Supplier 2 (Recommended tier) -->
+            <div class="bg-[#19191b] rounded-xl border border-mint-500/40 p-5 flex flex-col justify-between relative">
+              <div class="flex items-center justify-between mb-1">
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-mint-500/10 text-mint-400 border border-mint-500/25">
+                  Recommended tier
+                </span>
+                <div class="flex items-center gap-1 text-xs">
+                  <svg class="w-3.5 h-3.5 text-amber-400" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                  <span class="font-mono tabular-nums text-slate-300">4.7</span>
+                </div>
               </div>
               <div>
-                <div class="flex items-start justify-between">
-                  <div>
-                    <h4 class="font-semibold text-white text-base">AquaSource Global</h4>
-                    <p class="text-xs text-slate-400 mt-1">Orlando, FL · Tier 1 Vendor</p>
-                  </div>
-                  <span class="text-amber-400 text-sm font-semibold">4.7 ★</span>
-                </div>
-                <div class="mt-4 text-2xl font-bold text-mint-400">$16,100</div>
-                <div class="text-xs text-slate-300 mt-0.5">unit · 24 days lead time</div>
-                <div class="mt-4 pt-3 border-t border-navy-700 text-xs text-slate-400 space-y-1">
+                <h4 class="font-medium text-[#ededed] text-sm">AquaSource Global</h4>
+                <p class="text-xs text-slate-500 mt-0.5">Orlando, FL · Tier 1 Vendor</p>
+                <div class="mt-3 text-xl font-semibold tabular-nums font-mono text-mint-400">$16,100</div>
+                <div class="text-xs text-slate-400 mt-0.5">per unit · 24 days lead time</div>
+                <div class="mt-4 pt-3 border-t border-white/[0.08] text-xs text-slate-400 space-y-1">
                   <div>PayPal: <span class="text-mint-400 font-mono">sb-seller@example.com</span></div>
                   <div>Warranty: <span class="text-slate-300">36 months CIF</span></div>
                 </div>
               </div>
-              <button onclick="startDealWithSupplier('AquaSource Global', 'sb-seller@example.com', 16100)" class="mt-5 w-full mint-gradient mint-gradient-hover text-white text-sm font-semibold py-2.5 rounded-xl transition shadow-md shadow-mint-600/20">
-                Create Agreement
+              <button onclick="startDealWithSupplier('AquaSource Global', 'sb-seller@example.com', 16100)" class="mt-5 w-full bg-[#0d9488] hover:bg-[#0f766e] text-white text-xs font-medium py-2 rounded-lg transition-colors">
+                Select supplier
               </button>
             </div>
 
             <!-- Supplier 3 -->
-            <div class="glass rounded-2xl border border-navy-700 card-glow p-5 flex flex-col justify-between">
+            <div class="bg-[#19191b] rounded-xl border border-white/[0.08] p-5 flex flex-col justify-between">
               <div>
                 <div class="flex items-start justify-between">
                   <div>
-                    <h4 class="font-semibold text-white text-base">FlowMaster Equipment</h4>
-                    <p class="text-xs text-slate-500 mt-1">Milwaukee, WI · Verified OEM</p>
+                    <h4 class="font-medium text-[#ededed] text-sm">FlowMaster Equipment</h4>
+                    <p class="text-xs text-slate-500 mt-0.5">Milwaukee, WI · Verified OEM</p>
                   </div>
-                  <span class="text-amber-400 text-sm font-semibold">4.4 ★</span>
+                  <div class="flex items-center gap-1 text-xs">
+                    <svg class="w-3.5 h-3.5 text-amber-400" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                    <span class="font-mono tabular-nums text-slate-300">4.4</span>
+                  </div>
                 </div>
-                <div class="mt-4 text-2xl font-bold text-white">$17,250</div>
-                <div class="text-xs text-slate-400 mt-0.5">unit · 28 days lead time</div>
-                <div class="mt-4 pt-3 border-t border-navy-700 text-xs text-slate-400 space-y-1">
+                <div class="mt-3 text-xl font-semibold tabular-nums font-mono text-[#ededed]">$17,250</div>
+                <div class="text-xs text-slate-400 mt-0.5">per unit · 28 days lead time</div>
+                <div class="mt-4 pt-3 border-t border-white/[0.08] text-xs text-slate-400 space-y-1">
                   <div>PayPal: <span class="text-slate-300 font-mono">sb-flowmaster@example.com</span></div>
                   <div>Warranty: <span class="text-slate-300">18 months</span></div>
                 </div>
               </div>
-              <button onclick="startDealWithSupplier('FlowMaster Equipment', 'sb-flowmaster@example.com', 17250)" class="mt-5 w-full bg-navy-800 border border-navy-600 text-sm font-medium py-2.5 rounded-xl hover:bg-navy-700 text-slate-200 transition">
-                Create Agreement
+              <button onclick="startDealWithSupplier('FlowMaster Equipment', 'sb-flowmaster@example.com', 17250)" class="mt-5 w-full bg-[#232325] hover:bg-[#2c2c2f] border border-white/[0.08] text-xs font-medium py-2 rounded-lg text-slate-200 transition-colors">
+                Select supplier
               </button>
             </div>
           </div>
         </div>
 
-        <!-- 5. AI VERIFIER & MEDIATION (ACTIVE DEAL WORKSPACE) -->
-        <div id="page-negotiation" class="page hidden fade-in space-y-6">
-          <div class="flex flex-wrap items-center justify-between gap-4">
+        <!-- 5. MILESTONE VERIFICATION & DISPUTES -->
+        <div id="page-negotiation" class="page hidden fade-in space-y-5">
+          <div class="flex flex-wrap items-center justify-between gap-3">
             <div class="flex items-center gap-3">
-              <label class="text-xs text-slate-400 font-medium">Select Active Agreement:</label>
-              <select id="deal-selector" onchange="loadDealWorkspace(this.value)" class="bg-navy-900 border border-navy-700 text-sm text-white rounded-xl px-3 py-2 focus:outline-none focus:border-mint-500 min-w-[280px]">
+              <label class="text-xs text-slate-400 font-medium">Select agreement:</label>
+              <select id="deal-selector" onchange="loadDealWorkspace(this.value)" class="bg-[#232325] border border-white/[0.1] text-xs text-[#ededed] rounded-lg px-3 py-1.5 focus:outline-none focus:border-mint-500 min-w-[280px]">
                 <option value="">Loading agreements...</option>
               </select>
             </div>
             <div class="flex items-center gap-2">
-              <span class="text-xs text-slate-400">Current Role:</span>
-              <span id="badge-current-role" class="text-xs px-2.5 py-1 rounded-full bg-mint-500/10 text-mint-400 border border-mint-500/25 font-semibold">Client (Buyer)</span>
+              <span class="text-xs text-slate-400">Current perspective:</span>
+              <span id="badge-current-role" class="text-xs px-2.5 py-0.5 rounded-md bg-[#232325] text-mint-400 border border-white/[0.08] font-mono">Client (Buyer)</span>
             </div>
           </div>
 
           <!-- Deal Detail Container -->
           <div id="active-deal-container">
-            <div class="glass rounded-2xl border border-navy-700 card-glow p-8 text-center text-slate-500">
-              <p class="text-base font-medium text-slate-400">Select an agreement above or draft a new one to view milestones.</p>
-              <button onclick="navigate('forecasts')" class="mt-4 mint-gradient text-white text-xs font-semibold px-4 py-2 rounded-lg">
-                Draft Agreement with Gemini AI
+            <div class="bg-[#19191b] rounded-xl border border-white/[0.08] p-8 text-center text-slate-500">
+              <p class="text-sm text-slate-400">Select an agreement above or draft a new one to view milestones.</p>
+              <button onclick="navigate('forecasts')" class="mt-3 bg-[#0d9488] hover:bg-[#0f766e] text-white text-xs font-medium px-3.5 py-1.5 rounded-lg transition-colors">
+                Draft agreement
               </button>
             </div>
           </div>
         </div>
 
-        <!-- 6. APPROVALS & PAYPAL ESCROW -->
-        <div id="page-approvals" class="page hidden fade-in space-y-6">
-          <div class="glass rounded-2xl border border-navy-700 card-glow p-6 max-w-2xl mx-auto">
-            <div class="flex items-center gap-3 mb-2">
-              <div class="w-8 h-8 rounded-lg bg-mint-500/10 border border-mint-500/30 flex items-center justify-center text-mint-400">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        <!-- 6. EXECUTIVE APPROVALS & PAYPAL ESCROW -->
+        <div id="page-approvals" class="page hidden fade-in space-y-5">
+          <div class="bg-[#19191b] rounded-xl border border-white/[0.08] p-6 max-w-xl mx-auto">
+            <div class="flex items-center gap-2.5 mb-1.5">
+              <div class="w-7 h-7 rounded-md bg-[#232325] border border-white/[0.1] flex items-center justify-center text-mint-400">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
               </div>
-              <h3 class="text-xl font-bold text-white tracking-tight">Executive Purchase Approval</h3>
+              <h3 class="text-base font-semibold text-[#ededed]">Executive Approval</h3>
             </div>
-            <p class="text-sm text-slate-400">
-              Individual buyer authorization is mandatory before any PayPal escrow transaction or contract release is executed.
+            <p class="text-xs text-slate-400">
+              Individual buyer authorization is required before PayPal escrow hold or contract disbursement.
             </p>
 
-            <div id="approvals-deal-content" class="mt-6 space-y-4">
+            <div id="approvals-deal-content" class="mt-5 space-y-4">
               <!-- Populated dynamically based on selected deal -->
-              <div class="bg-navy-900/60 rounded-xl p-5 border border-navy-700/80 space-y-3.5">
-                <div class="flex justify-between items-center text-sm">
-                  <span class="text-slate-400">Equipment Item</span>
-                  <span class="text-white font-medium" id="appr-title">Centrifugal Water Pump 150HP</span>
+              <div class="bg-[#232325] rounded-lg p-4 border border-white/[0.08] space-y-3">
+                <div class="flex justify-between items-center text-xs">
+                  <span class="text-slate-400">Equipment item</span>
+                  <span class="text-[#ededed] font-medium" id="appr-title">Centrifugal Water Pump 150HP</span>
                 </div>
-                <div class="flex justify-between items-center text-sm">
-                  <span class="text-slate-400">Selected Supplier</span>
-                  <span class="text-white font-medium" id="appr-supplier">AquaSource Global</span>
+                <div class="flex justify-between items-center text-xs">
+                  <span class="text-slate-400">Selected supplier</span>
+                  <span class="text-[#ededed] font-medium" id="appr-supplier">AquaSource Global</span>
                 </div>
-                <div class="flex justify-between items-center text-sm">
-                  <span class="text-slate-400">Payment Structure</span>
-                  <span class="text-slate-200">PayPal Authorization Hold (Escrow)</span>
+                <div class="flex justify-between items-center text-xs">
+                  <span class="text-slate-400">Payment structure</span>
+                  <span class="text-slate-300">PayPal Authorization Hold (Escrow)</span>
                 </div>
-                <div class="flex justify-between items-baseline text-sm border-t border-navy-700 pt-4">
-                  <span class="text-slate-300 font-semibold text-base">Total Value</span>
-                  <span class="text-2xl font-bold text-mint-400" id="appr-total">$0.00</span>
+                <div class="flex justify-between items-baseline text-xs border-t border-white/[0.08] pt-3">
+                  <span class="text-slate-300 font-medium">Total value</span>
+                  <span class="text-lg font-semibold text-mint-400 tabular-nums font-mono" id="appr-total">$0.00</span>
                 </div>
               </div>
 
               <!-- PayPal Container for Milestones -->
-              <div id="approvals-milestones-container" class="space-y-4">
+              <div id="approvals-milestones-container" class="space-y-3">
                 <!-- Buttons rendered here -->
               </div>
             </div>
 
-            <div class="mt-6 p-3.5 bg-navy-950/80 rounded-xl border border-navy-800 flex items-start gap-2.5">
-              <svg class="w-4 h-4 text-slate-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-              <p class="text-xs text-slate-500 leading-relaxed">
-                <strong class="text-slate-400">Zero Autonomous Payment Risk:</strong> MINT AI cannot approve purchases or initiate disbursement directly. Backend cryptographic signature & human authorization is strictly required. Funds remain held securely on PayPal escrow until verifiable delivery.
+            <div class="mt-4 p-3 bg-[#232325] rounded-lg border border-white/[0.08] flex items-start gap-2.5">
+              <svg class="w-4 h-4 text-slate-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              <p class="text-xs text-slate-400 leading-relaxed">
+                <strong class="text-[#ededed]">Authorization safeguard:</strong> Cryptographic server signature and buyer authorization required. Funds remain held securely on PayPal escrow until verifiable delivery.
               </p>
             </div>
           </div>
         </div>
 
         <!-- 7. ORDERS & FULFILMENT -->
-        <div id="page-orders" class="page hidden fade-in space-y-6">
-          <div class="glass rounded-2xl border border-navy-700 card-glow overflow-hidden">
-            <div class="px-6 py-4 border-b border-navy-700 flex items-center justify-between">
-              <h3 class="font-semibold text-white">Purchase Orders & Fulfilment Tracking</h3>
-              <span class="text-xs text-slate-400">Escrow Verification Status</span>
+        <div id="page-orders" class="page hidden fade-in space-y-5">
+          <div class="bg-[#19191b] rounded-xl border border-white/[0.08] overflow-hidden">
+            <div class="px-5 py-3.5 border-b border-white/[0.08] flex items-center justify-between">
+              <h3 class="font-medium text-[#ededed] text-sm">Purchase orders & fulfilment tracking</h3>
+              <span class="text-xs text-slate-400 font-mono">Escrow release status</span>
             </div>
-            <div class="p-6">
-              <div id="orders-list-container" class="space-y-4">
+            <div class="p-5">
+              <div id="orders-list-container" class="space-y-3">
                 <!-- Populated dynamically -->
               </div>
             </div>
@@ -805,16 +820,16 @@
     // Status Badge Component
     function badge(status) {
       const map = {
-        pending: 'bg-slate-700/60 text-slate-300 border-slate-600',
-        funded: 'bg-blue-500/20 text-blue-400 border-blue-500/30',
-        submitted: 'bg-amber-500/20 text-amber-400 border-amber-500/30',
-        verified: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30',
-        released: 'bg-teal-500/20 text-mint-400 border-teal-500/30',
-        disputed: 'bg-rose-500/20 text-rose-400 border-rose-500/30',
-        refunded: 'bg-slate-600/20 text-slate-400 border-slate-600'
+        pending: 'bg-[#232325] text-slate-400 border-white/[0.08]',
+        funded: 'bg-blue-500/10 text-sky-400 border-blue-500/25',
+        submitted: 'bg-amber-500/10 text-amber-400 border-amber-500/25',
+        verified: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/25',
+        released: 'bg-teal-500/10 text-mint-400 border-teal-500/25',
+        disputed: 'bg-rose-500/10 text-rose-400 border-rose-500/25',
+        refunded: 'bg-slate-500/10 text-slate-400 border-slate-500/25'
       };
-      const cls = map[status] || 'bg-navy-800 text-slate-300 border-navy-700';
-      return `<span class="inline-block text-[11px] font-semibold uppercase px-2.5 py-0.5 rounded-full border ${cls}">${esc(status)}</span>`;
+      const cls = map[status] || 'bg-[#232325] text-slate-400 border-white/[0.08]';
+      return `<span class="inline-block text-[11px] font-mono capitalize px-2 py-0.5 rounded-md border ${cls}">${esc(status)}</span>`;
     }
 
     // Login & Logout
@@ -823,14 +838,14 @@
       $('#view-login').classList.add('hidden');
       $('#view-app').classList.remove('hidden');
       initApp();
-      showToast('Signed in to MINT Escrow Console');
+      showToast('Signed in to MINT');
     }
 
     function doLogout() {
       state.isLoggedIn = false;
       $('#view-app').classList.add('hidden');
       $('#view-login').classList.remove('hidden');
-      showToast('Signed out successfully');
+      showToast('Signed out');
     }
 
     // Role Switcher
@@ -842,7 +857,7 @@
       $('#user-display-org').textContent = isClient ? 'AquaFlow Industries' : 'AquaSource Global';
       $('#user-avatar').textContent = isClient ? 'SC' : 'AM';
       $('#badge-current-role').textContent = isClient ? 'Client (Buyer)' : 'Freelancer (Supplier)';
-      showToast(`Switched perspective to: ${isClient ? 'Client (Buyer)' : 'Freelancer (Supplier)'}`);
+      showToast(`Role: ${isClient ? 'Client (Buyer)' : 'Freelancer (Supplier)'}`);
       
       // Re-render active view
       if (state.activeDealId) {
@@ -870,13 +885,13 @@
       }
 
       const titles = {
-        dashboard: ['AI Procurement Command Centre', 'Industrial Water Pumps · Real-time Escrow & Verification Engine'],
-        forecasts: ['AI Agreement Drafter (Gemini 2.0 Flash)', 'Convert natural language proposals into objective, verifiable milestone criteria'],
-        mesh: ['Active Agreements & Demand Pools', 'Live escrow agreements stored and monitored in MongoDB'],
-        suppliers: ['Verified Supplier Network', 'Pre-qualified industrial water pump OEMs and distributors'],
-        negotiation: ['AI Verifier & Mediation Room', 'Gemini AI acceptance verification and neutral dispute resolution'],
-        approvals: ['Approvals & PayPal Escrow', 'Executive authorization hold and cryptographic payout gateway'],
-        orders: ['Orders & Fulfilment Tracking', 'Track milestone deliverables, escrow release statuses, and audit records'],
+        dashboard: ['Procurement Overview', 'Industrial equipment agreements, escrow holds, and milestone verification'],
+        forecasts: ['Agreement Drafter', 'Convert specifications into verifiable milestone criteria with Gemini 2.0'],
+        mesh: ['Agreements Directory', 'Live escrow agreements stored and monitored in database'],
+        suppliers: ['Supplier Directory', 'Pre-qualified industrial equipment manufacturers'],
+        negotiation: ['Milestone Verification', 'Objective acceptance verification and dispute mediation'],
+        approvals: ['Executive Approvals', 'Mandatory human authorization prior to PayPal escrow capture'],
+        orders: ['Purchase Orders', 'Fulfilment tracking and PayPal settlement records'],
       };
 
       if (titles[page]) {
@@ -966,12 +981,12 @@
 
       if (!state.deals.length) {
         const emptyHtml = `
-          <div class="p-8 text-center text-slate-500 border border-dashed border-navy-700 rounded-xl">
-            <svg class="w-10 h-10 mx-auto text-slate-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-            <p class="text-sm font-medium text-slate-400">No active agreements in database yet.</p>
-            <p class="text-xs text-slate-500 mt-1">Use the Gemini AI Drafter to create your first verified procurement deal!</p>
-            <button onclick="navigate('forecasts')" class="mt-4 mint-gradient text-white text-xs font-semibold px-4 py-2 rounded-lg hover:opacity-90 transition">
-              ✨ Draft First Deal
+          <div class="p-8 text-center text-slate-500 border border-dashed border-white/[0.1] rounded-xl">
+            <svg class="w-8 h-8 mx-auto text-slate-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            <p class="text-xs font-medium text-slate-400">No active agreements in database yet</p>
+            <p class="text-[11px] text-slate-500 mt-1">Use the agreement drafter to create your first verified procurement deal.</p>
+            <button onclick="navigate('forecasts')" class="mt-3 bg-[#0d9488] hover:bg-[#0f766e] text-white text-xs font-medium px-3.5 py-1.5 rounded-lg transition-colors">
+              Draft first agreement
             </button>
           </div>
         `;
@@ -983,13 +998,13 @@
 
       // Render Dashboard Deals
       dashList.innerHTML = state.deals.map(d => `
-        <div onclick="selectAndOpenDeal('${d._id}')" class="bg-navy-900/60 hover:bg-navy-800/80 p-4 rounded-xl border border-navy-700/80 hover:border-mint-500/40 transition cursor-pointer flex flex-wrap items-center justify-between gap-3">
+        <div onclick="selectAndOpenDeal('${d._id}')" class="bg-[#232325] hover:bg-[#2c2c2f] p-3.5 rounded-lg border border-white/[0.08] transition-colors cursor-pointer flex flex-wrap items-center justify-between gap-3">
           <div class="flex-1 min-w-[200px]">
             <div class="flex items-center gap-2">
-              <h4 class="font-semibold text-white text-sm">${esc(d.title)}</h4>
-              <span class="text-xs text-mint-400 font-bold">$${total(d)} USD</span>
+              <h4 class="font-medium text-[#ededed] text-xs">${esc(d.title)}</h4>
+              <span class="text-xs text-mint-400 font-mono tabular-nums font-semibold">$${total(d)} USD</span>
             </div>
-            <p class="text-xs text-slate-400 mt-1 line-clamp-1">${esc(d.summary || 'Escrow Agreement')}</p>
+            <p class="text-[11px] text-slate-400 mt-0.5 line-clamp-1">${esc(d.summary || 'Escrow Agreement')}</p>
             <div class="text-[11px] text-slate-500 mt-1">
               Buyer: <span class="text-slate-300">${esc(d.clientName)}</span> → Supplier: <span class="text-slate-300">${esc(d.freelancerName)}</span>
             </div>
@@ -1002,22 +1017,22 @@
 
       // Render Mesh Deals Grid
       meshGrid.innerHTML = state.deals.map(d => `
-        <div class="bg-navy-900/60 p-5 rounded-xl border border-navy-700 flex flex-col justify-between hover:border-mint-500/40 transition">
+        <div class="bg-[#232325] p-4 rounded-xl border border-white/[0.08] flex flex-col justify-between">
           <div>
             <div class="flex justify-between items-start">
-              <h4 class="font-semibold text-white text-base">${esc(d.title)}</h4>
-              <span class="text-mint-400 font-bold text-sm">$${total(d)} USD</span>
+              <h4 class="font-medium text-[#ededed] text-sm">${esc(d.title)}</h4>
+              <span class="text-mint-400 font-mono tabular-nums text-xs font-semibold">$${total(d)} USD</span>
             </div>
-            <p class="text-xs text-slate-400 mt-2 line-clamp-2">${esc(d.summary)}</p>
-            <div class="mt-4 pt-3 border-t border-navy-700/80 text-xs text-slate-400 space-y-1">
+            <p class="text-xs text-slate-400 mt-1.5 line-clamp-2">${esc(d.summary)}</p>
+            <div class="mt-3 pt-2.5 border-t border-white/[0.08] text-xs text-slate-400 space-y-1">
               <div>Buyer: <span class="text-slate-200">${esc(d.clientName)}</span></div>
-              <div>Supplier: <span class="text-slate-200">${esc(d.freelancerName)} (${esc(d.freelancerEmail)})</span></div>
-              <div>Milestones: <span class="text-mint-400 font-semibold">${d.milestones.length} stages</span></div>
+              <div>Supplier: <span class="text-slate-200">${esc(d.freelancerName)}</span></div>
+              <div>Milestones: <span class="text-mint-400 font-mono font-medium">${d.milestones.length} stages</span></div>
             </div>
           </div>
-          <div class="mt-4 pt-3 border-t border-navy-700/80 flex items-center justify-between">
+          <div class="mt-3 pt-2.5 border-t border-white/[0.08] flex items-center justify-between">
             <div class="flex gap-1 flex-wrap">${d.milestones.map(m => badge(m.status)).slice(0, 3).join('')}</div>
-            <button onclick="selectAndOpenDeal('${d._id}')" class="text-xs mint-gradient text-white font-medium px-3 py-1.5 rounded-lg hover:opacity-90 transition">
+            <button onclick="selectAndOpenDeal('${d._id}')" class="text-xs bg-[#0d9488] hover:bg-[#0f766e] text-white font-medium px-2.5 py-1 rounded-md transition-colors">
               Manage →
             </button>
           </div>
@@ -1026,23 +1041,23 @@
 
       // Render Orders
       ordersList.innerHTML = state.deals.map(d => `
-        <div class="bg-navy-900/60 p-5 rounded-xl border border-navy-700 space-y-4">
-          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-navy-700/80 pb-3">
+        <div class="bg-[#232325] p-4 rounded-xl border border-white/[0.08] space-y-3">
+          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-white/[0.08] pb-2.5">
             <div>
-              <h4 class="font-semibold text-white">${esc(d.title)}</h4>
+              <h4 class="font-medium text-[#ededed] text-sm">${esc(d.title)}</h4>
               <div class="text-xs text-slate-400">PO ID: <span class="font-mono text-slate-300">${d._id}</span></div>
             </div>
             <div class="text-right">
-              <div class="text-base font-bold text-mint-400">$${total(d)} USD</div>
-              <div class="text-xs text-slate-500">${d.milestones.length} milestone deliverables</div>
+              <div class="text-sm font-semibold text-mint-400 font-mono tabular-nums">$${total(d)} USD</div>
+              <div class="text-[11px] text-slate-500 font-mono">${d.milestones.length} milestone deliverables</div>
             </div>
           </div>
           <div class="space-y-2">
             ${d.milestones.map((m, i) => `
-              <div class="p-3 bg-navy-950/60 rounded-lg border border-navy-800 flex flex-wrap items-center justify-between text-xs gap-2">
+              <div class="p-2.5 bg-[#19191b] rounded-lg border border-white/[0.08] flex flex-wrap items-center justify-between text-xs gap-2">
                 <div>
-                  <span class="font-semibold text-white">${i + 1}. ${esc(m.title)}</span>
-                  <span class="text-slate-400 ml-2">($${Number(m.amount).toFixed(2)})</span>
+                  <span class="font-medium text-[#ededed]">${i + 1}. ${esc(m.title)}</span>
+                  <span class="text-slate-400 font-mono ml-2">($${Number(m.amount).toFixed(2)})</span>
                   ${m.authId ? `<span class="ml-2 font-mono text-emerald-400 text-[10px]">Auth: ${esc(m.authId)}</span>` : ''}
                   ${m.captureId ? `<span class="ml-2 font-mono text-mint-400 text-[10px]">Captured: ${esc(m.captureId)}</span>` : ''}
                 </div>
@@ -1068,13 +1083,13 @@
       });
 
       if (!events.length) {
-        container.innerHTML = '<div class="text-xs text-slate-500 text-center py-8">No events logged yet. Actions like escrow funding and AI verifications will stream here.</div>';
+        container.innerHTML = '<div class="text-xs text-slate-500 text-center py-8">No events logged yet. Actions like escrow funding and verifications will stream here.</div>';
         return;
       }
 
       container.innerHTML = events.slice(-10).reverse().map(e => `
-        <div class="p-2.5 bg-navy-900/60 rounded-lg border border-navy-700/80 text-xs">
-          <div class="font-medium text-mint-400 truncate">${esc(e.deal)}</div>
+        <div class="p-2.5 bg-[#232325] rounded-lg border border-white/[0.08] text-xs">
+          <div class="font-medium text-mint-400 truncate text-[11px]">${esc(e.deal)}</div>
           <div class="text-slate-300 mt-0.5 font-mono text-[11px]">${esc(e.text)}</div>
         </div>
       `).join('');
@@ -1085,24 +1100,24 @@
       const container = $('#forecast-cards');
       if (!container) return;
       container.innerHTML = state.forecasts.map(f => `
-        <div class="glass rounded-2xl border border-navy-700 card-glow p-5 hover:border-mint-500/30 transition">
+        <div class="bg-[#232325] rounded-xl border border-white/[0.08] p-4">
           <div class="flex items-start justify-between">
-            <h4 class="font-semibold text-white text-sm pr-4">${f.product}</h4>
-            <span class="text-xs px-2.5 py-0.5 rounded-full font-medium ${f.conf >= 0.65 ? 'bg-mint-500/15 text-mint-400 border border-mint-500/25' : 'bg-amber-500/15 text-amber-400 border border-amber-500/25'} shrink-0">
+            <h4 class="font-medium text-[#ededed] text-xs pr-4">${f.product}</h4>
+            <span class="text-[11px] font-mono px-2 py-0.5 rounded-md ${f.conf >= 0.65 ? 'bg-mint-500/10 text-mint-400 border border-mint-500/20' : 'bg-amber-500/10 text-amber-400 border border-amber-500/20'} shrink-0">
               ${(f.conf * 100).toFixed(0)}% conf
             </span>
           </div>
-          <div class="mt-4 flex items-end gap-6">
+          <div class="mt-3 flex items-end gap-6">
             <div>
-              <div class="text-xs text-slate-500">Predicted requirement</div>
-              <div class="text-2xl font-bold text-white tracking-tight">${f.qty} units</div>
+              <div class="text-[11px] text-slate-500">Predicted requirement</div>
+              <div class="text-xl font-semibold tabular-nums font-mono text-[#ededed]">${f.qty} units</div>
             </div>
             <div>
-              <div class="text-xs text-slate-500">Target window</div>
-              <div class="text-base font-semibold text-slate-200">${f.date}</div>
+              <div class="text-[11px] text-slate-500">Target window</div>
+              <div class="text-xs font-mono text-slate-300">${f.date}</div>
             </div>
           </div>
-          <p class="mt-4 text-xs text-slate-400 leading-relaxed border-t border-navy-700/60 pt-3">${f.expl}</p>
+          <p class="mt-3 text-xs text-slate-400 leading-relaxed border-t border-white/[0.08] pt-2.5">${f.expl}</p>
         </div>
       `).join('');
     }
@@ -1155,70 +1170,70 @@
       if (!d) return;
 
       container.innerHTML = `
-        <div class="glass rounded-2xl border border-mint-500/40 card-glow p-6 space-y-5 fade-in mt-6">
-          <div class="flex items-center justify-between border-b border-navy-700 pb-3">
+        <div class="bg-[#19191b] rounded-xl border border-white/[0.08] p-5 space-y-4 mt-5">
+          <div class="flex items-center justify-between border-b border-white/[0.08] pb-3">
             <div>
-              <span class="text-xs font-semibold text-mint-400 uppercase tracking-wider">Step 2: Review & Create Deal</span>
-              <h3 class="text-lg font-bold text-white mt-0.5">Agreement Specifications</h3>
+              <span class="text-xs font-medium text-slate-400">Step 2: Review and save agreement</span>
+              <h3 class="text-sm font-semibold text-[#ededed] mt-0.5">Agreement Specifications</h3>
             </div>
-            <span class="text-xs px-2.5 py-1 rounded-full bg-mint-500/15 text-mint-400 border border-mint-500/30">
-              AI Drafted
+            <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-mint-500/10 text-mint-400 border border-mint-500/25">
+              Structured output
             </span>
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
             <div>
-              <label class="block text-xs font-medium text-slate-400 mb-1">Buyer / Client Name</label>
-              <input id="dr-client-name" class="w-full bg-navy-900 border border-navy-600 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-mint-500" value="AquaFlow Industries" />
+              <label class="block text-xs font-medium text-slate-400 mb-1">Buyer / Client</label>
+              <input id="dr-client-name" class="w-full bg-[#232325] border border-white/[0.1] rounded-lg px-3 py-1.5 text-xs text-[#ededed] focus:outline-none focus:border-mint-500" value="AquaFlow Industries" />
             </div>
             <div>
-              <label class="block text-xs font-medium text-slate-400 mb-1">Supplier / Freelancer Name</label>
-              <input id="dr-freelancer-name" class="w-full bg-navy-900 border border-navy-600 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-mint-500" value="AquaSource Global" />
+              <label class="block text-xs font-medium text-slate-400 mb-1">Supplier</label>
+              <input id="dr-freelancer-name" class="w-full bg-[#232325] border border-white/[0.1] rounded-lg px-3 py-1.5 text-xs text-[#ededed] focus:outline-none focus:border-mint-500" value="AquaSource Global" />
             </div>
             <div>
               <label class="block text-xs font-medium text-slate-400 mb-1">Supplier PayPal Email</label>
-              <input id="dr-freelancer-email" type="email" class="w-full bg-navy-900 border border-navy-600 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-mint-500" value="sb-seller@example.com" />
+              <input id="dr-freelancer-email" type="email" class="w-full bg-[#232325] border border-white/[0.1] rounded-lg px-3 py-1.5 text-xs text-[#ededed] focus:outline-none focus:border-mint-500" value="sb-seller@example.com" />
             </div>
           </div>
 
           <div>
             <label class="block text-xs font-medium text-slate-400 mb-1">Agreement Title</label>
-            <input id="dr-title" class="w-full bg-navy-900 border border-navy-600 rounded-lg px-3 py-2 text-sm font-semibold text-white focus:outline-none focus:border-mint-500" value="${esc(d.title)}" />
+            <input id="dr-title" class="w-full bg-[#232325] border border-white/[0.1] rounded-lg px-3 py-1.5 text-xs font-medium text-[#ededed] focus:outline-none focus:border-mint-500" value="${esc(d.title)}" />
           </div>
 
           <div>
-            <label class="block text-xs font-medium text-slate-400 mb-1">Summary of Work</label>
-            <textarea id="dr-summary" rows="2" class="w-full bg-navy-900 border border-navy-600 rounded-lg p-2.5 text-xs text-slate-300 focus:outline-none focus:border-mint-500">${esc(d.summary)}</textarea>
+            <label class="block text-xs font-medium text-slate-400 mb-1">Scope summary</label>
+            <textarea id="dr-summary" rows="2" class="w-full bg-[#232325] border border-white/[0.1] rounded-lg p-2.5 text-xs text-slate-300 focus:outline-none focus:border-mint-500">${esc(d.summary)}</textarea>
           </div>
 
           <div>
-            <h4 class="text-sm font-semibold text-white mb-3">Proposed Objective Milestones:</h4>
-            <div class="space-y-3" id="dr-milestones-list">
+            <h4 class="text-xs font-medium text-slate-400 mb-2.5">Milestone schedule:</h4>
+            <div class="space-y-2.5" id="dr-milestones-list">
               ${(d.milestones || []).map((m, i) => `
-                <div class="bg-navy-900/70 p-4 rounded-xl border border-navy-700/80 space-y-2.5">
+                <div class="bg-[#232325] p-3.5 rounded-lg border border-white/[0.08] space-y-2">
                   <div class="flex items-center justify-between gap-3">
-                    <span class="text-xs font-bold text-mint-400">Milestone ${i + 1}</span>
+                    <span class="text-xs font-medium text-mint-400 font-mono">Milestone ${i + 1}</span>
                     <div class="flex items-center gap-2">
                       <span class="text-xs text-slate-400">Amount (USD):</span>
-                      <input data-m-i="${i}" data-m-k="amount" type="number" step="0.01" class="w-28 bg-navy-950 border border-navy-700 rounded px-2 py-1 text-sm text-right font-bold text-white focus:outline-none focus:border-mint-500" value="${m.amount}" />
+                      <input data-m-i="${i}" data-m-k="amount" type="number" step="0.01" class="w-24 bg-[#19191b] border border-white/[0.1] rounded px-2 py-1 text-xs text-right font-mono tabular-nums text-[#ededed] focus:outline-none focus:border-mint-500" value="${m.amount}" />
                     </div>
                   </div>
                   <div>
-                    <input data-m-i="${i}" data-m-k="title" class="w-full bg-navy-950 border border-navy-700 rounded px-3 py-1.5 text-xs font-medium text-white focus:outline-none focus:border-mint-500" value="${esc(m.title)}" placeholder="Milestone title" />
+                    <input data-m-i="${i}" data-m-k="title" class="w-full bg-[#19191b] border border-white/[0.1] rounded px-2.5 py-1.5 text-xs text-[#ededed] focus:outline-none focus:border-mint-500" value="${esc(m.title)}" placeholder="Milestone title" />
                   </div>
                   <div>
-                    <label class="block text-[11px] text-slate-400 mb-0.5">Objective Acceptance Criteria (for Gemini Verifier):</label>
-                    <textarea data-m-i="${i}" data-m-k="criteria" rows="2" class="w-full bg-navy-950 border border-navy-700 rounded p-2 text-xs text-slate-300 focus:outline-none focus:border-mint-500">${esc(m.criteria)}</textarea>
+                    <label class="block text-[11px] text-slate-400 mb-0.5">Objective acceptance criteria:</label>
+                    <textarea data-m-i="${i}" data-m-k="criteria" rows="2" class="w-full bg-[#19191b] border border-white/[0.1] rounded p-2 text-xs text-slate-300 focus:outline-none focus:border-mint-500">${esc(m.criteria)}</textarea>
                   </div>
                 </div>
               `).join('')}
             </div>
           </div>
 
-          <div class="flex justify-end pt-3">
-            <button onclick="handleConfirmCreateDeal(this)" class="mint-gradient mint-gradient-hover text-white font-semibold text-sm px-6 py-3 rounded-xl transition shadow-lg shadow-mint-600/25 flex items-center gap-2">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-              <span>Confirm & Save Deal in Database</span>
+          <div class="flex justify-end pt-2">
+            <button onclick="handleConfirmCreateDeal(this)" class="bg-[#0d9488] hover:bg-[#0f766e] text-white font-medium text-xs px-4 py-2 rounded-lg transition-colors flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 13l4 4L19 7"/></svg>
+              <span>Confirm & Save in Database</span>
             </button>
           </div>
         </div>
@@ -1247,7 +1262,7 @@
         };
 
         const created = await api('/deals', 'POST', payload);
-        showToast('Deal created successfully in database!');
+        showToast('Deal created in database');
         state.draft = null;
         $('#draft-review-container').innerHTML = '';
         await refreshData();
@@ -1258,7 +1273,7 @@
     function startDealWithSupplier(name, email, price) {
       $('#draft-input-text').value = `Procure 3 Centrifugal Water Pumps 150HP from ${name} (${email}) for $${(price * 3).toLocaleString()}. Milestone 1: $15,000 for FAT report and factory test data. Milestone 2: $${(price * 3 - 15000).toLocaleString()} upon delivery, ISO 9906 verification, and site commissioning.`;
       navigate('forecasts');
-      showToast(`Prompt loaded for ${name}. Click Draft Milestones!`);
+      showToast(`Prompt loaded for ${name}`);
     }
 
     // 3. LOAD DEAL WORKSPACE & MILESTONE MANAGER
@@ -1272,7 +1287,7 @@
         renderDealWorkspaceUI(deal);
         renderApprovalsUI(deal);
       } catch (err) {
-        container.innerHTML = `<div class="p-6 text-rose-400 bg-rose-500/10 rounded-xl">Error loading deal: ${esc(err.message)}</div>`;
+        container.innerHTML = `<div class="p-4 text-xs text-rose-400 bg-rose-500/10 rounded-lg">Error loading agreement: ${esc(err.message)}</div>`;
       }
     }
 
@@ -1283,80 +1298,80 @@
       const isFreelancer = state.role === 'freelancer';
 
       container.innerHTML = `
-        <div class="glass rounded-2xl border border-navy-700 card-glow overflow-hidden fade-in">
+        <div class="bg-[#19191b] rounded-xl border border-white/[0.08] overflow-hidden">
           <!-- Deal Header -->
-          <div class="p-6 border-b border-navy-700 bg-navy-900/40 flex flex-wrap items-center justify-between gap-4">
+          <div class="p-5 border-b border-white/[0.08] bg-[#232325] flex flex-wrap items-center justify-between gap-4">
             <div>
               <div class="flex items-center gap-2">
-                <h3 class="text-xl font-bold text-white">${esc(d.title)}</h3>
-                <span class="text-xs px-2.5 py-0.5 rounded-full bg-mint-500/15 text-mint-400 border border-mint-500/30 font-semibold">$${total(d)} USD</span>
+                <h3 class="text-base font-semibold text-[#ededed]">${esc(d.title)}</h3>
+                <span class="text-xs px-2 py-0.5 rounded-md bg-mint-500/10 text-mint-400 border border-mint-500/25 font-mono tabular-nums font-medium">$${total(d)} USD</span>
               </div>
               <p class="text-xs text-slate-400 mt-1 max-w-2xl">${esc(d.summary || '')}</p>
               <div class="text-xs text-slate-400 mt-2 flex items-center gap-4">
-                <span>Buyer: <strong class="text-white">${esc(d.clientName)}</strong></span>
-                <span>Supplier: <strong class="text-white">${esc(d.freelancerName)}</strong> (<span class="font-mono text-slate-300">${esc(d.freelancerEmail)}</span>)</span>
+                <span>Buyer: <strong class="text-[#ededed] font-medium">${esc(d.clientName)}</strong></span>
+                <span>Supplier: <strong class="text-[#ededed] font-medium">${esc(d.freelancerName)}</strong> (<span class="font-mono text-slate-400">${esc(d.freelancerEmail)}</span>)</span>
               </div>
             </div>
             <div class="text-right">
-              <span class="text-xs text-slate-500">ID: ${d._id}</span>
+              <span class="text-xs font-mono text-slate-500">ID: ${d._id}</span>
             </div>
           </div>
 
           <!-- Milestones List -->
-          <div class="p-6 space-y-6">
-            <h4 class="text-sm font-semibold uppercase tracking-wider text-slate-400">Milestone Deliverables & AI Verification</h4>
+          <div class="p-5 space-y-4">
+            <h4 class="text-xs font-medium text-slate-400">Milestone schedule & verification</h4>
 
             ${d.milestones.map((m, i) => `
-              <div class="bg-navy-900/70 rounded-2xl border border-navy-700/80 p-5 space-y-4 hover:border-navy-600 transition">
-                <div class="flex flex-wrap items-center justify-between gap-3 border-b border-navy-800 pb-3">
+              <div class="bg-[#232325] rounded-xl border border-white/[0.08] p-4 space-y-3">
+                <div class="flex flex-wrap items-center justify-between gap-3 border-b border-white/[0.08] pb-2.5">
                   <div class="flex items-center gap-2">
-                    <span class="w-6 h-6 rounded-full bg-navy-800 border border-navy-700 flex items-center justify-center text-xs font-bold text-mint-400">${i + 1}</span>
-                    <h5 class="font-semibold text-white text-base">${esc(m.title)}</h5>
+                    <span class="w-5 h-5 rounded bg-[#19191b] border border-white/[0.1] flex items-center justify-center text-xs font-mono text-mint-400">${i + 1}</span>
+                    <h5 class="font-medium text-[#ededed] text-sm">${esc(m.title)}</h5>
                   </div>
-                  <div class="flex items-center gap-3">
-                    <span class="text-base font-bold text-white">$${Number(m.amount).toFixed(2)} USD</span>
+                  <div class="flex items-center gap-2.5">
+                    <span class="text-sm font-semibold tabular-nums font-mono text-[#ededed]">$${Number(m.amount).toFixed(2)} USD</span>
                     ${badge(m.status)}
                   </div>
                 </div>
 
                 <!-- Acceptance Criteria -->
-                <div class="bg-navy-950/60 p-3.5 rounded-xl border border-navy-800">
-                  <div class="text-xs font-medium text-slate-400 mb-1">Acceptance Criteria (for Gemini Verifier):</div>
-                  <div class="text-xs text-slate-200 leading-relaxed">${esc(m.criteria)}</div>
+                <div class="bg-[#19191b] p-3 rounded-lg border border-white/[0.08]">
+                  <div class="text-[11px] font-medium text-slate-400 mb-0.5">Acceptance criteria:</div>
+                  <div class="text-xs text-slate-300 leading-relaxed">${esc(m.criteria)}</div>
                 </div>
 
                 <!-- Deliverable Submission (if submitted) -->
                 ${m.submission ? `
-                  <div class="bg-navy-950/60 p-3.5 rounded-xl border border-navy-800">
-                    <div class="text-xs font-medium text-slate-400 mb-1">Submitted Deliverable & Evidence:</div>
-                    <div class="text-xs text-slate-200 leading-relaxed font-mono bg-navy-900/80 p-2.5 rounded-lg border border-navy-700/60">${esc(m.submission)}</div>
+                  <div class="bg-[#19191b] p-3 rounded-lg border border-white/[0.08]">
+                    <div class="text-[11px] font-medium text-slate-400 mb-0.5">Submitted evidence:</div>
+                    <div class="text-xs text-slate-300 leading-relaxed font-mono bg-[#232325] p-2 rounded border border-white/[0.08]">${esc(m.submission)}</div>
                   </div>
                 ` : ''}
 
                 <!-- Gemini AI Verification Report -->
                 ${m.aiReport ? `
-                  <div class="bg-navy-950/80 border border-purple-500/40 rounded-xl p-4 space-y-2.5">
+                  <div class="bg-[#19191b] border border-purple-500/25 rounded-lg p-3 space-y-2">
                     <div class="flex items-center justify-between">
                       <div class="flex items-center gap-2">
-                        <span class="badge-gemini px-2 py-0.5 rounded text-[10px] font-bold gemini-gradient text-white">
-                          ✨ GEMINI VERIFIER
+                        <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-purple-500/10 text-purple-300 border border-purple-500/20">
+                          Gemini Verification
                         </span>
-                        <span class="text-xs font-bold ${m.aiReport.verdict === 'pass' ? 'text-emerald-400' : 'text-amber-400'} uppercase">
-                          Verdict: ${esc(m.aiReport.verdict)}
+                        <span class="text-xs font-mono capitalize ${m.aiReport.verdict === 'pass' ? 'text-emerald-400' : 'text-amber-400'}">
+                          ${esc(m.aiReport.verdict)}
                         </span>
                       </div>
-                      <span class="text-xs font-bold px-2 py-0.5 rounded bg-purple-500/20 text-purple-300">
+                      <span class="text-xs font-mono tabular-nums px-2 py-0.5 rounded bg-purple-500/15 text-purple-300">
                         Score: ${esc(m.aiReport.score)}/100
                       </span>
                     </div>
                     <p class="text-xs text-slate-300">${esc(m.aiReport.summary)}</p>
                     ${(m.aiReport.criteria || []).length ? `
-                      <div class="space-y-1.5 pt-2 border-t border-navy-800">
+                      <div class="space-y-1.5 pt-2 border-t border-white/[0.08]">
                         ${m.aiReport.criteria.map(c => `
                           <div class="text-xs flex items-start gap-2">
-                            <span class="${c.met ? 'text-emerald-400' : 'text-rose-400'} font-bold">${c.met ? '✓' : '✗'}</span>
+                            <span class="${c.met ? 'text-emerald-400' : 'text-rose-400'} font-mono">${c.met ? '✓' : '✗'}</span>
                             <div class="flex-1">
-                              <span class="text-white">${esc(c.criterion)}</span>
+                              <span class="text-[#ededed]">${esc(c.criterion)}</span>
                               <div class="text-[11px] text-slate-400 mt-0.5">Evidence: ${esc(c.evidence)}</div>
                             </div>
                           </div>
@@ -1368,16 +1383,16 @@
 
                 <!-- Dispute Panel (if disputed) -->
                 ${m.dispute ? `
-                  <div class="bg-rose-950/20 border border-rose-500/40 rounded-xl p-4 space-y-2">
+                  <div class="bg-[#19191b] border border-rose-500/30 rounded-lg p-3 space-y-2">
                     <div class="flex items-center justify-between">
-                      <div class="text-xs font-bold text-rose-400">⚖️ Dispute Opened by ${esc(m.dispute.by)}</div>
-                      <span class="text-xs px-2 py-0.5 rounded bg-rose-500/20 text-rose-300">
-                        Gemini Recommends: ${esc(m.dispute.recommended_release_percent)}% to Supplier
+                      <div class="text-xs font-medium text-rose-400">Dispute opened by ${esc(m.dispute.by)}</div>
+                      <span class="text-xs font-mono tabular-nums px-2 py-0.5 rounded bg-rose-500/15 text-rose-300">
+                        Mediator: ${esc(m.dispute.recommended_release_percent)}% to Supplier
                       </span>
                     </div>
                     <p class="text-xs text-slate-300">Reason: "${esc(m.dispute.reason)}"</p>
-                    <div class="text-xs text-slate-400 pt-2 border-t border-rose-900/40">
-                      <strong>Mediator Reasoning:</strong> ${esc(m.dispute.reasoning)}
+                    <div class="text-xs text-slate-400 pt-2 border-t border-white/[0.08]">
+                      <strong>Mediator reasoning:</strong> ${esc(m.dispute.reasoning)}
                     </div>
                     ${m.dispute.message_to_client ? `<div class="text-[11px] text-slate-400"><strong>Note to Client:</strong> ${esc(m.dispute.message_to_client)}</div>` : ''}
                     ${m.dispute.message_to_freelancer ? `<div class="text-[11px] text-slate-400"><strong>Note to Supplier:</strong> ${esc(m.dispute.message_to_freelancer)}</div>` : ''}
@@ -1385,7 +1400,7 @@
                 ` : ''}
 
                 <!-- Action Controls depending on Milestone Status & Role -->
-                <div class="pt-2 flex flex-wrap items-center gap-2">
+                <div class="pt-1 flex flex-wrap items-center gap-2">
                   <!-- Pending Milestone: Needs Funding -->
                   ${m.status === 'pending' && isClient ? `
                     <div id="paypal-btn-${i}" class="w-full max-w-xs"></div>
@@ -1397,72 +1412,72 @@
                   <!-- Funded or Submitted: Freelancer can submit work -->
                   ${['funded', 'submitted'].includes(m.status) && isFreelancer ? `
                     <div class="w-full space-y-2">
-                      <textarea id="sub-input-${i}" rows="2" class="w-full bg-navy-950 border border-navy-700 rounded-lg p-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-mint-500" placeholder="Describe completed deliverable and include live URLs (e.g. test certificate at https://...)">${esc(m.submission || '')}</textarea>
-                      <button onclick="handleSubmitDeliverable('${d._id}', ${i}, this)" class="mint-gradient text-white text-xs font-semibold px-4 py-2 rounded-lg hover:opacity-95 transition">
-                        Submit Deliverable for AI Verification
+                      <textarea id="sub-input-${i}" rows="2" class="w-full bg-[#19191b] border border-white/[0.1] rounded-lg p-2.5 text-xs text-[#ededed] placeholder-slate-500 focus:outline-none focus:border-mint-500" placeholder="Describe completed deliverable and include evidence URL">${esc(m.submission || '')}</textarea>
+                      <button onclick="handleSubmitDeliverable('${d._id}', ${i}, this)" class="bg-[#0d9488] hover:bg-[#0f766e] text-white text-xs font-medium px-3.5 py-1.5 rounded-lg transition-colors">
+                        Submit deliverable for verification
                       </button>
                     </div>
                   ` : ''}
 
                   <!-- Submitted: Run Gemini AI Verification -->
                   ${m.status === 'submitted' ? `
-                    <button onclick="handleVerifySubmission('${d._id}', ${i}, this)" class="gemini-gradient text-white text-xs font-semibold px-4 py-2 rounded-lg hover:opacity-95 transition flex items-center gap-1.5 shadow-md shadow-purple-500/20">
-                      <span>✨ Run Gemini AI Verification</span>
+                    <button onclick="handleVerifySubmission('${d._id}', ${i}, this)" class="bg-[#232325] hover:bg-[#2c2c2f] border border-white/[0.12] text-[#ededed] text-xs font-medium px-3.5 py-1.5 rounded-lg transition-colors flex items-center gap-1.5">
+                      <span>Run Gemini verification</span>
                     </button>
                   ` : ''}
 
                   <!-- Verified & Client: Settle 100% -->
                   ${m.status === 'verified' && isClient ? `
-                    <button onclick="handleSettleMilestone('${d._id}', ${i}, 100, this)" class="mint-gradient text-white text-xs font-semibold px-4 py-2 rounded-lg hover:opacity-95 transition flex items-center gap-1.5 shadow-md shadow-mint-600/20">
-                      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-                      <span>Approve & Release 100% Payout</span>
+                    <button onclick="handleSettleMilestone('${d._id}', ${i}, 100, this)" class="bg-[#0d9488] hover:bg-[#0f766e] text-white text-xs font-medium px-3.5 py-1.5 rounded-lg transition-colors flex items-center gap-1.5">
+                      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 13l4 4L19 7"/></svg>
+                      <span>Approve & release payout</span>
                     </button>
                   ` : ''}
 
                   <!-- Submitted & Client: Direct Approve -->
                   ${m.status === 'submitted' && isClient ? `
-                    <button onclick="handleSettleMilestone('${d._id}', ${i}, 100, this)" class="bg-navy-800 border border-navy-600 text-slate-200 text-xs font-medium px-4 py-2 rounded-lg hover:bg-navy-700 transition">
-                      Direct Release (Skip Verification)
+                    <button onclick="handleSettleMilestone('${d._id}', ${i}, 100, this)" class="bg-[#232325] hover:bg-[#2c2c2f] border border-white/[0.08] text-slate-200 text-xs font-medium px-3.5 py-1.5 rounded-lg transition-colors">
+                      Direct release
                     </button>
                   ` : ''}
 
                   <!-- Funded & Client: Cancel & Void Escrow (100% Refund) -->
                   ${m.status === 'funded' && isClient ? `
-                    <button onclick="handleSettleMilestone('${d._id}', ${i}, 0, this)" class="bg-navy-800 border border-navy-600 text-slate-300 text-xs font-medium px-3.5 py-2 rounded-lg hover:bg-navy-700 transition">
-                      Cancel & Void Escrow (100% Refund)
+                    <button onclick="handleSettleMilestone('${d._id}', ${i}, 0, this)" class="bg-[#232325] hover:bg-[#2c2c2f] border border-white/[0.08] text-slate-300 text-xs font-medium px-3 py-1.5 rounded-lg transition-colors">
+                      Void escrow (100% refund)
                     </button>
                   ` : ''}
 
                   <!-- Disputed: Accept Ruling -->
                   ${m.status === 'disputed' ? `
-                    <button onclick="handleSettleMilestone('${d._id}', ${i}, ${m.dispute.recommended_release_percent}, this)" class="gemini-gradient text-white text-xs font-semibold px-4 py-2 rounded-lg hover:opacity-95 transition">
-                      Accept Gemini Ruling (${m.dispute.recommended_release_percent}% Payout)
+                    <button onclick="handleSettleMilestone('${d._id}', ${i}, ${m.dispute.recommended_release_percent}, this)" class="bg-[#0d9488] hover:bg-[#0f766e] text-white text-xs font-medium px-3.5 py-1.5 rounded-lg transition-colors">
+                      Accept mediator ruling (${m.dispute.recommended_release_percent}% payout)
                     </button>
                   ` : ''}
 
                   <!-- Raise Dispute (if submitted or verified) -->
                   ${['submitted', 'verified'].includes(m.status) ? `
-                    <button onclick="handleRaiseDispute('${d._id}', ${i})" class="bg-rose-500/15 border border-rose-500/30 text-rose-300 text-xs font-medium px-3.5 py-2 rounded-lg hover:bg-rose-500/25 transition">
+                    <button onclick="handleRaiseDispute('${d._id}', ${i})" class="bg-rose-500/10 hover:bg-rose-500/15 border border-rose-500/25 text-rose-300 text-xs font-medium px-3 py-1.5 rounded-lg transition-colors">
                       Raise Dispute
                     </button>
                   ` : ''}
                 </div>
 
                 <!-- PayPal Smart Advisor & Escrow Guard Add-On -->
-                <div class="pt-3 border-t border-navy-800/80 flex flex-wrap items-center justify-between gap-2">
+                <div class="pt-2.5 border-t border-white/[0.08] flex flex-wrap items-center justify-between gap-2">
                   <div class="flex items-center gap-2">
-                    <button type="button" onclick="window.paypalAdvisor.toggleAdvisor('${d._id}', ${i})" class="bg-navy-950 hover:bg-navy-800 border border-navy-700 text-mint-400 text-xs font-medium px-3 py-1.5 rounded-lg transition flex items-center gap-1.5 shadow-sm">
-                      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    <button type="button" onclick="window.paypalAdvisor.toggleAdvisor('${d._id}', ${i})" class="bg-[#19191b] hover:bg-[#232325] border border-white/[0.08] text-mint-400 text-xs font-medium px-2.5 py-1.5 rounded-lg transition-colors flex items-center gap-1.5">
+                      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                       <span>PayPal Gateway Advisor</span>
                     </button>
                     ${m.status === 'funded' ? `
-                      <span class="text-[11px] font-mono px-2.5 py-0.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 text-emerald-400">
+                      <span class="text-[11px] font-mono px-2 py-0.5 rounded-md border border-emerald-500/25 bg-emerald-500/10 text-emerald-400">
                         ● Escrow Guard: Guaranteed Hold
                       </span>
                     ` : ''}
                   </div>
                   ${m.status === 'funded' ? `
-                    <button type="button" onclick="window.paypalAdvisor.reauthorizeHold('${d._id}', ${i}, this)" class="bg-navy-950 hover:bg-navy-800 border border-navy-700 text-slate-300 text-xs font-medium px-3 py-1.5 rounded-lg transition">
+                    <button type="button" onclick="window.paypalAdvisor.reauthorizeHold('${d._id}', ${i}, this)" class="bg-[#19191b] hover:bg-[#232325] border border-white/[0.08] text-slate-300 text-xs font-medium px-2.5 py-1.5 rounded-lg transition-colors">
                       Reauthorize Hold
                     </button>
                   ` : ''}
@@ -1471,7 +1486,7 @@
 
                 <!-- Milestone Event Logs -->
                 ${(m.log || []).length ? `
-                  <div class="pt-2 border-t border-navy-800 text-[11px] text-slate-500 font-mono space-y-0.5">
+                  <div class="pt-2 border-t border-white/[0.08] text-[11px] text-slate-500 font-mono space-y-0.5">
                     ${m.log.map(esc).join('<br>')}
                   </div>
                 ` : ''}
@@ -1620,21 +1635,21 @@
 
       if (!pendingMilestones.length) {
         container.innerHTML = `
-          <div class="p-4 bg-emerald-500/10 border border-emerald-500/30 rounded-xl text-center text-xs text-emerald-400 font-medium">
-            ✓ All milestones for this agreement have been authorized or released!
+          <div class="p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-lg text-center text-xs text-emerald-400 font-medium">
+            All milestones for this agreement have been authorized or released
           </div>
         `;
         return;
       }
 
       container.innerHTML = pendingMilestones.map((m, i) => `
-        <div class="bg-navy-900/80 p-4 rounded-xl border border-navy-700 flex flex-wrap items-center justify-between gap-3">
+        <div class="bg-[#232325] p-3.5 rounded-lg border border-white/[0.08] flex flex-wrap items-center justify-between gap-3">
           <div>
-            <div class="font-semibold text-white text-sm">${esc(m.title)}</div>
-            <div class="text-xs text-slate-400">$${Number(m.amount).toFixed(2)} USD · PayPal Authorization Required</div>
+            <div class="font-medium text-[#ededed] text-xs">${esc(m.title)}</div>
+            <div class="text-[11px] text-slate-400 font-mono mt-0.5">$${Number(m.amount).toFixed(2)} USD · PayPal Authorization Required</div>
           </div>
-          <button onclick="selectAndOpenDeal('${d._id}'); navigate('negotiation');" class="mint-gradient text-white text-xs font-semibold px-4 py-2 rounded-lg hover:opacity-95 transition">
-            Authorize in Deal Workspace
+          <button onclick="selectAndOpenDeal('${d._id}'); navigate('negotiation');" class="bg-[#0d9488] hover:bg-[#0f766e] text-white text-xs font-medium px-3 py-1.5 rounded-lg transition-colors">
+            Authorize in Workspace
           </button>
         </div>
       `).join('');
