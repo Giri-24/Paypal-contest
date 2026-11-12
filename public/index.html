@@ -5,6 +5,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MINT — Mission Intelligence & Negotiation Technology</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛡️</text></svg>">
+  <script>
+    (function() {
+      try {
+        var t = localStorage.getItem('mint_theme') || 'dark';
+        var d = t === 'dark' || (t === 'system' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        if (d) {
+          document.documentElement.classList.add('dark');
+          document.documentElement.classList.remove('light');
+        } else {
+          document.documentElement.classList.add('light');
+          document.documentElement.classList.remove('dark');
+        }
+      } catch(e) {}
+    })();
+  </script>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -68,6 +83,91 @@
       animation: spin 0.8s linear infinite;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Theme Switcher component styles */
+    #theme-switcher button { transition: all 0.15s ease; }
+    html.dark #theme-switcher button.theme-active {
+      background-color: #111c33 !important;
+      color: #2dd4bf !important;
+      border: 1px solid #1a2744 !important;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.4);
+    }
+    html.light #theme-switcher button.theme-active {
+      background-color: #ffffff !important;
+      color: #0d9488 !important;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08) !important;
+      border: 1px solid #cbd5e1 !important;
+    }
+
+    /* Light Mode Theme Overrides */
+    html.light { color-scheme: light; }
+    html.light body { background-color: #f8fafc !important; color: #1e293b !important; }
+    html.light aside { background-color: #ffffff !important; border-right-color: #e2e8f0 !important; }
+    html.light header { background-color: rgba(255, 255, 255, 0.9) !important; border-bottom-color: #e2e8f0 !important; }
+    html.light .bg-navy-950,
+    html.light .bg-navy-950\/80,
+    html.light .bg-navy-950\/85 { background-color: #f1f5f9 !important; }
+    html.light .bg-navy-900,
+    html.light .bg-navy-900\/80,
+    html.light .bg-navy-900\/90 { background-color: #ffffff !important; }
+    html.light .bg-navy-800,
+    html.light .bg-navy-800\/60,
+    html.light .bg-navy-800\/80 { background-color: #f8fafc !important; }
+    html.light .border-navy-700,
+    html.light .border-navy-700\/80,
+    html.light .border-navy-800 { border-color: #e2e8f0 !important; }
+    html.light .border-navy-600 { border-color: #cbd5e1 !important; }
+    html.light .glass { background: rgba(255, 255, 255, 0.92) !important; border-color: #e2e8f0 !important; }
+    html.light .card-glow { box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.07), 0 1px 2px -1px rgba(0, 0, 0, 0.05) !important; border-color: #e2e8f0 !important; }
+    html.light .card-glow-active { box-shadow: 0 0 0 1px rgba(20, 184, 166, 0.4), 0 4px 16px rgba(20, 184, 166, 0.12) !important; }
+    html.light .text-white { color: #0f172a !important; }
+    html.light .text-slate-200,
+    html.light .text-slate-300 { color: #334155 !important; }
+    html.light .text-slate-400 { color: #64748b !important; }
+    html.light .text-slate-500 { color: #64748b !important; }
+    html.light input,
+    html.light select,
+    html.light textarea {
+      background-color: #ffffff !important;
+      border-color: #cbd5e1 !important;
+      color: #0f172a !important;
+    }
+    html.light input::placeholder,
+    html.light textarea::placeholder { color: #94a3b8 !important; }
+    html.light .hover\:bg-navy-800:hover { background-color: #f1f5f9 !important; }
+    html.light .hover\:text-white:hover { color: #0f172a !important; }
+    html.light ::-webkit-scrollbar-track { background: #f1f5f9; }
+    html.light ::-webkit-scrollbar-thumb { background: #cbd5e1; }
+    html.light .advisor-tab.bg-navy-800 { background-color: #e2e8f0 !important; color: #0d9488 !important; }
+    /* Retain crisp white text on colored accent elements and badges */
+    html.light .mint-gradient,
+    html.light .mint-gradient *,
+    html.light .gemini-gradient,
+    html.light .gemini-gradient *,
+    html.light [class*="bg-mint-"],
+    html.light [class*="bg-mint-"] *,
+    html.light [class*="bg-emerald-600"],
+    html.light [class*="bg-emerald-600"] *,
+    html.light [class*="bg-rose-600"],
+    html.light [class*="bg-rose-600"] *,
+    html.light [class*="bg-blue-600"],
+    html.light [class*="bg-blue-600"] * {
+      color: #ffffff !important;
+    }
+    /* Subtle tinted badges */
+    html.light .bg-mint-500\/10,
+    html.light .bg-mint-500\/20,
+    html.light .bg-mint-600\/10,
+    html.light .bg-mint-600\/30 {
+      background-color: rgba(20, 184, 166, 0.12) !important;
+      color: #0f766e !important;
+    }
+    html.light .bg-mint-500\/10 *,
+    html.light .bg-mint-500\/20 *,
+    html.light .bg-mint-600\/10 *,
+    html.light .bg-mint-600\/30 * {
+      color: #0f766e !important;
+    }
   </style>
 </head>
 <body class="bg-navy-950 text-slate-200 min-h-screen antialiased selection:bg-mint-500 selection:text-white">
@@ -185,6 +285,28 @@
             <option value="client">Client (Buyer / Approver)</option>
             <option value="freelancer">Freelancer (Seller / Deliverer)</option>
           </select>
+        </div>
+
+        <!-- Theme Switcher (Left Sidebar) -->
+        <div>
+          <div class="flex items-center justify-between mb-1.5">
+            <label class="block text-[11px] font-medium text-slate-400 uppercase tracking-wider">Appearance</label>
+            <span id="theme-active-label" class="text-[10px] text-mint-400 font-mono capitalize">dark</span>
+          </div>
+          <div class="grid grid-cols-3 gap-1 bg-navy-950 p-1 rounded-lg border border-navy-700 text-xs" id="theme-switcher">
+            <button type="button" onclick="setTheme('dark')" id="theme-btn-dark" class="py-1 px-1.5 rounded-md font-medium flex items-center justify-center gap-1 transition theme-active" title="Dark theme">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+              <span>Dark</span>
+            </button>
+            <button type="button" onclick="setTheme('light')" id="theme-btn-light" class="py-1 px-1.5 rounded-md font-medium flex items-center justify-center gap-1 transition text-slate-400 hover:text-white" title="Light theme">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+              <span>Light</span>
+            </button>
+            <button type="button" onclick="setTheme('system')" id="theme-btn-system" class="py-1 px-1.5 rounded-md font-medium flex items-center justify-center gap-1 transition text-slate-400 hover:text-white" title="Follow system theme">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+              <span>Auto</span>
+            </button>
+          </div>
         </div>
 
         <div class="flex items-center gap-3 pt-2">
@@ -550,6 +672,71 @@
 
   <!-- JAVASCRIPT APPLICATION LOGIC -->
   <script>
+    // -------------------------------------------------------------------------
+    // Theme Management (Dark / Light / System) - Left Sidebar Control
+    // -------------------------------------------------------------------------
+    function applyTheme(pref) {
+      const isSystem = pref === 'system';
+      const systemDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const effectiveDark = isSystem ? systemDark : pref === 'dark';
+
+      const root = document.documentElement;
+      if (effectiveDark) {
+        root.classList.add('dark');
+        root.classList.remove('light');
+      } else {
+        root.classList.add('light');
+        root.classList.remove('dark');
+      }
+
+      ['dark', 'light', 'system'].forEach(t => {
+        const btn = document.getElementById(`theme-btn-${t}`);
+        if (btn) {
+          if (t === pref) {
+            btn.classList.add('theme-active');
+            btn.classList.remove('text-slate-400');
+          } else {
+            btn.classList.remove('theme-active');
+            btn.classList.add('text-slate-400');
+          }
+        }
+      });
+
+      const label = document.getElementById('theme-active-label');
+      if (label) {
+        label.textContent = isSystem ? `auto (${effectiveDark ? 'dark' : 'light'})` : pref;
+      }
+    }
+
+    function setTheme(pref) {
+      try {
+        localStorage.setItem('mint_theme', pref);
+      } catch (e) {}
+      applyTheme(pref);
+      showToast(`Appearance: ${pref.charAt(0).toUpperCase() + pref.slice(1)}`);
+    }
+
+    function initTheme() {
+      let saved = 'dark';
+      try {
+        saved = localStorage.getItem('mint_theme') || 'dark';
+      } catch (e) {}
+      applyTheme(saved);
+
+      if (window.matchMedia) {
+        try {
+          window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+            let current = 'dark';
+            try { current = localStorage.getItem('mint_theme') || 'dark'; } catch (e) {}
+            if (current === 'system') applyTheme('system');
+          });
+        } catch (e) {}
+      }
+    }
+
+    // Initialize theme immediately on parse
+    initTheme();
+
     // Global Application State
     const state = {
       isLoggedIn: false,
@@ -1460,6 +1647,7 @@
 
     // Auto-login for instant access
     window.addEventListener('DOMContentLoaded', () => {
+      initTheme();
       doLogin();
     });
   </script>
