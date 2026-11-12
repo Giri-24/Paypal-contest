@@ -27,23 +27,41 @@
       theme: {
         extend: {
           colors: {
+            paypal: {
+              blue: '#0070ba',
+              hover: '#005ea6',
+              deep: '#00457c',
+              gold: '#ffc439',
+              'gold-hover': '#f59e0b',
+              navy: '#060b14',
+              card: '#0d172a',
+              surface: '#13223b',
+              hover: '#1a2d4f',
+            },
             surface: {
-              deep: '#0f0f10',
-              page: '#141415',
-              card: '#19191b',
-              raised: '#232325',
-              hover: '#2a2a2d',
+              deep: '#060b14',
+              page: '#060b14',
+              card: '#0d172a',
+              raised: '#13223b',
+              hover: '#1a2d4f',
             },
             accent: {
-              400: '#2dd4bf',
-              500: '#14b8a6',
-              600: '#0d9488',
-              700: '#0f766e',
+              400: '#38bdf8',
+              500: '#0070ba',
+              600: '#005ea6',
+              700: '#00457c',
+            },
+            mint: {
+              300: '#7dd3fc',
+              400: '#38bdf8',
+              500: '#0070ba',
+              600: '#005ea6',
+              700: '#00457c',
             },
             ink: {
-              primary: '#ededed',
-              secondary: '#a1a1a6',
-              muted: '#85858b',
+              primary: '#f1f5f9',
+              secondary: '#cbd5e1',
+              muted: '#94a3b8',
             }
           },
           fontFamily: {
@@ -61,86 +79,86 @@
     body { font-family: 'Inter', system-ui, sans-serif; }
     .tabular-nums { font-variant-numeric: tabular-nums; }
 
-    /* Unslop Neutral Graphite Ramp (Dark Default) */
-    html.dark body { background-color: #141415; color: #ededed; }
-    html.dark aside { background-color: #0f0f10 !important; border-right: 1px solid rgba(255, 255, 255, 0.08) !important; }
-    html.dark header { background-color: rgba(20, 20, 21, 0.92) !important; border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important; }
-    html.dark .bg-navy-950 { background-color: #141415 !important; }
-    html.dark .bg-navy-900, html.dark .bg-navy-900\/60, html.dark .bg-navy-900\/70, html.dark .bg-navy-900\/80 { background-color: #19191b !important; }
-    html.dark .bg-navy-800, html.dark .bg-navy-800\/60, html.dark .bg-navy-800\/80 { background-color: #232325 !important; }
-    html.dark .border-navy-700, html.dark .border-navy-700\/80, html.dark .border-navy-800, html.dark .border-navy-600 { border-color: rgba(255, 255, 255, 0.08) !important; }
-    html.dark .glass { background-color: #19191b !important; border: 1px solid rgba(255, 255, 255, 0.08) !important; backdrop-filter: none !important; }
-    html.dark .text-white { color: #ededed !important; }
-    html.dark .text-slate-200, html.dark .text-slate-300 { color: #a1a1a6 !important; }
-    html.dark .text-slate-400, html.dark .text-slate-500 { color: #85858b !important; }
+    /* PayPal Enterprise Midnight Sapphire (Dark Default) */
+    html.dark body { background-color: #060b14; color: #f1f5f9; }
+    html.dark aside { background-color: #09111f !important; border-right: 1px solid rgba(56, 189, 248, 0.12) !important; }
+    html.dark header { background-color: rgba(9, 17, 31, 0.94) !important; border-bottom: 1px solid rgba(56, 189, 248, 0.12) !important; }
+    html.dark .bg-navy-950 { background-color: #060b14 !important; }
+    html.dark .bg-navy-900, html.dark .bg-navy-900\/60, html.dark .bg-navy-900\/70, html.dark .bg-navy-900\/80, html.dark .bg-navy-900\/90 { background-color: #0d172a !important; }
+    html.dark .bg-navy-800, html.dark .bg-navy-800\/60, html.dark .bg-navy-800\/80 { background-color: #13223b !important; }
+    html.dark .border-navy-700, html.dark .border-navy-700\/80, html.dark .border-navy-800, html.dark .border-navy-800\/60, html.dark .border-navy-800\/80, html.dark .border-navy-600 { border-color: rgba(56, 189, 248, 0.12) !important; }
+    html.dark .glass { background-color: #0d172a !important; border: 1px solid rgba(56, 189, 248, 0.12) !important; backdrop-filter: none !important; }
+    html.dark .text-white { color: #f8fafc !important; }
+    html.dark .text-slate-200, html.dark .text-slate-300 { color: #cbd5e1 !important; }
+    html.dark .text-slate-400, html.dark .text-slate-500 { color: #94a3b8 !important; }
     html.dark input, html.dark select, html.dark textarea {
-      background-color: #232325 !important;
-      border: 1px solid rgba(255, 255, 255, 0.1) !important;
-      color: #ededed !important;
+      background-color: #13223b !important;
+      border: 1px solid rgba(56, 189, 248, 0.18) !important;
+      color: #f1f5f9 !important;
     }
-    html.dark input::placeholder, html.dark textarea::placeholder { color: #64646a !important; }
+    html.dark input::placeholder, html.dark textarea::placeholder { color: #64748b !important; }
 
-    /* Unslop Neutral Graphite Ramp (Light Mode) */
+    /* Fintech Daylight Mode (Crisp Light Surface) */
     html.light { color-scheme: light; }
-    html.light body { background-color: #fafafa !important; color: #171717 !important; }
-    html.light aside { background-color: #f4f4f5 !important; border-right: 1px solid rgba(0, 0, 0, 0.08) !important; }
-    html.light header { background-color: rgba(250, 250, 250, 0.92) !important; border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important; }
-    html.light .bg-navy-950 { background-color: #fafafa !important; }
-    html.light .bg-navy-900, html.light .bg-navy-900\/60, html.light .bg-navy-900\/70, html.light .bg-navy-900\/80 { background-color: #ffffff !important; }
-    html.light .bg-navy-800, html.light .bg-navy-800\/60, html.light .bg-navy-800\/80 { background-color: #f4f4f5 !important; }
-    html.light .border-navy-700, html.light .border-navy-700\/80, html.light .border-navy-800, html.light .border-navy-600 { border-color: rgba(0, 0, 0, 0.08) !important; }
-    html.light .glass { background-color: #ffffff !important; border: 1px solid rgba(0, 0, 0, 0.08) !important; backdrop-filter: none !important; }
-    html.light .text-white { color: #171717 !important; }
-    html.light .text-slate-200, html.light .text-slate-300 { color: #525252 !important; }
-    html.light .text-slate-400, html.light .text-slate-500 { color: #737373 !important; }
+    html.light body { background-color: #f8fafc !important; color: #0f172a !important; }
+    html.light aside { background-color: #ffffff !important; border-right: 1px solid rgba(15, 23, 42, 0.08) !important; }
+    html.light header { background-color: rgba(255, 255, 255, 0.94) !important; border-bottom: 1px solid rgba(15, 23, 42, 0.08) !important; }
+    html.light .bg-navy-950 { background-color: #f8fafc !important; }
+    html.light .bg-navy-900, html.light .bg-navy-900\/60, html.light .bg-navy-900\/70, html.light .bg-navy-900\/80, html.light .bg-navy-900\/90 { background-color: #ffffff !important; }
+    html.light .bg-navy-800, html.light .bg-navy-800\/60, html.light .bg-navy-800\/80 { background-color: #f1f5f9 !important; }
+    html.light .border-navy-700, html.light .border-navy-700\/80, html.light .border-navy-800, html.light .border-navy-600 { border-color: rgba(15, 23, 42, 0.08) !important; }
+    html.light .glass { background-color: #ffffff !important; border: 1px solid rgba(15, 23, 42, 0.08) !important; backdrop-filter: none !important; }
+    html.light .text-white { color: #0f172a !important; }
+    html.light .text-slate-200, html.light .text-slate-300 { color: #334155 !important; }
+    html.light .text-slate-400, html.light .text-slate-500 { color: #64748b !important; }
     html.light input, html.light select, html.light textarea {
       background-color: #ffffff !important;
-      border: 1px solid rgba(0, 0, 0, 0.12) !important;
-      color: #171717 !important;
+      border: 1px solid rgba(15, 23, 42, 0.12) !important;
+      color: #0f172a !important;
     }
-    html.light input::placeholder, html.light textarea::placeholder { color: #a1a1a6 !important; }
+    html.light input::placeholder, html.light textarea::placeholder { color: #94a3b8 !important; }
 
-    /* Unslop Solid Buttons (replaces gradients & halos) */
-    .mint-gradient {
-      background: #0d9488 !important;
+    /* PayPal Brand Buttons (Solid, High-Contrast) */
+    .mint-gradient, .btn-primary {
+      background: #0070ba !important;
       color: #ffffff !important;
-      border: 1px solid #0f766e !important;
-      box-shadow: none !important;
+      border: 1px solid #005ea6 !important;
+      box-shadow: 0 1px 2px 0 rgba(0, 112, 186, 0.25) !important;
     }
-    .mint-gradient:hover, .mint-gradient-hover:hover {
-      background: #0f766e !important;
+    .mint-gradient:hover, .mint-gradient-hover:hover, .btn-primary:hover {
+      background: #005ea6 !important;
     }
     .gemini-gradient {
-      background: #232325 !important;
-      color: #ededed !important;
-      border: 1px solid rgba(255, 255, 255, 0.12) !important;
+      background: #13223b !important;
+      color: #f1f5f9 !important;
+      border: 1px solid rgba(56, 189, 248, 0.18) !important;
       box-shadow: none !important;
     }
     .gemini-gradient:hover {
-      background: #2c2c2f !important;
+      background: #1a2d4f !important;
     }
     html.light .gemini-gradient {
-      background: #f4f4f5 !important;
-      color: #171717 !important;
-      border: 1px solid rgba(0, 0, 0, 0.12) !important;
+      background: #f1f5f9 !important;
+      color: #0f172a !important;
+      border: 1px solid rgba(15, 23, 42, 0.12) !important;
     }
     html.light .gemini-gradient:hover {
-      background: #e4e4e7 !important;
+      background: #e2e8f0 !important;
     }
 
     /* Active navigation row */
     html.dark .sidebar-active {
-      background-color: #232325 !important;
-      border-left: 2px solid #14b8a6 !important;
-      color: #ededed !important;
+      background-color: #13223b !important;
+      border-left: 2px solid #38bdf8 !important;
+      color: #ffffff !important;
     }
     html.light .sidebar-active {
-      background-color: #e4e4e7 !important;
-      border-left: 2px solid #0d9488 !important;
-      color: #171717 !important;
+      background-color: #e0f2fe !important;
+      border-left: 2px solid #0070ba !important;
+      color: #0070ba !important;
     }
 
-    /* Remove slop glows */
+    /* Card glow removal for pristine fintech edges */
     .card-glow, .card-glow-active {
       box-shadow: none !important;
     }
@@ -148,22 +166,23 @@
     /* Theme Switcher component styles */
     #theme-switcher button { transition: all 0.15s ease; }
     html.dark #theme-switcher button.theme-active {
-      background-color: #232325 !important;
-      color: #2dd4bf !important;
-      border: 1px solid rgba(255, 255, 255, 0.1) !important;
+      background-color: #13223b !important;
+      color: #38bdf8 !important;
+      border: 1px solid rgba(56, 189, 248, 0.25) !important;
     }
     html.light #theme-switcher button.theme-active {
       background-color: #ffffff !important;
-      color: #0d9488 !important;
-      border: 1px solid rgba(0, 0, 0, 0.1) !important;
+      color: #0070ba !important;
+      border: 1px solid rgba(0, 112, 186, 0.25) !important;
+      box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;
     }
 
-    /* Scrollbars */
+    /* High-clarity scrollbars */
     ::-webkit-scrollbar { width: 5px; height: 5px; }
-    html.dark ::-webkit-scrollbar-track { background: #141415; }
-    html.dark ::-webkit-scrollbar-thumb { background: #2c2c2f; border-radius: 2px; }
-    html.light ::-webkit-scrollbar-track { background: #fafafa; }
-    html.light ::-webkit-scrollbar-thumb { background: #d4d4d8; border-radius: 2px; }
+    html.dark ::-webkit-scrollbar-track { background: #060b14; }
+    html.dark ::-webkit-scrollbar-thumb { background: #1a2d4f; border-radius: 2px; }
+    html.light ::-webkit-scrollbar-track { background: #f8fafc; }
+    html.light ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 2px; }
 
     .fade-in { animation: fadeIn 0.15s ease-out; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
@@ -174,7 +193,7 @@
       height: 14px;
       border: 2px solid rgba(255,255,255,0.25);
       border-radius: 50%;
-      border-top-color: #ededed;
+      border-top-color: #38bdf8;
       animation: spin 0.8s linear infinite;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
@@ -183,50 +202,50 @@
 <body class="bg-navy-950 text-slate-200 min-h-screen antialiased selection:bg-mint-500 selection:text-white">
 
   <!-- TOAST NOTIFICATION CONTAINER -->
-  <div id="toast" class="hidden fixed bottom-6 right-6 z-50 bg-[#19191b] border border-white/[0.12] rounded-lg px-4 py-3 shadow-lg flex items-center gap-3 max-w-md transition-opacity duration-150">
+  <div id="toast" class="hidden fixed bottom-6 right-6 z-50 bg-[#0d172a] border border-[#38bdf8]/20 rounded-lg px-4 py-3 shadow-xl flex items-center gap-3 max-w-md transition-opacity duration-150">
     <div id="toast-icon" class="w-2 h-2 rounded-full bg-mint-400 shrink-0"></div>
     <div id="toast-message" class="text-xs font-medium text-[#ededed]">Notification message</div>
   </div>
 
   <!-- LOGIN VIEW -->
-  <div id="view-login" class="min-h-screen flex items-center justify-center p-6 relative bg-[#141415]">
+  <div id="view-login" class="min-h-screen flex items-center justify-center p-6 relative bg-[#060b14]">
     <div class="w-full max-w-sm relative z-10">
       <div class="text-center mb-6">
-        <div class="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-[#0d9488] mb-3 text-white">
+        <div class="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-[#0070ba] shadow-lg shadow-[#0070ba]/25 mb-3 text-white">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
         </div>
         <h1 class="text-2xl font-semibold text-[#ededed] flex items-center justify-center gap-2">
           MINT
-          <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-mint-500/10 text-mint-400 border border-mint-500/25">Escrow OS</span>
+          <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-[#0070ba]/15 text-[#38bdf8] border border-[#0070ba]/30">PayPal Escrow OS</span>
         </h1>
-        <p class="text-slate-400 mt-1 text-xs">Industrial Equipment Procurement & Escrow</p>
+        <p class="text-slate-400 mt-1 text-xs">Industrial Equipment Procurement & Escrow Engine</p>
       </div>
 
-      <div class="bg-[#19191b] rounded-xl p-6 border border-white/[0.08]">
+      <div class="bg-[#0d172a] rounded-xl p-6 border border-white/[0.08]">
         <h2 class="text-sm font-medium text-[#ededed] mb-5 flex items-center justify-between">
           <span>Sign in to console</span>
-          <span class="text-[11px] text-mint-400 font-mono">Ready</span>
+          <span class="text-[11px] text-[#38bdf8] font-mono">Sandbox Ready</span>
         </h2>
         <form onsubmit="event.preventDefault(); doLogin();" class="space-y-4">
           <div>
             <label class="block text-xs font-medium text-slate-400 mb-1">Work Email</label>
-            <input id="login-email" type="email" required value="admin@aquaflow.com" class="w-full bg-[#232325] border border-white/[0.1] rounded-lg px-3 py-2 text-xs text-[#ededed] placeholder-slate-500 focus:outline-none focus:border-mint-500 transition-colors" />
+            <input id="login-email" type="email" required value="admin@aquaflow.com" class="w-full bg-[#13223b] border border-white/[0.1] rounded-lg px-3 py-2 text-xs text-[#ededed] placeholder-slate-500 focus:outline-none focus:border-[#0070ba] transition-colors" />
           </div>
           <div>
             <div class="flex items-center justify-between mb-1">
               <label class="block text-xs font-medium text-slate-400">Password</label>
               <span class="text-[10px] text-slate-500 font-mono">demo1234</span>
             </div>
-            <input id="login-password" type="password" required value="demo1234" class="w-full bg-[#232325] border border-white/[0.1] rounded-lg px-3 py-2 text-xs text-[#ededed] placeholder-slate-500 focus:outline-none focus:border-mint-500 transition-colors" />
+            <input id="login-password" type="password" required value="demo1234" class="w-full bg-[#13223b] border border-white/[0.1] rounded-lg px-3 py-2 text-xs text-[#ededed] placeholder-slate-500 focus:outline-none focus:border-[#0070ba] transition-colors" />
           </div>
-          <button type="submit" id="btn-login" class="w-full bg-[#0d9488] hover:bg-[#0f766e] text-white font-medium py-2 rounded-lg transition-colors flex items-center justify-center gap-2 text-xs">
-            <span>Sign in</span>
+          <button type="submit" id="btn-login" class="w-full bg-[#0070ba] hover:bg-[#005ea6] text-white font-medium py-2 rounded-lg transition-colors flex items-center justify-center gap-2 text-xs shadow-sm shadow-[#0070ba]/30">
+            <span>Sign in to Console</span>
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
           </button>
         </form>
         <div class="mt-5 pt-4 border-t border-white/[0.08] flex items-center justify-between text-[11px] text-slate-500">
           <span>Gemini 2.0 Flash</span>
-          <span class="font-mono">PayPal v2</span>
+          <span class="font-mono text-[#38bdf8]">PayPal v2 SDK</span>
         </div>
       </div>
     </div>
@@ -235,18 +254,18 @@
   <!-- APP SHELL -->
   <div id="view-app" class="hidden min-h-screen flex">
     <!-- Sidebar -->
-    <aside class="w-64 bg-[#0f0f10] border-r border-white/[0.08] flex flex-col fixed h-full z-20 select-none">
+    <aside class="w-64 bg-[#09111f] border-r border-white/[0.08] flex flex-col fixed h-full z-20 select-none">
       <div class="p-4 border-b border-white/[0.08]">
         <div class="flex items-center gap-2.5">
-          <div class="w-8 h-8 rounded-lg bg-[#0d9488] flex items-center justify-center text-white shrink-0">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+          <div class="w-8 h-8 rounded-lg bg-[#0070ba] shadow-sm shadow-[#0070ba]/30 flex items-center justify-center text-white shrink-0">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
           </div>
           <div>
             <div class="font-semibold text-[#ededed] text-sm tracking-tight flex items-center gap-1.5">
               MINT
-              <span class="text-[9px] font-mono px-1.5 py-0.2 bg-mint-500/10 text-mint-400 border border-mint-500/20 rounded">Escrow</span>
+              <span class="text-[9px] font-mono px-1.5 py-0.5 bg-[#0070ba]/20 text-[#38bdf8] border border-[#0070ba]/35 rounded">PayPal Escrow</span>
             </div>
-            <div class="text-[11px] text-slate-500">Industrial Procurement</div>
+            <div class="text-[11px] text-slate-400">Autonomous Procurement</div>
           </div>
         </div>
       </div>
@@ -257,27 +276,27 @@
           <svg class="w-4 h-4 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
           <span>Overview</span>
         </button>
-        <button data-nav="forecasts" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium text-slate-400 hover:text-white hover:bg-[#232325] transition-colors">
+        <button data-nav="forecasts" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium text-slate-400 hover:text-white hover:bg-[#13223b] transition-colors">
           <svg class="w-4 h-4 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
           <span>Agreement Drafter</span>
         </button>
-        <button data-nav="mesh" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium text-slate-400 hover:text-white hover:bg-[#232325] transition-colors">
+        <button data-nav="mesh" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium text-slate-400 hover:text-white hover:bg-[#13223b] transition-colors">
           <svg class="w-4 h-4 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
           <span>Agreements</span>
         </button>
-        <button data-nav="suppliers" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium text-slate-400 hover:text-white hover:bg-[#232325] transition-colors">
+        <button data-nav="suppliers" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium text-slate-400 hover:text-white hover:bg-[#13223b] transition-colors">
           <svg class="w-4 h-4 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
           <span>Suppliers</span>
         </button>
-        <button data-nav="negotiation" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium text-slate-400 hover:text-white hover:bg-[#232325] transition-colors">
+        <button data-nav="negotiation" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium text-slate-400 hover:text-white hover:bg-[#13223b] transition-colors">
           <svg class="w-4 h-4 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
           <span>Verification & Dispute</span>
         </button>
-        <button data-nav="approvals" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium text-slate-400 hover:text-white hover:bg-[#232325] transition-colors">
+        <button data-nav="approvals" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium text-slate-400 hover:text-white hover:bg-[#13223b] transition-colors">
           <svg class="w-4 h-4 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
           <span>Approvals</span>
         </button>
-        <button data-nav="orders" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium text-slate-400 hover:text-white hover:bg-[#232325] transition-colors">
+        <button data-nav="orders" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium text-slate-400 hover:text-white hover:bg-[#13223b] transition-colors">
           <svg class="w-4 h-4 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
           <span>Orders</span>
         </button>
@@ -288,7 +307,7 @@
         <!-- Role Switcher -->
         <div>
           <label class="block text-xs font-medium text-slate-400 mb-1">Acting Role</label>
-          <select id="role-select" onchange="setRole(this.value)" class="w-full bg-[#232325] border border-white/[0.1] text-xs text-[#ededed] rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-mint-500">
+          <select id="role-select" onchange="setRole(this.value)" class="w-full bg-[#13223b] border border-white/[0.1] text-xs text-[#ededed] rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-[#0070ba]">
             <option value="client">Client (Buyer / Approver)</option>
             <option value="freelancer">Freelancer (Seller / Deliverer)</option>
           </select>
@@ -298,16 +317,16 @@
         <div>
           <div class="flex items-center justify-between mb-1">
             <label class="block text-xs font-medium text-slate-400">Appearance</label>
-            <span id="theme-active-label" class="text-[10px] text-mint-400 font-mono capitalize">dark</span>
+            <span id="theme-active-label" class="text-[10px] text-[#38bdf8] font-mono capitalize">midnight</span>
           </div>
-          <div class="grid grid-cols-3 gap-1 bg-[#141415] p-1 rounded-lg border border-white/[0.08] text-xs" id="theme-switcher">
-            <button type="button" onclick="setTheme('dark')" id="theme-btn-dark" class="py-1 px-1.5 rounded-md font-medium flex items-center justify-center gap-1 transition-colors theme-active" title="Dark theme">
+          <div class="grid grid-cols-3 gap-1 bg-[#060b14] p-1 rounded-lg border border-white/[0.08] text-xs" id="theme-switcher">
+            <button type="button" onclick="setTheme('dark')" id="theme-btn-dark" class="py-1 px-1.5 rounded-md font-medium flex items-center justify-center gap-1 transition-colors theme-active" title="PayPal Midnight Sapphire">
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
-              <span>Dark</span>
+              <span>Midnight</span>
             </button>
-            <button type="button" onclick="setTheme('light')" id="theme-btn-light" class="py-1 px-1.5 rounded-md font-medium flex items-center justify-center gap-1 transition-colors text-slate-400 hover:text-white" title="Light theme">
+            <button type="button" onclick="setTheme('light')" id="theme-btn-light" class="py-1 px-1.5 rounded-md font-medium flex items-center justify-center gap-1 transition-colors text-slate-400 hover:text-white" title="Fintech Daylight Light">
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
-              <span>Light</span>
+              <span>Daylight</span>
             </button>
             <button type="button" onclick="setTheme('system')" id="theme-btn-system" class="py-1 px-1.5 rounded-md font-medium flex items-center justify-center gap-1 transition-colors text-slate-400 hover:text-white" title="Follow system theme">
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
@@ -317,10 +336,10 @@
         </div>
 
         <div class="flex items-center gap-2.5 pt-2 border-t border-white/[0.08]">
-          <div class="w-7 h-7 rounded-md bg-[#232325] border border-white/[0.1] flex items-center justify-center text-mint-400 text-xs font-mono" id="user-avatar">SC</div>
+          <div class="w-7 h-7 rounded-md bg-[#13223b] border border-white/[0.1] flex items-center justify-center text-[#38bdf8] text-xs font-mono font-medium" id="user-avatar">SC</div>
           <div class="flex-1 min-w-0">
             <div class="text-xs font-medium text-[#ededed] truncate" id="user-display-name">Sarah Chen</div>
-            <div class="text-[11px] text-slate-500 truncate" id="user-display-org">AquaFlow Industries</div>
+            <div class="text-[11px] text-slate-400 truncate" id="user-display-org">AquaFlow Industries</div>
           </div>
           <button onclick="doLogout()" class="p-1 rounded text-slate-500 hover:text-white transition-colors" title="Sign out">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
@@ -332,22 +351,31 @@
     <!-- Main Content Area -->
     <main class="flex-1 ml-64 min-h-screen flex flex-col">
       <!-- Top Sticky Header -->
-      <header class="sticky top-0 z-10 bg-[#141415]/95 backdrop-blur-sm border-b border-white/[0.08] px-8 py-3.5 flex items-center justify-between">
-        <div>
-          <h1 id="page-title" class="text-base font-semibold text-[#ededed]">Procurement Overview</h1>
-          <p id="page-subtitle" class="text-xs text-slate-400 mt-0.5">Agreements, escrow authorizations, and milestone verification</p>
+      <header class="sticky top-0 z-10 bg-[#060b14]/95 backdrop-blur-sm border-b border-white/[0.08] px-8 py-3.5 flex items-center justify-between">
+        <div class="flex items-center gap-4">
+          <div>
+            <h1 id="page-title" class="text-base font-semibold text-[#ededed]">Procurement Overview</h1>
+            <p id="page-subtitle" class="text-xs text-slate-400 mt-0.5">Agreements, escrow authorizations, and milestone verification</p>
+          </div>
+          <!-- Contest Evaluator Badge -->
+          <div class="hidden lg:inline-flex items-center gap-2 px-2.5 py-1 rounded-md bg-[#0070ba]/10 text-[#38bdf8] border border-[#0070ba]/30 text-xs font-medium">
+            <span class="w-1.5 h-1.5 rounded-full bg-[#ffc439]"></span>
+            <span class="font-mono text-[11px] text-[#ffc439] font-semibold">PAYPAL CONTEST 2026</span>
+            <span class="text-slate-500">·</span>
+            <span class="text-slate-300">Escrow & Settlement Engine</span>
+          </div>
         </div>
         <div class="flex items-center gap-2.5">
           <!-- Live Backend Status Pill -->
-          <div id="backend-status-pill" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[#232325] text-mint-400 text-xs font-mono border border-white/[0.08]">
+          <div id="backend-status-pill" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[#13223b] text-[#38bdf8] text-xs font-mono border border-white/[0.08]">
             <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
             <span id="backend-status-text">Connected</span>
           </div>
-          <button onclick="navigate('forecasts')" class="px-3 py-1.5 rounded-lg bg-[#0d9488] hover:bg-[#0f766e] text-xs font-medium text-white transition-colors flex items-center gap-1.5">
+          <button onclick="navigate('forecasts')" class="px-3 py-1.5 rounded-lg bg-[#0070ba] hover:bg-[#005ea6] text-xs font-medium text-white transition-colors flex items-center gap-1.5 shadow-sm shadow-[#0070ba]/30">
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v16m8-8H4"/></svg>
             <span>+ Draft Agreement</span>
           </button>
-          <button onclick="refreshData()" class="px-3 py-1.5 rounded-lg bg-[#232325] hover:bg-[#2a2a2d] border border-white/[0.08] text-xs font-medium text-slate-300 transition-colors flex items-center gap-1.5">
+          <button onclick="refreshData()" class="px-3 py-1.5 rounded-lg bg-[#13223b] hover:bg-[#1a2d4f] border border-white/[0.08] text-xs font-medium text-slate-300 transition-colors flex items-center gap-1.5">
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
             Refresh
           </button>
@@ -361,10 +389,10 @@
         <div id="page-dashboard" class="page fade-in space-y-5">
           <!-- Top KPI Metrics -->
           <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
-            <div class="bg-[#19191b] rounded-xl p-5 border border-white/[0.08]">
+            <div class="bg-[#0d172a] rounded-xl p-5 border border-white/[0.08]">
               <div class="flex items-center justify-between">
                 <span class="text-xs font-medium text-slate-400">Active agreements</span>
-                <span class="p-1 rounded bg-[#232325] text-slate-400">
+                <span class="p-1 rounded bg-[#13223b] text-slate-400">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                 </span>
               </div>
@@ -372,10 +400,10 @@
               <div class="mt-1 text-xs text-slate-500 font-mono" id="kpi-deals-sub">Database records</div>
             </div>
 
-            <div class="bg-[#19191b] rounded-xl p-5 border border-white/[0.08]">
+            <div class="bg-[#0d172a] rounded-xl p-5 border border-white/[0.08]">
               <div class="flex items-center justify-between">
                 <span class="text-xs font-medium text-slate-400">Total contract value</span>
-                <span class="p-1 rounded bg-[#232325] text-slate-400">
+                <span class="p-1 rounded bg-[#13223b] text-slate-400">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                 </span>
               </div>
@@ -383,21 +411,29 @@
               <div class="mt-1 text-xs text-slate-500">Sum of milestone values</div>
             </div>
 
-            <div class="bg-[#19191b] rounded-xl p-5 border border-white/[0.08]">
-              <div class="flex items-center justify-between">
-                <span class="text-xs font-medium text-slate-400">PayPal escrow held</span>
-                <span class="p-1 rounded bg-[#232325] text-slate-400">
+            <!-- PayPal Escrow Held (Highlighted for Contest Evaluators) -->
+            <div class="bg-[#0d172a] rounded-xl p-5 border border-[#0070ba]/40 relative overflow-hidden ring-1 ring-[#0070ba]/20 shadow-sm shadow-[#0070ba]/10">
+              <div class="absolute -right-4 -top-4 w-20 h-20 bg-[#0070ba]/15 rounded-full blur-xl pointer-events-none"></div>
+              <div class="flex items-center justify-between relative z-10">
+                <span class="text-xs font-medium text-slate-300 flex items-center gap-1.5">
+                  <span class="w-1.5 h-1.5 rounded-full bg-[#0070ba]"></span>
+                  PayPal Escrow Held
+                </span>
+                <span class="p-1 rounded bg-[#0070ba]/15 text-[#38bdf8] border border-[#0070ba]/30">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
                 </span>
               </div>
-              <div class="mt-2 text-2xl font-semibold text-mint-400 tabular-nums font-mono" id="kpi-escrow-held">$0.00</div>
-              <div class="mt-1 text-xs text-slate-500">Active authorization holds</div>
+              <div class="mt-2 text-2xl font-semibold text-[#38bdf8] tabular-nums font-mono relative z-10" id="kpi-escrow-held">$0.00</div>
+              <div class="mt-1 text-xs text-slate-400 relative z-10 flex items-center gap-1.5">
+                <span class="text-[10px] font-mono font-medium px-1.5 py-0.2 rounded bg-[#ffc439]/15 text-[#ffc439] border border-[#ffc439]/30">AUTHORIZE</span>
+                <span>Active escrow holds</span>
+              </div>
             </div>
 
-            <div class="bg-[#19191b] rounded-xl p-5 border border-white/[0.08]">
+            <div class="bg-[#0d172a] rounded-xl p-5 border border-white/[0.08]">
               <div class="flex items-center justify-between">
                 <span class="text-xs font-medium text-slate-400">Milestones verified</span>
-                <span class="p-1 rounded bg-[#232325] text-slate-400">
+                <span class="p-1 rounded bg-[#13223b] text-slate-400">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 13l4 4L19 7"/></svg>
                 </span>
               </div>
@@ -407,14 +443,14 @@
           </div>
 
           <!-- PAYPAL SMART ADVISOR & ESCROW GUARD COMMAND CENTER -->
-          <div id="dashboard-advisor-section" class="bg-[#19191b] rounded-xl border border-white/[0.08] overflow-hidden">
+          <div id="dashboard-advisor-section" class="bg-[#0d172a] rounded-xl border border-white/[0.08] overflow-hidden">
             <!-- Dynamically populated by window.paypalAdvisor.renderDashboardAdvisor -->
           </div>
 
           <!-- Main Grid -->
           <div class="grid grid-cols-1 xl:grid-cols-3 gap-5">
             <!-- Active Deals List -->
-            <div class="xl:col-span-2 bg-[#19191b] rounded-xl border border-white/[0.08] overflow-hidden">
+            <div class="xl:col-span-2 bg-[#0d172a] rounded-xl border border-white/[0.08] overflow-hidden">
               <div class="px-5 py-3.5 border-b border-white/[0.08] flex items-center justify-between">
                 <div class="flex items-center gap-2">
                   <span class="w-2 h-2 rounded-full bg-mint-400"></span>
@@ -434,10 +470,10 @@
             </div>
 
             <!-- Recent Event Log -->
-            <div class="bg-[#19191b] rounded-xl border border-white/[0.08] flex flex-col">
+            <div class="bg-[#0d172a] rounded-xl border border-white/[0.08] flex flex-col">
               <div class="px-5 py-3.5 border-b border-white/[0.08] flex items-center justify-between">
                 <h3 class="font-medium text-[#ededed] text-sm">Escrow audit trail</h3>
-                <span class="text-[11px] text-slate-500 font-mono">Stream</span>
+                <span class="text-[11px] text-[#38bdf8] font-mono">Real-time Stream</span>
               </div>
               <div id="dashboard-audit-log" class="p-4 space-y-2.5 flex-1 overflow-y-auto max-h-[420px]">
                 <div class="text-xs text-slate-500 text-center py-8">No events logged yet.</div>
@@ -448,9 +484,9 @@
 
         <!-- 2. AGREEMENT DRAFTER (FORECASTS) -->
         <div id="page-forecasts" class="page hidden fade-in space-y-5">
-          <div class="bg-[#19191b] rounded-xl border border-white/[0.08] p-5">
+          <div class="bg-[#0d172a] rounded-xl border border-white/[0.08] p-5">
             <div class="flex items-center gap-2 mb-2">
-              <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-[#232325] text-mint-400 border border-white/[0.1]">
+              <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-[#13223b] text-[#38bdf8] border border-white/[0.1]">
                 Gemini 2.0 Flash · Structured Generator
               </span>
               <h3 class="text-sm font-semibold text-[#ededed]">Draft milestone criteria</h3>
@@ -459,10 +495,10 @@
               Describe deliverables and pricing. Gemini produces objective acceptance criteria and milestone amounts.
             </p>
 
-            <textarea id="draft-input-text" rows="3" class="w-full bg-[#232325] border border-white/[0.1] rounded-lg p-3 text-xs text-[#ededed] placeholder-slate-500 focus:outline-none focus:border-mint-500 transition-colors" placeholder="e.g. Procure 3 Centrifugal Water Pumps 150HP from AquaSource Global for $48,300...">I want to procure 3 Centrifugal Water Pumps 150HP from AquaSource Global for $48,300. Milestone 1: $15,000 upon factory acceptance test (FAT) report and material certs. Milestone 2: $33,300 upon physical delivery, ISO 9906 compliance test report, and operational commissioning.</textarea>
+            <textarea id="draft-input-text" rows="3" class="w-full bg-[#13223b] border border-white/[0.1] rounded-lg p-3 text-xs text-[#ededed] placeholder-slate-500 focus:outline-none focus:border-[#0070ba] transition-colors" placeholder="e.g. Procure 3 Centrifugal Water Pumps 150HP from AquaSource Global for $48,300...">I want to procure 3 Centrifugal Water Pumps 150HP from AquaSource Global for $48,300. Milestone 1: $15,000 upon factory acceptance test (FAT) report and material certs. Milestone 2: $33,300 upon physical delivery, ISO 9906 compliance test report, and operational commissioning.</textarea>
 
             <div class="mt-3 flex flex-wrap items-center justify-between gap-3">
-              <button onclick="handleDraftMilestones(this)" class="bg-[#0d9488] hover:bg-[#0f766e] text-white font-medium text-xs px-4 py-2 rounded-lg transition-colors flex items-center gap-2">
+              <button onclick="handleDraftMilestones(this)" class="bg-[#0070ba] hover:bg-[#005ea6] text-white font-medium text-xs px-4 py-2 rounded-lg transition-colors flex items-center gap-2 shadow-sm shadow-[#0070ba]/30">
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
                 <span>Generate milestones with Gemini</span>
               </button>
@@ -484,13 +520,13 @@
 
         <!-- 3. AGREEMENTS & DEMAND MESH -->
         <div id="page-mesh" class="page hidden fade-in space-y-5">
-          <div class="bg-[#19191b] rounded-xl border border-white/[0.08] overflow-hidden">
+          <div class="bg-[#0d172a] rounded-xl border border-white/[0.08] overflow-hidden">
             <div class="px-5 py-3.5 border-b border-white/[0.08] flex items-center justify-between">
               <div>
                 <h3 class="font-medium text-[#ededed] text-sm">Agreements directory</h3>
                 <p class="text-xs text-slate-400 mt-0.5">Stored in MongoDB database</p>
               </div>
-              <button onclick="navigate('forecasts')" class="bg-[#0d9488] hover:bg-[#0f766e] text-white text-xs font-medium px-3 py-1.5 rounded-lg transition-colors">
+              <button onclick="navigate('forecasts')" class="bg-[#0070ba] hover:bg-[#005ea6] text-white text-xs font-medium px-3 py-1.5 rounded-lg transition-colors shadow-sm shadow-[#0070ba]/30">
                 + New Agreement
               </button>
             </div>
@@ -509,12 +545,12 @@
               <h3 class="text-sm font-medium text-[#ededed]">Verified supplier network</h3>
               <p class="text-xs text-slate-400">Pre-vetted industrial equipment manufacturers</p>
             </div>
-            <span class="text-xs text-mint-400 font-mono">3 Qualified vendors</span>
+            <span class="text-xs text-[#38bdf8] font-mono">3 Qualified vendors</span>
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <!-- Supplier 1 -->
-            <div class="bg-[#19191b] rounded-xl border border-white/[0.08] p-5 flex flex-col justify-between">
+            <div class="bg-[#0d172a] rounded-xl border border-white/[0.08] p-5 flex flex-col justify-between">
               <div>
                 <div class="flex items-start justify-between">
                   <div>
@@ -533,15 +569,15 @@
                   <div>Warranty: <span class="text-slate-300">24 months</span></div>
                 </div>
               </div>
-              <button onclick="startDealWithSupplier('PumpCorp Industrial', 'sb-pumpcorp@example.com', 16800)" class="mt-5 w-full bg-[#232325] hover:bg-[#2c2c2f] border border-white/[0.08] text-xs font-medium py-2 rounded-lg text-slate-200 transition-colors">
+              <button onclick="startDealWithSupplier('PumpCorp Industrial', 'sb-pumpcorp@example.com', 16800)" class="mt-5 w-full bg-[#13223b] hover:bg-[#1a2d4f] border border-white/[0.08] text-xs font-medium py-2 rounded-lg text-slate-200 transition-colors">
                 Select supplier
               </button>
             </div>
 
             <!-- Supplier 2 (Recommended tier) -->
-            <div class="bg-[#19191b] rounded-xl border border-mint-500/40 p-5 flex flex-col justify-between relative">
+            <div class="bg-[#0d172a] rounded-xl border border-[#0070ba]/50 p-5 flex flex-col justify-between relative shadow-sm shadow-[#0070ba]/10">
               <div class="flex items-center justify-between mb-1">
-                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-mint-500/10 text-mint-400 border border-mint-500/25">
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-[#0070ba]/20 text-[#38bdf8] border border-[#0070ba]/35 font-semibold">
                   Recommended tier
                 </span>
                 <div class="flex items-center gap-1 text-xs">
@@ -551,21 +587,21 @@
               </div>
               <div>
                 <h4 class="font-medium text-[#ededed] text-sm">AquaSource Global</h4>
-                <p class="text-xs text-slate-500 mt-0.5">Orlando, FL · Tier 1 Vendor</p>
-                <div class="mt-3 text-xl font-semibold tabular-nums font-mono text-mint-400">$16,100</div>
+                <p class="text-xs text-slate-400 mt-0.5">Orlando, FL · Tier 1 Vendor</p>
+                <div class="mt-3 text-xl font-semibold tabular-nums font-mono text-[#38bdf8]">$16,100</div>
                 <div class="text-xs text-slate-400 mt-0.5">per unit · 24 days lead time</div>
                 <div class="mt-4 pt-3 border-t border-white/[0.08] text-xs text-slate-400 space-y-1">
-                  <div>PayPal: <span class="text-mint-400 font-mono">sb-seller@example.com</span></div>
+                  <div>PayPal: <span class="text-[#38bdf8] font-mono">sb-seller@example.com</span></div>
                   <div>Warranty: <span class="text-slate-300">36 months CIF</span></div>
                 </div>
               </div>
-              <button onclick="startDealWithSupplier('AquaSource Global', 'sb-seller@example.com', 16100)" class="mt-5 w-full bg-[#0d9488] hover:bg-[#0f766e] text-white text-xs font-medium py-2 rounded-lg transition-colors">
+              <button onclick="startDealWithSupplier('AquaSource Global', 'sb-seller@example.com', 16100)" class="mt-5 w-full bg-[#0070ba] hover:bg-[#005ea6] text-white text-xs font-medium py-2 rounded-lg transition-colors shadow-sm shadow-[#0070ba]/30">
                 Select supplier
               </button>
             </div>
 
             <!-- Supplier 3 -->
-            <div class="bg-[#19191b] rounded-xl border border-white/[0.08] p-5 flex flex-col justify-between">
+            <div class="bg-[#0d172a] rounded-xl border border-white/[0.08] p-5 flex flex-col justify-between">
               <div>
                 <div class="flex items-start justify-between">
                   <div>
@@ -584,7 +620,7 @@
                   <div>Warranty: <span class="text-slate-300">18 months</span></div>
                 </div>
               </div>
-              <button onclick="startDealWithSupplier('FlowMaster Equipment', 'sb-flowmaster@example.com', 17250)" class="mt-5 w-full bg-[#232325] hover:bg-[#2c2c2f] border border-white/[0.08] text-xs font-medium py-2 rounded-lg text-slate-200 transition-colors">
+              <button onclick="startDealWithSupplier('FlowMaster Equipment', 'sb-flowmaster@example.com', 17250)" class="mt-5 w-full bg-[#13223b] hover:bg-[#1a2d4f] border border-white/[0.08] text-xs font-medium py-2 rounded-lg text-slate-200 transition-colors">
                 Select supplier
               </button>
             </div>
@@ -596,21 +632,21 @@
           <div class="flex flex-wrap items-center justify-between gap-3">
             <div class="flex items-center gap-3">
               <label class="text-xs text-slate-400 font-medium">Select agreement:</label>
-              <select id="deal-selector" onchange="loadDealWorkspace(this.value)" class="bg-[#232325] border border-white/[0.1] text-xs text-[#ededed] rounded-lg px-3 py-1.5 focus:outline-none focus:border-mint-500 min-w-[280px]">
+              <select id="deal-selector" onchange="loadDealWorkspace(this.value)" class="bg-[#13223b] border border-white/[0.1] text-xs text-[#ededed] rounded-lg px-3 py-1.5 focus:outline-none focus:border-[#0070ba] min-w-[280px]">
                 <option value="">Loading agreements...</option>
               </select>
             </div>
             <div class="flex items-center gap-2">
               <span class="text-xs text-slate-400">Current perspective:</span>
-              <span id="badge-current-role" class="text-xs px-2.5 py-0.5 rounded-md bg-[#232325] text-mint-400 border border-white/[0.08] font-mono">Client (Buyer)</span>
+              <span id="badge-current-role" class="text-xs px-2.5 py-0.5 rounded-md bg-[#13223b] text-[#38bdf8] border border-white/[0.08] font-mono">Client (Buyer)</span>
             </div>
           </div>
 
           <!-- Deal Detail Container -->
           <div id="active-deal-container">
-            <div class="bg-[#19191b] rounded-xl border border-white/[0.08] p-8 text-center text-slate-500">
+            <div class="bg-[#0d172a] rounded-xl border border-white/[0.08] p-8 text-center text-slate-500">
               <p class="text-sm text-slate-400">Select an agreement above or draft a new one to view milestones.</p>
-              <button onclick="navigate('forecasts')" class="mt-3 bg-[#0d9488] hover:bg-[#0f766e] text-white text-xs font-medium px-3.5 py-1.5 rounded-lg transition-colors">
+              <button onclick="navigate('forecasts')" class="mt-3 bg-[#0070ba] hover:bg-[#005ea6] text-white text-xs font-medium px-3.5 py-1.5 rounded-lg transition-colors shadow-sm shadow-[#0070ba]/30">
                 Draft agreement
               </button>
             </div>
@@ -619,9 +655,9 @@
 
         <!-- 6. EXECUTIVE APPROVALS & PAYPAL ESCROW -->
         <div id="page-approvals" class="page hidden fade-in space-y-5">
-          <div class="bg-[#19191b] rounded-xl border border-white/[0.08] p-6 max-w-xl mx-auto">
+          <div class="bg-[#0d172a] rounded-xl border border-white/[0.08] p-6 max-w-xl mx-auto">
             <div class="flex items-center gap-2.5 mb-1.5">
-              <div class="w-7 h-7 rounded-md bg-[#232325] border border-white/[0.1] flex items-center justify-center text-mint-400">
+              <div class="w-7 h-7 rounded-md bg-[#13223b] border border-white/[0.1] flex items-center justify-center text-[#38bdf8]">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
               </div>
               <h3 class="text-base font-semibold text-[#ededed]">Executive Approval</h3>
@@ -632,7 +668,7 @@
 
             <div id="approvals-deal-content" class="mt-5 space-y-4">
               <!-- Populated dynamically based on selected deal -->
-              <div class="bg-[#232325] rounded-lg p-4 border border-white/[0.08] space-y-3">
+              <div class="bg-[#13223b] rounded-lg p-4 border border-white/[0.08] space-y-3">
                 <div class="flex justify-between items-center text-xs">
                   <span class="text-slate-400">Equipment item</span>
                   <span class="text-[#ededed] font-medium" id="appr-title">Centrifugal Water Pump 150HP</span>
@@ -647,7 +683,7 @@
                 </div>
                 <div class="flex justify-between items-baseline text-xs border-t border-white/[0.08] pt-3">
                   <span class="text-slate-300 font-medium">Total value</span>
-                  <span class="text-lg font-semibold text-mint-400 tabular-nums font-mono" id="appr-total">$0.00</span>
+                  <span class="text-lg font-semibold text-[#38bdf8] tabular-nums font-mono" id="appr-total">$0.00</span>
                 </div>
               </div>
 
@@ -657,7 +693,7 @@
               </div>
             </div>
 
-            <div class="mt-4 p-3 bg-[#232325] rounded-lg border border-white/[0.08] flex items-start gap-2.5">
+            <div class="mt-4 p-3 bg-[#13223b] rounded-lg border border-white/[0.08] flex items-start gap-2.5">
               <svg class="w-4 h-4 text-slate-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
               <p class="text-xs text-slate-400 leading-relaxed">
                 <strong class="text-[#ededed]">Authorization safeguard:</strong> Cryptographic server signature and buyer authorization required. Funds remain held securely on PayPal escrow until verifiable delivery.
@@ -668,7 +704,7 @@
 
         <!-- 7. ORDERS & FULFILMENT -->
         <div id="page-orders" class="page hidden fade-in space-y-5">
-          <div class="bg-[#19191b] rounded-xl border border-white/[0.08] overflow-hidden">
+          <div class="bg-[#0d172a] rounded-xl border border-white/[0.08] overflow-hidden">
             <div class="px-5 py-3.5 border-b border-white/[0.08] flex items-center justify-between">
               <h3 class="font-medium text-[#ededed] text-sm">Purchase orders & fulfilment tracking</h3>
               <span class="text-xs text-slate-400 font-mono">Escrow release status</span>
@@ -719,7 +755,11 @@
 
       const label = document.getElementById('theme-active-label');
       if (label) {
-        label.textContent = isSystem ? `auto (${effectiveDark ? 'dark' : 'light'})` : pref;
+        if (isSystem) {
+          label.textContent = `auto (${effectiveDark ? 'midnight' : 'daylight'})`;
+        } else {
+          label.textContent = pref === 'dark' ? 'midnight' : 'daylight';
+        }
       }
     }
 
@@ -728,7 +768,7 @@
         localStorage.setItem('mint_theme', pref);
       } catch (e) {}
       applyTheme(pref);
-      showToast(`Appearance: ${pref.charAt(0).toUpperCase() + pref.slice(1)}`);
+      showToast(`Appearance: ${pref === 'dark' ? 'Midnight Sapphire' : pref === 'light' ? 'Fintech Daylight' : 'System Auto'}`);
     }
 
     function initTheme() {
@@ -820,15 +860,15 @@
     // Status Badge Component
     function badge(status) {
       const map = {
-        pending: 'bg-[#232325] text-slate-400 border-white/[0.08]',
-        funded: 'bg-blue-500/10 text-sky-400 border-blue-500/25',
+        pending: 'bg-[#13223b] text-slate-400 border-white/[0.08]',
+        funded: 'bg-[#0070ba]/15 text-[#38bdf8] border-[#0070ba]/35',
         submitted: 'bg-amber-500/10 text-amber-400 border-amber-500/25',
         verified: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/25',
-        released: 'bg-teal-500/10 text-mint-400 border-teal-500/25',
+        released: 'bg-[#0070ba]/20 text-[#38bdf8] border-[#0070ba]/30',
         disputed: 'bg-rose-500/10 text-rose-400 border-rose-500/25',
         refunded: 'bg-slate-500/10 text-slate-400 border-slate-500/25'
       };
-      const cls = map[status] || 'bg-[#232325] text-slate-400 border-white/[0.08]';
+      const cls = map[status] || 'bg-[#13223b] text-slate-400 border-white/[0.08]';
       return `<span class="inline-block text-[11px] font-mono capitalize px-2 py-0.5 rounded-md border ${cls}">${esc(status)}</span>`;
     }
 
@@ -985,7 +1025,7 @@
             <svg class="w-8 h-8 mx-auto text-slate-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
             <p class="text-xs font-medium text-slate-400">No active agreements in database yet</p>
             <p class="text-[11px] text-slate-500 mt-1">Use the agreement drafter to create your first verified procurement deal.</p>
-            <button onclick="navigate('forecasts')" class="mt-3 bg-[#0d9488] hover:bg-[#0f766e] text-white text-xs font-medium px-3.5 py-1.5 rounded-lg transition-colors">
+            <button onclick="navigate('forecasts')" class="mt-3 bg-[#0070ba] hover:bg-[#005ea6] text-white text-xs font-medium px-3.5 py-1.5 rounded-lg transition-colors shadow-sm shadow-[#0070ba]/30">
               Draft first agreement
             </button>
           </div>
@@ -998,11 +1038,11 @@
 
       // Render Dashboard Deals
       dashList.innerHTML = state.deals.map(d => `
-        <div onclick="selectAndOpenDeal('${d._id}')" class="bg-[#232325] hover:bg-[#2c2c2f] p-3.5 rounded-lg border border-white/[0.08] transition-colors cursor-pointer flex flex-wrap items-center justify-between gap-3">
+        <div onclick="selectAndOpenDeal('${d._id}')" class="bg-[#13223b] hover:bg-[#1a2d4f] p-3.5 rounded-lg border border-white/[0.08] transition-colors cursor-pointer flex flex-wrap items-center justify-between gap-3">
           <div class="flex-1 min-w-[200px]">
             <div class="flex items-center gap-2">
               <h4 class="font-medium text-[#ededed] text-xs">${esc(d.title)}</h4>
-              <span class="text-xs text-mint-400 font-mono tabular-nums font-semibold">$${total(d)} USD</span>
+              <span class="text-xs text-[#38bdf8] font-mono tabular-nums font-semibold">$${total(d)} USD</span>
             </div>
             <p class="text-[11px] text-slate-400 mt-0.5 line-clamp-1">${esc(d.summary || 'Escrow Agreement')}</p>
             <div class="text-[11px] text-slate-500 mt-1">
@@ -1017,22 +1057,22 @@
 
       // Render Mesh Deals Grid
       meshGrid.innerHTML = state.deals.map(d => `
-        <div class="bg-[#232325] p-4 rounded-xl border border-white/[0.08] flex flex-col justify-between">
+        <div class="bg-[#13223b] p-4 rounded-xl border border-white/[0.08] flex flex-col justify-between">
           <div>
             <div class="flex justify-between items-start">
               <h4 class="font-medium text-[#ededed] text-sm">${esc(d.title)}</h4>
-              <span class="text-mint-400 font-mono tabular-nums text-xs font-semibold">$${total(d)} USD</span>
+              <span class="text-[#38bdf8] font-mono tabular-nums text-xs font-semibold">$${total(d)} USD</span>
             </div>
             <p class="text-xs text-slate-400 mt-1.5 line-clamp-2">${esc(d.summary)}</p>
             <div class="mt-3 pt-2.5 border-t border-white/[0.08] text-xs text-slate-400 space-y-1">
               <div>Buyer: <span class="text-slate-200">${esc(d.clientName)}</span></div>
               <div>Supplier: <span class="text-slate-200">${esc(d.freelancerName)}</span></div>
-              <div>Milestones: <span class="text-mint-400 font-mono font-medium">${d.milestones.length} stages</span></div>
+              <div>Milestones: <span class="text-[#38bdf8] font-mono font-medium">${d.milestones.length} stages</span></div>
             </div>
           </div>
           <div class="mt-3 pt-2.5 border-t border-white/[0.08] flex items-center justify-between">
             <div class="flex gap-1 flex-wrap">${d.milestones.map(m => badge(m.status)).slice(0, 3).join('')}</div>
-            <button onclick="selectAndOpenDeal('${d._id}')" class="text-xs bg-[#0d9488] hover:bg-[#0f766e] text-white font-medium px-2.5 py-1 rounded-md transition-colors">
+            <button onclick="selectAndOpenDeal('${d._id}')" class="text-xs bg-[#0070ba] hover:bg-[#005ea6] text-white font-medium px-2.5 py-1 rounded-md transition-colors shadow-sm shadow-[#0070ba]/30">
               Manage →
             </button>
           </div>
@@ -1041,25 +1081,25 @@
 
       // Render Orders
       ordersList.innerHTML = state.deals.map(d => `
-        <div class="bg-[#232325] p-4 rounded-xl border border-white/[0.08] space-y-3">
+        <div class="bg-[#13223b] p-4 rounded-xl border border-white/[0.08] space-y-3">
           <div class="flex flex-wrap items-center justify-between gap-2 border-b border-white/[0.08] pb-2.5">
             <div>
               <h4 class="font-medium text-[#ededed] text-sm">${esc(d.title)}</h4>
               <div class="text-xs text-slate-400">PO ID: <span class="font-mono text-slate-300">${d._id}</span></div>
             </div>
             <div class="text-right">
-              <div class="text-sm font-semibold text-mint-400 font-mono tabular-nums">$${total(d)} USD</div>
+              <div class="text-sm font-semibold text-[#38bdf8] font-mono tabular-nums">$${total(d)} USD</div>
               <div class="text-[11px] text-slate-500 font-mono">${d.milestones.length} milestone deliverables</div>
             </div>
           </div>
           <div class="space-y-2">
             ${d.milestones.map((m, i) => `
-              <div class="p-2.5 bg-[#19191b] rounded-lg border border-white/[0.08] flex flex-wrap items-center justify-between text-xs gap-2">
+              <div class="p-2.5 bg-[#0d172a] rounded-lg border border-white/[0.08] flex flex-wrap items-center justify-between text-xs gap-2">
                 <div>
                   <span class="font-medium text-[#ededed]">${i + 1}. ${esc(m.title)}</span>
                   <span class="text-slate-400 font-mono ml-2">($${Number(m.amount).toFixed(2)})</span>
                   ${m.authId ? `<span class="ml-2 font-mono text-emerald-400 text-[10px]">Auth: ${esc(m.authId)}</span>` : ''}
-                  ${m.captureId ? `<span class="ml-2 font-mono text-mint-400 text-[10px]">Captured: ${esc(m.captureId)}</span>` : ''}
+                  ${m.captureId ? `<span class="ml-2 font-mono text-[#38bdf8] text-[10px]">Captured: ${esc(m.captureId)}</span>` : ''}
                 </div>
                 <div>${badge(m.status)}</div>
               </div>
@@ -1088,8 +1128,8 @@
       }
 
       container.innerHTML = events.slice(-10).reverse().map(e => `
-        <div class="p-2.5 bg-[#232325] rounded-lg border border-white/[0.08] text-xs">
-          <div class="font-medium text-mint-400 truncate text-[11px]">${esc(e.deal)}</div>
+        <div class="p-2.5 bg-[#13223b] rounded-lg border border-white/[0.08] text-xs">
+          <div class="font-medium text-[#38bdf8] truncate text-[11px]">${esc(e.deal)}</div>
           <div class="text-slate-300 mt-0.5 font-mono text-[11px]">${esc(e.text)}</div>
         </div>
       `).join('');
@@ -1100,10 +1140,10 @@
       const container = $('#forecast-cards');
       if (!container) return;
       container.innerHTML = state.forecasts.map(f => `
-        <div class="bg-[#232325] rounded-xl border border-white/[0.08] p-4">
+        <div class="bg-[#13223b] rounded-xl border border-white/[0.08] p-4">
           <div class="flex items-start justify-between">
             <h4 class="font-medium text-[#ededed] text-xs pr-4">${f.product}</h4>
-            <span class="text-[11px] font-mono px-2 py-0.5 rounded-md ${f.conf >= 0.65 ? 'bg-mint-500/10 text-mint-400 border border-mint-500/20' : 'bg-amber-500/10 text-amber-400 border border-amber-500/20'} shrink-0">
+            <span class="text-[11px] font-mono px-2 py-0.5 rounded-md ${f.conf >= 0.65 ? 'bg-[#0070ba]/20 text-[#38bdf8] border border-[#0070ba]/35' : 'bg-amber-500/10 text-amber-400 border border-amber-500/20'} shrink-0">
               ${(f.conf * 100).toFixed(0)}% conf
             </span>
           </div>
@@ -1170,13 +1210,13 @@
       if (!d) return;
 
       container.innerHTML = `
-        <div class="bg-[#19191b] rounded-xl border border-white/[0.08] p-5 space-y-4 mt-5">
+        <div class="bg-[#0d172a] rounded-xl border border-white/[0.08] p-5 space-y-4 mt-5">
           <div class="flex items-center justify-between border-b border-white/[0.08] pb-3">
             <div>
               <span class="text-xs font-medium text-slate-400">Step 2: Review and save agreement</span>
               <h3 class="text-sm font-semibold text-[#ededed] mt-0.5">Agreement Specifications</h3>
             </div>
-            <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-mint-500/10 text-mint-400 border border-mint-500/25">
+            <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-[#0070ba]/20 text-[#38bdf8] border border-[#0070ba]/35">
               Structured output
             </span>
           </div>
@@ -1184,46 +1224,46 @@
           <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
             <div>
               <label class="block text-xs font-medium text-slate-400 mb-1">Buyer / Client</label>
-              <input id="dr-client-name" class="w-full bg-[#232325] border border-white/[0.1] rounded-lg px-3 py-1.5 text-xs text-[#ededed] focus:outline-none focus:border-mint-500" value="AquaFlow Industries" />
+              <input id="dr-client-name" class="w-full bg-[#13223b] border border-white/[0.1] rounded-lg px-3 py-1.5 text-xs text-[#ededed] focus:outline-none focus:border-[#0070ba]" value="AquaFlow Industries" />
             </div>
             <div>
               <label class="block text-xs font-medium text-slate-400 mb-1">Supplier</label>
-              <input id="dr-freelancer-name" class="w-full bg-[#232325] border border-white/[0.1] rounded-lg px-3 py-1.5 text-xs text-[#ededed] focus:outline-none focus:border-mint-500" value="AquaSource Global" />
+              <input id="dr-freelancer-name" class="w-full bg-[#13223b] border border-white/[0.1] rounded-lg px-3 py-1.5 text-xs text-[#ededed] focus:outline-none focus:border-[#0070ba]" value="AquaSource Global" />
             </div>
             <div>
               <label class="block text-xs font-medium text-slate-400 mb-1">Supplier PayPal Email</label>
-              <input id="dr-freelancer-email" type="email" class="w-full bg-[#232325] border border-white/[0.1] rounded-lg px-3 py-1.5 text-xs text-[#ededed] focus:outline-none focus:border-mint-500" value="sb-seller@example.com" />
+              <input id="dr-freelancer-email" type="email" class="w-full bg-[#13223b] border border-white/[0.1] rounded-lg px-3 py-1.5 text-xs text-[#ededed] focus:outline-none focus:border-[#0070ba]" value="sb-seller@example.com" />
             </div>
           </div>
 
           <div>
             <label class="block text-xs font-medium text-slate-400 mb-1">Agreement Title</label>
-            <input id="dr-title" class="w-full bg-[#232325] border border-white/[0.1] rounded-lg px-3 py-1.5 text-xs font-medium text-[#ededed] focus:outline-none focus:border-mint-500" value="${esc(d.title)}" />
+            <input id="dr-title" class="w-full bg-[#13223b] border border-white/[0.1] rounded-lg px-3 py-1.5 text-xs font-medium text-[#ededed] focus:outline-none focus:border-[#0070ba]" value="${esc(d.title)}" />
           </div>
 
           <div>
             <label class="block text-xs font-medium text-slate-400 mb-1">Scope summary</label>
-            <textarea id="dr-summary" rows="2" class="w-full bg-[#232325] border border-white/[0.1] rounded-lg p-2.5 text-xs text-slate-300 focus:outline-none focus:border-mint-500">${esc(d.summary)}</textarea>
+            <textarea id="dr-summary" rows="2" class="w-full bg-[#13223b] border border-white/[0.1] rounded-lg p-2.5 text-xs text-slate-300 focus:outline-none focus:border-[#0070ba]">${esc(d.summary)}</textarea>
           </div>
 
           <div>
             <h4 class="text-xs font-medium text-slate-400 mb-2.5">Milestone schedule:</h4>
             <div class="space-y-2.5" id="dr-milestones-list">
               ${(d.milestones || []).map((m, i) => `
-                <div class="bg-[#232325] p-3.5 rounded-lg border border-white/[0.08] space-y-2">
+                <div class="bg-[#13223b] p-3.5 rounded-lg border border-white/[0.08] space-y-2">
                   <div class="flex items-center justify-between gap-3">
-                    <span class="text-xs font-medium text-mint-400 font-mono">Milestone ${i + 1}</span>
+                    <span class="text-xs font-medium text-[#38bdf8] font-mono">Milestone ${i + 1}</span>
                     <div class="flex items-center gap-2">
                       <span class="text-xs text-slate-400">Amount (USD):</span>
-                      <input data-m-i="${i}" data-m-k="amount" type="number" step="0.01" class="w-24 bg-[#19191b] border border-white/[0.1] rounded px-2 py-1 text-xs text-right font-mono tabular-nums text-[#ededed] focus:outline-none focus:border-mint-500" value="${m.amount}" />
+                      <input data-m-i="${i}" data-m-k="amount" type="number" step="0.01" class="w-24 bg-[#0d172a] border border-white/[0.1] rounded px-2 py-1 text-xs text-right font-mono tabular-nums text-[#ededed] focus:outline-none focus:border-[#0070ba]" value="${m.amount}" />
                     </div>
                   </div>
                   <div>
-                    <input data-m-i="${i}" data-m-k="title" class="w-full bg-[#19191b] border border-white/[0.1] rounded px-2.5 py-1.5 text-xs text-[#ededed] focus:outline-none focus:border-mint-500" value="${esc(m.title)}" placeholder="Milestone title" />
+                    <input data-m-i="${i}" data-m-k="title" class="w-full bg-[#0d172a] border border-white/[0.1] rounded px-2.5 py-1.5 text-xs text-[#ededed] focus:outline-none focus:border-[#0070ba]" value="${esc(m.title)}" placeholder="Milestone title" />
                   </div>
                   <div>
                     <label class="block text-[11px] text-slate-400 mb-0.5">Objective acceptance criteria:</label>
-                    <textarea data-m-i="${i}" data-m-k="criteria" rows="2" class="w-full bg-[#19191b] border border-white/[0.1] rounded p-2 text-xs text-slate-300 focus:outline-none focus:border-mint-500">${esc(m.criteria)}</textarea>
+                    <textarea data-m-i="${i}" data-m-k="criteria" rows="2" class="w-full bg-[#0d172a] border border-white/[0.1] rounded p-2 text-xs text-slate-300 focus:outline-none focus:border-[#0070ba]">${esc(m.criteria)}</textarea>
                   </div>
                 </div>
               `).join('')}
@@ -1231,7 +1271,7 @@
           </div>
 
           <div class="flex justify-end pt-2">
-            <button onclick="handleConfirmCreateDeal(this)" class="bg-[#0d9488] hover:bg-[#0f766e] text-white font-medium text-xs px-4 py-2 rounded-lg transition-colors flex items-center gap-2">
+            <button onclick="handleConfirmCreateDeal(this)" class="bg-[#0070ba] hover:bg-[#005ea6] text-white font-medium text-xs px-4 py-2 rounded-lg transition-colors flex items-center gap-2 shadow-sm shadow-[#0070ba]/30">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 13l4 4L19 7"/></svg>
               <span>Confirm & Save in Database</span>
             </button>
@@ -1298,13 +1338,13 @@
       const isFreelancer = state.role === 'freelancer';
 
       container.innerHTML = `
-        <div class="bg-[#19191b] rounded-xl border border-white/[0.08] overflow-hidden">
+        <div class="bg-[#0d172a] rounded-xl border border-white/[0.08] overflow-hidden">
           <!-- Deal Header -->
-          <div class="p-5 border-b border-white/[0.08] bg-[#232325] flex flex-wrap items-center justify-between gap-4">
+          <div class="p-5 border-b border-white/[0.08] bg-[#13223b] flex flex-wrap items-center justify-between gap-4">
             <div>
               <div class="flex items-center gap-2">
                 <h3 class="text-base font-semibold text-[#ededed]">${esc(d.title)}</h3>
-                <span class="text-xs px-2 py-0.5 rounded-md bg-mint-500/10 text-mint-400 border border-mint-500/25 font-mono tabular-nums font-medium">$${total(d)} USD</span>
+                <span class="text-xs px-2 py-0.5 rounded-md bg-[#0070ba]/20 text-[#38bdf8] border border-[#0070ba]/35 font-mono tabular-nums font-medium">$${total(d)} USD</span>
               </div>
               <p class="text-xs text-slate-400 mt-1 max-w-2xl">${esc(d.summary || '')}</p>
               <div class="text-xs text-slate-400 mt-2 flex items-center gap-4">
@@ -1322,10 +1362,10 @@
             <h4 class="text-xs font-medium text-slate-400">Milestone schedule & verification</h4>
 
             ${d.milestones.map((m, i) => `
-              <div class="bg-[#232325] rounded-xl border border-white/[0.08] p-4 space-y-3">
+              <div class="bg-[#13223b] rounded-xl border border-white/[0.08] p-4 space-y-3">
                 <div class="flex flex-wrap items-center justify-between gap-3 border-b border-white/[0.08] pb-2.5">
                   <div class="flex items-center gap-2">
-                    <span class="w-5 h-5 rounded bg-[#19191b] border border-white/[0.1] flex items-center justify-center text-xs font-mono text-mint-400">${i + 1}</span>
+                    <span class="w-5 h-5 rounded bg-[#0d172a] border border-white/[0.1] flex items-center justify-center text-xs font-mono text-[#38bdf8]">${i + 1}</span>
                     <h5 class="font-medium text-[#ededed] text-sm">${esc(m.title)}</h5>
                   </div>
                   <div class="flex items-center gap-2.5">
@@ -1335,22 +1375,22 @@
                 </div>
 
                 <!-- Acceptance Criteria -->
-                <div class="bg-[#19191b] p-3 rounded-lg border border-white/[0.08]">
+                <div class="bg-[#0d172a] p-3 rounded-lg border border-white/[0.08]">
                   <div class="text-[11px] font-medium text-slate-400 mb-0.5">Acceptance criteria:</div>
                   <div class="text-xs text-slate-300 leading-relaxed">${esc(m.criteria)}</div>
                 </div>
 
                 <!-- Deliverable Submission (if submitted) -->
                 ${m.submission ? `
-                  <div class="bg-[#19191b] p-3 rounded-lg border border-white/[0.08]">
+                  <div class="bg-[#0d172a] p-3 rounded-lg border border-white/[0.08]">
                     <div class="text-[11px] font-medium text-slate-400 mb-0.5">Submitted evidence:</div>
-                    <div class="text-xs text-slate-300 leading-relaxed font-mono bg-[#232325] p-2 rounded border border-white/[0.08]">${esc(m.submission)}</div>
+                    <div class="text-xs text-slate-300 leading-relaxed font-mono bg-[#13223b] p-2 rounded border border-white/[0.08]">${esc(m.submission)}</div>
                   </div>
                 ` : ''}
 
                 <!-- Gemini AI Verification Report -->
                 ${m.aiReport ? `
-                  <div class="bg-[#19191b] border border-purple-500/25 rounded-lg p-3 space-y-2">
+                  <div class="bg-[#0d172a] border border-purple-500/25 rounded-lg p-3 space-y-2">
                     <div class="flex items-center justify-between">
                       <div class="flex items-center gap-2">
                         <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-purple-500/10 text-purple-300 border border-purple-500/20">
@@ -1383,7 +1423,7 @@
 
                 <!-- Dispute Panel (if disputed) -->
                 ${m.dispute ? `
-                  <div class="bg-[#19191b] border border-rose-500/30 rounded-lg p-3 space-y-2">
+                  <div class="bg-[#0d172a] border border-rose-500/30 rounded-lg p-3 space-y-2">
                     <div class="flex items-center justify-between">
                       <div class="text-xs font-medium text-rose-400">Dispute opened by ${esc(m.dispute.by)}</div>
                       <span class="text-xs font-mono tabular-nums px-2 py-0.5 rounded bg-rose-500/15 text-rose-300">
@@ -1412,8 +1452,8 @@
                   <!-- Funded or Submitted: Freelancer can submit work -->
                   ${['funded', 'submitted'].includes(m.status) && isFreelancer ? `
                     <div class="w-full space-y-2">
-                      <textarea id="sub-input-${i}" rows="2" class="w-full bg-[#19191b] border border-white/[0.1] rounded-lg p-2.5 text-xs text-[#ededed] placeholder-slate-500 focus:outline-none focus:border-mint-500" placeholder="Describe completed deliverable and include evidence URL">${esc(m.submission || '')}</textarea>
-                      <button onclick="handleSubmitDeliverable('${d._id}', ${i}, this)" class="bg-[#0d9488] hover:bg-[#0f766e] text-white text-xs font-medium px-3.5 py-1.5 rounded-lg transition-colors">
+                      <textarea id="sub-input-${i}" rows="2" class="w-full bg-[#0d172a] border border-white/[0.1] rounded-lg p-2.5 text-xs text-[#ededed] placeholder-slate-500 focus:outline-none focus:border-[#0070ba]" placeholder="Describe completed deliverable and include evidence URL">${esc(m.submission || '')}</textarea>
+                      <button onclick="handleSubmitDeliverable('${d._id}', ${i}, this)" class="bg-[#0070ba] hover:bg-[#005ea6] text-white text-xs font-medium px-3.5 py-1.5 rounded-lg transition-colors shadow-sm shadow-[#0070ba]/30">
                         Submit deliverable for verification
                       </button>
                     </div>
@@ -1421,14 +1461,14 @@
 
                   <!-- Submitted: Run Gemini AI Verification -->
                   ${m.status === 'submitted' ? `
-                    <button onclick="handleVerifySubmission('${d._id}', ${i}, this)" class="bg-[#232325] hover:bg-[#2c2c2f] border border-white/[0.12] text-[#ededed] text-xs font-medium px-3.5 py-1.5 rounded-lg transition-colors flex items-center gap-1.5">
+                    <button onclick="handleVerifySubmission('${d._id}', ${i}, this)" class="bg-[#13223b] hover:bg-[#1a2d4f] border border-white/[0.12] text-[#ededed] text-xs font-medium px-3.5 py-1.5 rounded-lg transition-colors flex items-center gap-1.5">
                       <span>Run Gemini verification</span>
                     </button>
                   ` : ''}
 
                   <!-- Verified & Client: Settle 100% -->
                   ${m.status === 'verified' && isClient ? `
-                    <button onclick="handleSettleMilestone('${d._id}', ${i}, 100, this)" class="bg-[#0d9488] hover:bg-[#0f766e] text-white text-xs font-medium px-3.5 py-1.5 rounded-lg transition-colors flex items-center gap-1.5">
+                    <button onclick="handleSettleMilestone('${d._id}', ${i}, 100, this)" class="bg-[#0070ba] hover:bg-[#005ea6] text-white text-xs font-medium px-3.5 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 shadow-sm shadow-[#0070ba]/30">
                       <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 13l4 4L19 7"/></svg>
                       <span>Approve & release payout</span>
                     </button>
@@ -1436,21 +1476,21 @@
 
                   <!-- Submitted & Client: Direct Approve -->
                   ${m.status === 'submitted' && isClient ? `
-                    <button onclick="handleSettleMilestone('${d._id}', ${i}, 100, this)" class="bg-[#232325] hover:bg-[#2c2c2f] border border-white/[0.08] text-slate-200 text-xs font-medium px-3.5 py-1.5 rounded-lg transition-colors">
+                    <button onclick="handleSettleMilestone('${d._id}', ${i}, 100, this)" class="bg-[#13223b] hover:bg-[#1a2d4f] border border-white/[0.08] text-slate-200 text-xs font-medium px-3.5 py-1.5 rounded-lg transition-colors">
                       Direct release
                     </button>
                   ` : ''}
 
                   <!-- Funded & Client: Cancel & Void Escrow (100% Refund) -->
                   ${m.status === 'funded' && isClient ? `
-                    <button onclick="handleSettleMilestone('${d._id}', ${i}, 0, this)" class="bg-[#232325] hover:bg-[#2c2c2f] border border-white/[0.08] text-slate-300 text-xs font-medium px-3 py-1.5 rounded-lg transition-colors">
+                    <button onclick="handleSettleMilestone('${d._id}', ${i}, 0, this)" class="bg-[#13223b] hover:bg-[#1a2d4f] border border-white/[0.08] text-slate-300 text-xs font-medium px-3 py-1.5 rounded-lg transition-colors">
                       Void escrow (100% refund)
                     </button>
                   ` : ''}
 
                   <!-- Disputed: Accept Ruling -->
                   ${m.status === 'disputed' ? `
-                    <button onclick="handleSettleMilestone('${d._id}', ${i}, ${m.dispute.recommended_release_percent}, this)" class="bg-[#0d9488] hover:bg-[#0f766e] text-white text-xs font-medium px-3.5 py-1.5 rounded-lg transition-colors">
+                    <button onclick="handleSettleMilestone('${d._id}', ${i}, ${m.dispute.recommended_release_percent}, this)" class="bg-[#0070ba] hover:bg-[#005ea6] text-white text-xs font-medium px-3.5 py-1.5 rounded-lg transition-colors shadow-sm shadow-[#0070ba]/30">
                       Accept mediator ruling (${m.dispute.recommended_release_percent}% payout)
                     </button>
                   ` : ''}
@@ -1466,7 +1506,7 @@
                 <!-- PayPal Smart Advisor & Escrow Guard Add-On -->
                 <div class="pt-2.5 border-t border-white/[0.08] flex flex-wrap items-center justify-between gap-2">
                   <div class="flex items-center gap-2">
-                    <button type="button" onclick="window.paypalAdvisor.toggleAdvisor('${d._id}', ${i})" class="bg-[#19191b] hover:bg-[#232325] border border-white/[0.08] text-mint-400 text-xs font-medium px-2.5 py-1.5 rounded-lg transition-colors flex items-center gap-1.5">
+                    <button type="button" onclick="window.paypalAdvisor.toggleAdvisor('${d._id}', ${i})" class="bg-[#0d172a] hover:bg-[#13223b] border border-white/[0.08] text-[#38bdf8] text-xs font-medium px-2.5 py-1.5 rounded-lg transition-colors flex items-center gap-1.5">
                       <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                       <span>PayPal Gateway Advisor</span>
                     </button>
@@ -1477,7 +1517,7 @@
                     ` : ''}
                   </div>
                   ${m.status === 'funded' ? `
-                    <button type="button" onclick="window.paypalAdvisor.reauthorizeHold('${d._id}', ${i}, this)" class="bg-[#19191b] hover:bg-[#232325] border border-white/[0.08] text-slate-300 text-xs font-medium px-2.5 py-1.5 rounded-lg transition-colors">
+                    <button type="button" onclick="window.paypalAdvisor.reauthorizeHold('${d._id}', ${i}, this)" class="bg-[#0d172a] hover:bg-[#13223b] border border-white/[0.08] text-slate-300 text-xs font-medium px-2.5 py-1.5 rounded-lg transition-colors">
                       Reauthorize Hold
                     </button>
                   ` : ''}
@@ -1643,12 +1683,12 @@
       }
 
       container.innerHTML = pendingMilestones.map((m, i) => `
-        <div class="bg-[#232325] p-3.5 rounded-lg border border-white/[0.08] flex flex-wrap items-center justify-between gap-3">
+        <div class="bg-[#13223b] p-3.5 rounded-lg border border-white/[0.08] flex flex-wrap items-center justify-between gap-3">
           <div>
             <div class="font-medium text-[#ededed] text-xs">${esc(m.title)}</div>
             <div class="text-[11px] text-slate-400 font-mono mt-0.5">$${Number(m.amount).toFixed(2)} USD · PayPal Authorization Required</div>
           </div>
-          <button onclick="selectAndOpenDeal('${d._id}'); navigate('negotiation');" class="bg-[#0d9488] hover:bg-[#0f766e] text-white text-xs font-medium px-3 py-1.5 rounded-lg transition-colors">
+          <button onclick="selectAndOpenDeal('${d._id}'); navigate('negotiation');" class="bg-[#0070ba] hover:bg-[#005ea6] text-white text-xs font-medium px-3 py-1.5 rounded-lg transition-colors shadow-sm shadow-[#0070ba]/30">
             Authorize in Workspace
           </button>
         </div>
