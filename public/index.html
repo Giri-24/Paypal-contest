@@ -277,6 +277,11 @@
             </div>
           </div>
 
+          <!-- PAYPAL SMART ADVISOR & ESCROW GUARD COMMAND CENTER -->
+          <div id="dashboard-advisor-section" class="glass rounded-2xl border border-navy-700 card-glow overflow-hidden">
+            <!-- Dynamically populated by window.paypalAdvisor.renderDashboardAdvisor -->
+          </div>
+
           <!-- Main Grid -->
           <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
             <!-- Active Deals List -->
@@ -727,6 +732,9 @@
         updateDashboardKPIs();
         renderDeals();
         populateDealSelector();
+        if (window.paypalAdvisor) {
+          window.paypalAdvisor.renderDashboardAdvisor('dashboard-advisor-section');
+        }
       } catch (err) {
         console.warn('Could not load deals from backend:', err.message);
         showToast('Connected to server. Create a deal to test full escrow.', false);
@@ -1253,6 +1261,27 @@
                   ` : ''}
                 </div>
 
+                <!-- PayPal Smart Advisor & Escrow Guard Add-On -->
+                <div class="pt-3 border-t border-navy-800/80 flex flex-wrap items-center justify-between gap-2">
+                  <div class="flex items-center gap-2">
+                    <button type="button" onclick="window.paypalAdvisor.toggleAdvisor('${d._id}', ${i})" class="bg-navy-950 hover:bg-navy-800 border border-navy-700 text-mint-400 text-xs font-medium px-3 py-1.5 rounded-lg transition flex items-center gap-1.5 shadow-sm">
+                      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                      <span>PayPal Gateway Advisor</span>
+                    </button>
+                    ${m.status === 'funded' ? `
+                      <span class="text-[11px] font-mono px-2.5 py-0.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 text-emerald-400">
+                        ● Escrow Guard: Guaranteed Hold
+                      </span>
+                    ` : ''}
+                  </div>
+                  ${m.status === 'funded' ? `
+                    <button type="button" onclick="window.paypalAdvisor.reauthorizeHold('${d._id}', ${i}, this)" class="bg-navy-950 hover:bg-navy-800 border border-navy-700 text-slate-300 text-xs font-medium px-3 py-1.5 rounded-lg transition">
+                      Reauthorize Hold
+                    </button>
+                  ` : ''}
+                </div>
+                <div id="advisor-slot-${i}" class="hidden"></div>
+
                 <!-- Milestone Event Logs -->
                 ${(m.log || []).length ? `
                   <div class="pt-2 border-t border-navy-800 text-[11px] text-slate-500 font-mono space-y-0.5">
@@ -1269,6 +1298,17 @@
       if (isClient && d.milestones.some(m => m.status === 'pending')) {
         renderPayPalEscrowButtons(d);
       }
+
+      // Auto-load Advisor for funded milestones to display live Escrow Guard telemetry
+      d.milestones.forEach((m, idx) => {
+        if (m.status === 'funded') {
+          const slot = document.getElementById(`advisor-slot-${idx}`);
+          if (slot && window.paypalAdvisor) {
+            slot.classList.remove('hidden');
+            window.paypalAdvisor.renderAdvisorWidget(d._id, idx, slot);
+          }
+        }
+      });
     }
 
     // 4. PAYPAL ESCROW BUTTONS INITIALIZATION
@@ -1423,5 +1463,6 @@
       doLogin();
     });
   </script>
+  <script src="/advisor-widget.js"></script>
 </body>
 </html>
